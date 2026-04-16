@@ -90,7 +90,7 @@ async function verificarPin() {
 
   try {
     // Verificar PIN en el servidor — seguro, no expone el PIN al cliente
-    const res = await $fetch<{ ok: boolean }>('/api/admin-auth', {
+    const res = await $fetch<{ ok: boolean }>('/api-auth/admin-auth', {
       method: 'POST',
       body: { pin: entered },
     })

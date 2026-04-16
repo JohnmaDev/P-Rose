@@ -81,18 +81,14 @@ export default defineNuxtConfig({
     preset: 'netlify',
   },
 
-  // Dev server proxy para API de Go — excluye endpoints propios de Nitro
+  // Dev server proxy para API de Go
   routeRules: {
-    '/api/get_products': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/get_products' : undefined },
-    '/api/get_categories': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/get_categories' : undefined },
-    '/api/get_cuts': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/get_cuts' : undefined },
-    '/api/add_product': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/add_product' : undefined },
-    '/api/update_product': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/update_product' : undefined },
-    '/api/delete_product': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/delete_product' : undefined },
-    '/api/manage_categories': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/manage_categories' : undefined },
-    '/api/manage_cuts': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/manage_cuts' : undefined },
-    '/api/reservations': { proxy: process.env.NODE_ENV === 'development' ? 'https://personalbarber.vip/api/reservations' : undefined },
-    // /api/admin-auth NO se proxea — es handler nativo de Nitro
+    // Todo en /api se proxea a la API de Go
+    '/api/**': {
+      proxy: process.env.NODE_ENV === 'development'
+        ? 'https://personalbarber.vip/api/**'
+        : undefined
+    }
   },
 })
 
