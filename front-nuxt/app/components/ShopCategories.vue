@@ -60,10 +60,11 @@
         :is="cat.comingSoon ? 'div' : 'NuxtLink'"
         v-for="cat in [...activeCategories, ...otherComingSoonCategories]"
         :key="cat.id"
-        :to="cat.comingSoon ? undefined : `/tienda?cat=${cat.id}`"
+        :to="cat.comingSoon ? undefined : { path: '/tienda', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
         class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col items-center justify-center p-6 text-center"
         :class="[cat.comingSoon ? 'cursor-default bg-white/3' : 'cursor-pointer hover:scale-[1.02] bg-zinc-900']"
         :style="{ borderColor: `${cat.accent}${cat.comingSoon ? '15' : '30'}` }"
+
       >
         <!-- Fondo -->
         <div v-if="!cat.comingSoon && cat.cover" class="absolute inset-0 z-0">

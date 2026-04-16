@@ -31,6 +31,26 @@
     color: white;
     font-family: var(--font-sans);
   }
+
+  /* Cursor pointer para todos los elementos interactivos — coherencia UX */
+  button,
+  [role="button"],
+  a,
+  label[for],
+  select,
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  /* Botones deshabilitados — no-drop para claridad visual */
+  button:disabled,
+  input:disabled,
+  [disabled] {
+    cursor: not-allowed;
+  }
 }
 
 /* ─── Custom Utility Classes ───────────────────────────── */

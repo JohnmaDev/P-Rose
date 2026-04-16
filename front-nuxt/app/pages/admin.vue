@@ -61,9 +61,7 @@ import AdminCuts from '~/components/admin/AdminCuts.vue'
 
 useSeoMeta({ title: 'Panel de Administración | PersonalBarber' })
 
-const config = useRuntimeConfig()
-
-// PIN validado contra ENV var (Nuxt runtimeConfig)
+// PIN validado server-side vía /api/verify-pin (nunca expuesto al cliente)
 const autenticado = ref(false)
 const pinIngresado = ref('')
 const pinError = ref(false)
@@ -86,14 +84,27 @@ const activeComponent = computed(() => {
   return map[activeTab.value]
 })
 
-function verificarPin() {
-  // Comparar contra variable de entorno pública de Nuxt (NUXT_PUBLIC_ADMIN_PIN en Netlify)
-  const correctPin = config.public.adminPin
-  if (pinIngresado.value === correctPin) {
-    autenticado.value = true
-    pinError.value = false
-    sessionStorage.setItem('admin_pin', pinIngresado.value)
-  } else {
+async function verificarPin() {
+  const entered = pinIngresado.value.trim()
+  if (!entered) return
+
+  try {
+    // Verificar PIN en el servidor — seguro, no expone el PIN al cliente
+    const res = await $fetch<{ ok: boolean }>('/api/admin-auth', {
+      method: 'POST',
+      body: { pin: entered },
+    })
+
+    if (res.ok) {
+      autenticado.value = true
+      pinError.value = false
+      sessionStorage.setItem('admin_pin', entered)
+    } else {
+      pinError.value = true
+      pinIngresado.value = ''
+      sessionStorage.removeItem('admin_pin')
+    }
+  } catch {
     pinError.value = true
     pinIngresado.value = ''
     sessionStorage.removeItem('admin_pin')

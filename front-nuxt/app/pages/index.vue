@@ -6,6 +6,8 @@
     <div class="w-full max-w-6xl px-4 flex flex-col items-center pb-20 overflow-hidden">
       <ShopCategories class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-1000 ease-out" />
       <MasonryGallery class="animate-on-scroll w-full mt-8 opacity-0 translate-y-12 transition-all duration-1000 ease-out" />
+      <!-- Footer con logo, datos de contacto y créditos del desarrollador -->
+      <AppFooter class="mt-14 animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out" />
     </div>
   </div>
 </template>

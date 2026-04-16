@@ -188,18 +188,35 @@ const filters = computed(() => [
     })
     .map(c => ({ id: c.id, label: c.label }))
 ])
+// Flag para evitar reseteo de filtro cuando syncFilter cambia activeDepartment desde URL
+let syncingFromRoute = false
 
 function syncFilter() {
   const cat = route.query.cat as string
   const dept = route.query.dept as string
+
+  // Flag para evitar que el watch de activeDepartment resetee el filtro durante sync
+  syncingFromRoute = true
+
+  // Primero aplicar dept si viene en la query
   if (dept && ['men', 'women', 'merch'].includes(dept)) {
     activeDepartment.value = dept as 'men' | 'merch' | 'women'
   }
+
+  // Luego refinar según la categoría (tiene prioridad sobre dept)
   const categoryObj = categories.value.find(c => c.id === cat)
-  if (categoryObj?.department && categoryObj.department !== 'unisex') {
-    activeDepartment.value = categoryObj.department as 'men' | 'merch' | 'women'
+  if (categoryObj) {
+    if (categoryObj.department === 'unisex' || categoryObj.style === 'premium') {
+      activeDepartment.value = 'merch'
+    } else if (categoryObj.department && ['men', 'women'].includes(categoryObj.department)) {
+      activeDepartment.value = categoryObj.department as 'men' | 'women'
+    }
   }
+
+  // Activar el filtro si la categoría existe en los filtros del departamento activo
   activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
+
+  nextTick(() => { syncingFromRoute = false })
 }
 
 async function fetchData() {
@@ -215,7 +232,14 @@ onMounted(() => {
 
 watch(() => route.query.cat, syncFilter)
 watch(() => route.query.dept, syncFilter)
-watch(activeDepartment, () => { activeFilter.value = 'all' })
+
+// Solo resetear el filtro cuando el usuario cambia el departamento MANUALMENTE (no vía URL)
+watch(activeDepartment, () => {
+  if (!syncingFromRoute) {
+    activeFilter.value = 'all'
+  }
+})
+
 
 // SEO dinámico por categoría
 watch(activeFilter, (newFilter) => {
