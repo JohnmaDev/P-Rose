@@ -1,11 +1,12 @@
 [build]
-  base = "."
-  command = "cd front-nuxt && npm install && npm run build"
-  publish = "front-nuxt/dist"
+  base = "front-nuxt"
+  command = "npm install && npm run generate"
+  publish = "dist"
   functions = "backend/functions"
 
 [build.environment]
   GO_VERSION = "1.21"
+  NODE_VERSION = "20"
 
 [[headers]]
   for = "/*"
@@ -23,5 +24,6 @@
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/server"
+  to = "/index.html"
   status = 200
+
