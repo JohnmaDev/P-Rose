@@ -89,11 +89,11 @@ export default defineNuxtConfig({
 
   // Dev server proxy para API de Go
   routeRules: {
-    // Todo en /api se proxea a la API de Go
+    // Proxea la API de Go tanto en dev como en SSR de producción
     '/api/**': {
       proxy: process.env.NODE_ENV === 'development'
         ? 'https://personalbarber.vip/api/**'
-        : undefined
+        : 'https://personalbarber.vip/.netlify/functions/**'
     }
   },
 })
