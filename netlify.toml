@@ -1,7 +1,7 @@
 [build]
-  base = "front-nuxt"
-  command = "npm install && npm run generate"
-  publish = "dist"
+  base = "."
+  command = "cd front-nuxt && npm install && npm run generate"
+  publish = "front-nuxt/dist"
   functions = "backend/functions"
 
 [build.environment]
