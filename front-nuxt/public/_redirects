@@ -1,0 +1,5 @@
+# API → Netlify Functions (Go backend)
+/api/* /.netlify/functions/:splat 200
+
+# SPA catch-all — Nuxt router maneja el resto
+/* /index.html 200
