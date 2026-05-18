@@ -55,18 +55,7 @@ export function useCatalog() {
       ])
 
       if (resProd.ok && resCat.ok) {
-        // Asignar productos — shuffle SOLO en cliente para no romper hidratación SSR
-        if (process.client) {
-          const shuffled = [...resProd.products]
-          for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1))
-            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-          }
-          products.value = shuffled
-        } else {
-          products.value = resProd.products
-        }
-
+        products.value = resProd.products
         categories.value = resCat.categories
         isLoaded.value = true
         return { success: true }

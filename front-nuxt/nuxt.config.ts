@@ -6,6 +6,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
 
+  devServer: {
+    host: '0.0.0.0'
+  },
+
   // SSR habilitado para SEO óptimo
   ssr: true,
 
@@ -51,6 +55,8 @@ export default defineNuxtConfig({
 
   // App head global — metadatos base SEO
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' },
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',

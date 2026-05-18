@@ -90,8 +90,8 @@
           </div>
 
           <button @click="guardarCorte" :disabled="guardandoCut" class="w-full mt-10 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark shadow-[0_10px_30px_rgba(57,255,20,0.3)] disabled:opacity-50 transition-all flex items-center justify-center gap-3 group">
-            <i v-if="guardandoCut" class="fas fa-spinner animate-spin text-lg"></i>
-            <i v-else class="fas fa-save text-lg group-hover:scale-110 transition-transform"></i>
+            <fa-icon v-if="guardandoCut" :icon="['fas', 'spinner']" class="animate-spin text-lg" />
+            <fa-icon v-else :icon="['fas', 'save']" class="text-lg group-hover:scale-110 transition-transform" />
             <span class="text-sm tracking-widest">{{ guardandoCut ? 'Guardando...' : 'Publicar en Galería' }}</span>
           </button>
         </div>

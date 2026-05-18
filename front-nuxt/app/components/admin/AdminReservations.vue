@@ -76,7 +76,7 @@
               <span class="text-xs font-black uppercase tracking-wider text-zinc-500 group-hover:text-zinc-400">Historial de Citas Pasadas</span>
               <span class="text-[10px] bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded-full font-black">{{ historialCount }}</span>
             </div>
-            <i class="fas text-zinc-600 text-xs transition-transform duration-300" :class="showHistorial ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            <fa-icon :icon="['fas', showHistorial ? 'chevron-up' : 'chevron-down']" class="text-zinc-600 text-xs transition-transform duration-300" />
           </button>
 
           <transition name="fade">

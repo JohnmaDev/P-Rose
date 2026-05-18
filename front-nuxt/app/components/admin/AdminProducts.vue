@@ -160,7 +160,7 @@
           </div>
 
           <button @click="guardarProducto" :disabled="guardando" class="w-full mt-8 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark transition-all flex items-center justify-center gap-2">
-            <i v-if="guardando" class="fas fa-spinner animate-spin"></i>
+            <fa-icon v-if="guardando" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
             {{ guardando ? 'Guardando...' : 'Guardar Producto' }}
           </button>
         </div>

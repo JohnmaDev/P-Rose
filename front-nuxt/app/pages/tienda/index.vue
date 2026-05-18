@@ -85,7 +85,7 @@
         :class="{'opacity-40 pointer-events-none': isLoading}">
         <div v-for="(product, index) in filteredProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          :class="['group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500',
+          :class="['group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium',
             activeDepartment === 'men' ? 'hover:border-neon-green/50' : (activeDepartment === 'merch' ? 'hover:border-cyan-400/50' : 'hover:border-pink-500/50')]">
 
           <!-- Imagen -->
@@ -93,7 +93,7 @@
             <img
               :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
               :alt="product.name"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              class="w-full h-full object-cover transition-premium group-hover:scale-110"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               loading="lazy"
             />
@@ -219,13 +219,26 @@ function syncFilter() {
   nextTick(() => { syncingFromRoute = false })
 }
 
+function shuffleProducts() {
+  if (products.value.length > 0) {
+    const shuffled = [...products.value]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    products.value = shuffled
+  }
+}
+
 async function fetchData() {
   await fetchCatalog(true)
+  shuffleProducts()
   syncFilter()
   setTimeout(() => { isFirstVisit.value = false }, 1000)
 }
 
 onMounted(() => {
+  shuffleProducts()
   syncFilter()
   setTimeout(() => { isFirstVisit.value = false }, 1000)
 })

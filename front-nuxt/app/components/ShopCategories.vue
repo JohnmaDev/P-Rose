@@ -57,11 +57,11 @@
     <!-- Tarjetas de Categorías -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
       <component
-        :is="cat.comingSoon ? 'div' : 'NuxtLink'"
+        :is="cat.comingSoon ? 'div' : NuxtLinkResolved"
         v-for="cat in [...activeCategories, ...otherComingSoonCategories]"
         :key="cat.id"
         :to="cat.comingSoon ? undefined : { path: '/tienda', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
-        class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col items-center justify-center p-6 text-center"
+        class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border transition-premium flex flex-col items-center justify-center p-6 text-center"
         :class="[cat.comingSoon ? 'cursor-default bg-white/3' : 'cursor-pointer hover:scale-[1.02] bg-zinc-900']"
         :style="{ borderColor: `${cat.accent}${cat.comingSoon ? '15' : '30'}` }"
 
@@ -71,7 +71,7 @@
           <img
             :src="optimizeImage(cat.cover, 600)"
             :alt="cat.label"
-            class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-all duration-700"
+            class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-premium"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
         </div>
@@ -84,13 +84,17 @@
 
         <!-- Contenido Central -->
         <div class="relative z-10 flex flex-col items-center gap-4">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-all duration-500 group-hover:scale-110 shadow-lg"
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-premium group-hover:scale-110 shadow-lg"
             :style="{ borderColor: `${cat.accent}60`, background: `${cat.accent}15`, boxShadow: `0 0 20px ${cat.accent}20` }">
             <div v-if="isImageUrl(cat.icon)"
-              class="w-10 h-10 sm:w-12 sm:h-12 transition-all duration-500"
-              :style="{ backgroundColor: cat.accent, mask: `url('${cat.icon}') no-repeat center / contain`, WebkitMask: `url('${cat.icon}') no-repeat center / contain` }">
+              class="w-10 h-10 sm:w-12 sm:h-12 transition-premium-fast"
+              :style="{ 
+                backgroundColor: cat.accent, 
+                mask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`, 
+                WebkitMask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain` 
+              }">
             </div>
-            <fa-icon v-else :icon="['fas', (cat.icon || 'tag').replace('fas fa-', '')]" class="text-2xl sm:text-3xl transition-all duration-500" :style="{ color: cat.accent }" />
+            <fa-icon v-else :icon="['fas', (cat.icon || 'tag').replace('fas fa-', '')]" class="text-2xl sm:text-3xl transition-premium-fast" :style="{ color: cat.accent }" />
           </div>
 
           <div class="flex flex-col items-center">
@@ -161,6 +165,8 @@
 </template>
 
 <script setup lang="ts">
+const NuxtLinkResolved = resolveComponent('NuxtLink')
+
 const { products, categories, isLoading } = useCatalog()
 const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
 

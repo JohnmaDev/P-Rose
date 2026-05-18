@@ -23,7 +23,7 @@
                  WebkitMask: `url('${c.icon.replace('.png', '.webp')}') no-repeat center / contain`
                }">
           </div>
-          <i v-else :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>
+          <fa-icon v-else :icon="parseIcon(c.icon)" :style="{ color: c.accent }" />
           <!-- Fallback si la máscara falla o no hay nada -->
           <div v-if="isImageUrl(c.icon)" class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
              <fa-icon :icon="['fas', 'image']" class="text-[8px]" />
@@ -93,7 +93,7 @@
                              WebkitMask: `url('${catForm.icon.replace('.png', '.webp')}') no-repeat center / contain`
                            }">
                       </div>
-                      <i v-else :class="catForm.icon" :style="{ color: catForm.accent }"></i>
+                      <fa-icon v-else :icon="parseIcon(catForm.icon)" :style="{ color: catForm.accent }" />
                    </div>
                 </div>
               </div>
@@ -153,7 +153,7 @@
           </div>
 
           <button @click="guardarCategoria" :disabled="guardandoCat" class="w-full mt-8 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark transition-all flex items-center justify-center gap-2">
-            <i v-if="guardandoCat" class="fas fa-spinner animate-spin"></i>
+            <fa-icon v-if="guardandoCat" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
             {{ guardandoCat ? 'Guardando...' : 'Guardar Categoría' }}
           </button>
         </div>
@@ -259,6 +259,20 @@ export default {
       if (!url) return false;
       const u = url.toLowerCase();
       return u.startsWith('/') || u.startsWith('http') || u.endsWith('.svg') || u.endsWith('.png') || u.endsWith('.webp') || u.endsWith('.jpg') || u.endsWith('.jpeg');
+    },
+    parseIcon(iconString) {
+      if (!iconString) return ['fas', 'tag'];
+      const parts = iconString.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        const prefix = parts[0];
+        const nameWithFa = parts[1];
+        const name = nameWithFa.startsWith('fa-') ? nameWithFa.slice(3) : nameWithFa;
+        return [prefix, name];
+      }
+      if (iconString.startsWith('fa-')) {
+        return ['fas', iconString.slice(3)];
+      }
+      return ['fas', iconString];
     },
     abrirCloudinaryWidget() {
       const openWidget = () => {
