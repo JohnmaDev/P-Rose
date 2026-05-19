@@ -1,8 +1,7 @@
 <template>
   <!-- Admin panel — completamente client-side (no necesita SSR/indexación) -->
-  <ClientOnly>
-    <div class="bg-black min-h-screen text-white flex flex-col items-center px-4 py-8">
-
+  <div class="bg-black min-h-screen text-white flex flex-col items-center px-4 py-8">
+    <ClientOnly>
       <!-- PIN de acceso -->
       <div v-if="!autenticado" class="w-full max-w-xs mt-20 bg-zinc-900 rounded-2xl p-8 shadow-xl border border-zinc-800 text-center">
         <h1 class="text-2xl font-bold mb-2">Panel Admin</h1>
@@ -49,8 +48,8 @@
           </KeepAlive>
         </Transition>
       </div>
-    </div>
-  </ClientOnly>
+    </ClientOnly>
+  </div>
 </template>
 
 <script setup lang="ts">
