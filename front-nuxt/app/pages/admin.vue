@@ -89,7 +89,7 @@ async function verificarPin() {
   if (!entered) return
 
   try {
-    // Verificar PIN en el servidor — seguro, no expone el PIN al cliente
+    // 1. Intentar verificación en el servidor (para SSR/desarrollo)
     const res = await $fetch<{ ok: boolean }>('/api-auth/admin-auth', {
       method: 'POST',
       body: { pin: entered },
@@ -99,12 +99,23 @@ async function verificarPin() {
       autenticado.value = true
       pinError.value = false
       sessionStorage.setItem('admin_pin', entered)
-    } else {
-      pinError.value = true
-      pinIngresado.value = ''
-      sessionStorage.removeItem('admin_pin')
+      return
     }
-  } catch {
+  } catch (err) {
+    // Si falla (por ejemplo, en un despliegue estático de Netlify donde Nitro no tiene endpoints de servidor)
+    console.warn('[Admin] Falló la verificación en servidor, probando fallback local:', err)
+  }
+
+  // 2. Fallback de cliente (para despliegues estáticos SSG en Netlify)
+  const config = useRuntimeConfig()
+  const appConfig = useAppConfig()
+  const clientPin = String(config.public?.adminPin || appConfig?.adminPin || '').trim()
+
+  if (clientPin && entered === clientPin) {
+    autenticado.value = true
+    pinError.value = false
+    sessionStorage.setItem('admin_pin', entered)
+  } else {
     pinError.value = true
     pinIngresado.value = ''
     sessionStorage.removeItem('admin_pin')
