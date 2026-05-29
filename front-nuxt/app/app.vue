@@ -1,14 +1,21 @@
 <template>
   <main id="app-container">
+    <!-- Navbar global persistente en todas las páginas -->
+    <AppNavbar />
+
     <NuxtPage :keepalive="{ include: ['tienda'] }" />
 
-    <!-- Carrito: solo cuando no estamos en Home ni en páginas que no corresponde -->
     <ClientOnly>
+      <!-- Carrito: solo cuando no estamos en Home ni en páginas que no corresponde -->
       <template v-if="showCart">
         <CartDrawer :is-open="cartOpen" @close="cartOpen = false" />
         <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
       </template>
 
+      <!-- Botón flotante de WhatsApp — siempre visible -->
+      <WhatsAppFab v-if="!cartOpen" />
+
+      <!-- Botón Scroll Top -->
       <button
         v-if="showScrollTop && !cartOpen"
         @click="scrollToTop"
@@ -22,6 +29,9 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
+const { initLang } = useLanguage()
 const route = useRoute()
 
 const cartOpen = ref(false)
@@ -43,6 +53,9 @@ function handleScroll() {
   }
 }
 
-onMounted(() => window.addEventListener('scroll', handleScroll, { passive: true }))
+onMounted(() => {
+  initLang()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>

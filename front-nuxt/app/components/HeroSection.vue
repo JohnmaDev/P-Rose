@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden bg-barber-black py-20 lg:py-0">
+  <section class="relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden bg-barber-black pt-32 pb-20 lg:pt-24 lg:pb-0">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <picture>
@@ -22,12 +22,12 @@
       <!-- Massive Typography Left Column -->
       <div class="w-full lg:w-3/5 text-center lg:text-left z-20 mt-12 lg:mt-0 flex flex-col items-center lg:items-start">
         <h1 class="text-[3rem] leading-tight sm:text-[4.5rem] lg:text-[120px] xl:text-[145px] font-black lg:leading-tight tracking-tighter italic uppercase animate-fade-in-up opacity-0 text-shadow-premium">
-          <span class="text-neon-green block drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">TU ESTILO.</span>
-          <span class="text-white block">TU BARBERO.</span>
-          <span class="text-white block">MEDELLÍN.</span>
+          <span class="text-neon-green block drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">{{ t('hero.line1') }}</span>
+          <span class="text-white block">{{ t('hero.line2') }}</span>
+          <span class="text-white block">{{ t('hero.line3') }}</span>
         </h1>
         <p class="text-lg sm:text-2xl lg:text-3xl text-gray-300 mt-8 mb-10 font-bold max-w-2xl mx-auto lg:mx-0 animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
-          <span class="text-white">PersonalBarber</span> — Donde la excelencia es el estándar. Reserva tu cita y <span class="text-neon-green">refleja tu mejor versión</span>.
+          <span class="text-white">PersonalBarber</span> — {{ t('hero.subtitle') }} <span class="text-neon-green">{{ t('hero.subtitleHighlight') }}</span>.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
@@ -35,13 +35,13 @@
             @click="$emit('reserve')"
             class="px-10 py-5 bg-neon-green hover:bg-neon-green-dark text-black text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 shadow-[0_0_30px_rgba(57,255,20,0.3)] hover:shadow-[0_0_60px_rgba(46,255,46,0.8)] hover:-translate-y-1 hover:scale-105 uppercase flex items-center justify-center gap-3"
           >
-            RESERVAR AHORA <fa-icon :icon="['fas', 'calendar-check']" />
+            {{ t('hero.cta1') }} <fa-icon :icon="['fas', 'calendar-check']" />
           </button>
           <button
             @click="scrollToProducts"
             class="px-10 py-5 bg-transparent border-4 border-white/20 hover:border-white text-white text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] uppercase flex items-center justify-center gap-3"
           >
-            LA TIENDA <fa-icon :icon="['fas', 'shopping-bag']" />
+            {{ t('hero.cta2') }} <fa-icon :icon="['fas', 'shopping-bag']" />
           </button>
         </div>
       </div>
@@ -86,6 +86,10 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
+
 const socials = [
   { name: 'WhatsApp', icon: ['fab', 'whatsapp'], link: 'https://api.whatsapp.com/send?phone=573045840264' },
   { name: 'TikTok', icon: ['fab', 'tiktok'], link: 'https://www.tiktok.com/@pipehpbarber' },
