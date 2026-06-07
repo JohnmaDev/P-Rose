@@ -11,6 +11,7 @@
           <img
             src="/PersonalBarber.svg"
             alt="PersonalBarber"
+            fetchpriority="high"
             class="h-9 w-9 transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(57,255,20,0.6)]"
           />
         </NuxtLink>
