@@ -1,9 +1,9 @@
 <template>
   <main id="app-container">
-    <!-- Navbar global persistente en todas las páginas -->
-    <AppNavbar />
+    <!-- Navbar global persistente en todas las páginas, excepto checkout y admin -->
+    <AppNavbar v-if="showNavbar" />
 
-    <NuxtPage :keepalive="{ include: ['tienda'] }" />
+    <NuxtPage />
 
     <ClientOnly>
       <!-- Carrito: solo cuando no estamos en Home ni en páginas que no corresponde -->
@@ -19,7 +19,7 @@
       <button
         v-if="showScrollTop && !cartOpen"
         @click="scrollToTop"
-        aria-label="Volver arriba"
+        :aria-label="t('common.scrollTop')"
         class="fixed bottom-10 sm:bottom-6 right-6 z-50 bg-neon-green text-black px-4 py-2 rounded-full shadow-[0_0_15px_rgba(57,255,20,0.4)] hover:bg-neon-green-dark transition-all duration-300 focus:outline-none hover:scale-110"
       >
         ↑ Top
@@ -31,15 +31,20 @@
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
 
-const { initLang } = useLanguage()
+const { initLang, t } = useLanguage()
 const route = useRoute()
 
 const cartOpen = ref(false)
 const showScrollTop = ref(false)
 
-// Mostrar carrito solo en páginas que lo necesitan
+// Mostrar navbar global excepto en checkout y admin
+const showNavbar = computed(() =>
+  route.name !== 'checkout' && route.name !== 'admin'
+)
+
+// Mostrar carrito solo en páginas que lo necesitan (no en Home, admin ni checkout)
 const showCart = computed(() =>
-  route.name !== 'index' && route.name !== 'admin'
+  route.name !== 'index' && route.name !== 'admin' && route.name !== 'checkout'
 )
 
 function scrollToTop() {

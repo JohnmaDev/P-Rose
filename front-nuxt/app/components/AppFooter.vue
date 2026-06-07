@@ -27,7 +27,7 @@
       </address>
 
       <!-- Redes sociales del barbero -->
-      <nav class="flex items-center justify-center gap-4 mb-4" aria-label="Redes sociales PersonalBarber">
+      <nav class="flex items-center justify-center gap-4 mb-4" :aria-label="t('footer.socialLabel')">
         <a
           href="https://www.instagram.com/pipehp_/"
           target="_blank"
@@ -72,13 +72,15 @@
           JohnmaDev
         </a>
         <span class="hidden sm:inline opacity-30">·</span>
-        <span class="opacity-50">All rights reserved.</span>
+        <span class="opacity-50">{{ t('footer.rights') }}</span>
       </p>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+const { t } = useLanguage()
 // Componente footer con logo, datos de contacto, redes sociales y créditos del desarrollador
 // NAP (Name + Address + Phone) incluido para SEO local de Google
 </script>

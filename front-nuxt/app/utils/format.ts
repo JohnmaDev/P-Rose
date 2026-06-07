@@ -39,7 +39,8 @@ export function generateProductSlug(id: number | string, name: string): string {
 /**
  * Extrae el ID numérico de un slug "id-nombre-producto"
  */
-export function getIdFromSlug(slug: string): number {
+export function getIdFromSlug(slug?: string): number {
+  if (!slug) return 0
   const parts = slug.split('-')
   return parseInt(parts[0], 10) || 0
 }

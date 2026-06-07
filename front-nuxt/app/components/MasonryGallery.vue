@@ -3,10 +3,10 @@
   <section id="cortes" class="mt-24 w-full scroll-mt-24">
     <div class="text-center mb-16 px-4">
       <h2 class="text-[3.5rem] leading-tight sm:text-[5rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
-        NUESTROS <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">CORTES</span>
+        {{ t('cortes.title1') }} <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">{{ t('cortes.title2') }}</span>
       </h2>
       <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide">
-        El trabajo habla por sí solo
+        {{ t('cortes.subtitle') }}
       </p>
       <div class="flex justify-center gap-2 opacity-80 mt-6 mb-8">
         <span v-for="i in 3" :key="i" class="w-3 h-3 bg-neon-green rounded-full shadow-[0_0_10px_rgba(57,255,20,0.5)]"></span>
@@ -44,12 +44,16 @@
     <!-- Empty State -->
     <div v-else class="text-center py-20 bg-zinc-900/30 rounded-3xl border border-dashed border-white/10">
       <fa-icon :icon="['fas', 'camera-retro']" class="text-3xl text-zinc-700 mb-4" />
-      <p class="text-zinc-500 font-bold italic">Próximamente más trabajos...</p>
+      <p class="text-zinc-500 font-bold italic">{{ t('cortes.empty') }}</p>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
+
 interface Cut {
   id: string | number
   image: string

@@ -1,9 +1,18 @@
-// constants/servicios.ts — Servicios de la barbería (idéntico al original)
-export const servicios = [
+// constants/servicios.ts — Servicios de la barbería con soporte i18n
+// Los campos label/desc usan claves de traducción que se resuelven en el componente
+
+export interface ServicioRaw {
+  value: string
+  labelKey: string
+  descKey: string
+  icon: string
+}
+
+export const serviciosRaw: ServicioRaw[] = [
   {
     value: 'Corte Sencillo',
-    label: 'Corte Sencillo',
-    desc: 'Corte profesional con cualquier estilo del menú.',
+    labelKey: 'services.corteSencillo',
+    descKey: 'services.corteSencilloDesc',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-scissors">
       <circle cx="18" cy="46" r="6" stroke="currentColor" stroke-width="2.5"/>
       <circle cx="18" cy="18" r="6" stroke="currentColor" stroke-width="2.5"/>
@@ -14,8 +23,8 @@ export const servicios = [
   },
   {
     value: 'Corte + Barba',
-    label: 'Corte + Barba',
-    desc: 'Corte completo con recorte y diseño de barba.',
+    labelKey: 'services.corteBarba',
+    descKey: 'services.corteBarbaDesc',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-cut-beard">
       <path d="M16 60 V52 C16 45 22 40 28 40 H36 C42 40 48 45 48 52 V60" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       <path d="M24 40 L24 60M40 40 L40 60" stroke="currentColor" stroke-width="2"/>
@@ -31,8 +40,8 @@ export const servicios = [
   },
   {
     value: 'Solo Barba',
-    label: 'Solo Barba',
-    desc: 'Recorte, forma y estilo de barba profesional.',
+    labelKey: 'services.soloBarba',
+    descKey: 'services.soloBarbaDesc',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-beard">
       <path d="M14 26 C20 26 24 20 32 20 C40 20 44 26 50 26 C46 30 40 32 32 30 C24 32 18 30 14 26Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M16 28 C14 36 16 44 24 50 C28 53 32 54 32 54 C32 54 36 53 40 50 C48 44 50 36 48 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -41,8 +50,8 @@ export const servicios = [
   },
   {
     value: 'Depilación Nariz',
-    label: 'Depilación Nariz',
-    desc: 'Eliminación rápida y precisa de vellos nasales.',
+    labelKey: 'services.depNariz',
+    descKey: 'services.depNarizDesc',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-nose">
       <path d="M32 14 C32 26 24 34 24 42 C24 48 28 50 32 50 C36 50 40 48 40 42 C40 34 32 26 32 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M22 42 C18 42 16 46 18 48 C20 50 24 50 26 46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -53,8 +62,8 @@ export const servicios = [
   },
   {
     value: 'Depilación Oídos',
-    label: 'Depilación Oídos',
-    desc: 'Tratamiento de vello en oídos limpio y sin dolor.',
+    labelKey: 'services.depOidos',
+    descKey: 'services.depOidosDesc',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-ear">
       <path d="M24 18 C18 22 16 30 18 38 C20 44 26 50 30 50 C28 46 28 42 32 40 C36 38 40 34 40 28 C40 20 34 14 28 14 C22 14 18 18 18 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M28 26 C28 26 32 28 32 32 C32 36 28 38 28 42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>

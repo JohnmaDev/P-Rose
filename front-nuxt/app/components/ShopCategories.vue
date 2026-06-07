@@ -15,17 +15,14 @@
     </Transition>
     <div class="text-center mb-16 px-4">
       <h2 class="text-[3.5rem] leading-tight sm:text-[6rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
-        NUESTRA <span class="block sm:inline transition-colors duration-500" :class="{
+        {{ t('tienda.nuestra') }} <span class="block sm:inline transition-colors duration-500" :class="{
           'text-neon-green drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]': activeDepartment === 'men',
           'text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]': activeDepartment === 'merch',
           'text-pink-500 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]': activeDepartment === 'women'
-        }">{{ activeDepartment === 'men' ? 'TIENDA' : (activeDepartment === 'merch' ? 'BOUTIQUE' : 'BEAUTY') }}</span>
+        }">{{ t(`tienda.depts.${activeDepartment}`) }}</span>
       </h2>
       <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide transition-colors duration-500">
-        {{
-          activeDepartment === 'men' ? 'Productos de calidad profesional, directo a tus manos' :
-          (activeDepartment === 'merch' ? 'Prendas exclusivas y accesorios con el sello de la casa' : 'Belleza, maquillaje y cuidado integral para ti')
-        }}
+        {{ t(`tienda.subtitles.${activeDepartment}`) }}
       </p>
       <div class="flex justify-center mt-8 mb-16 fade-in">
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
@@ -34,21 +31,21 @@
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
-            <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">Para Él</span><span class="xs:hidden">Él</span>
+            <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
           <button
             @click="activeDepartment = 'merch'"
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
-            <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">Merch</span><span class="xs:hidden">Ropa</span>
+            <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
           </button>
           <button
             @click="activeDepartment = 'women'"
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
-            <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">Para Ella</span><span class="xs:hidden">Ella</span>
+            <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
           </button>
         </div>
       </div>
@@ -56,66 +53,100 @@
 
     <!-- Tarjetas de Categorías -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
-      <component
-        :is="cat.comingSoon ? 'div' : NuxtLinkResolved"
-        v-for="cat in [...activeCategories, ...otherComingSoonCategories]"
-        :key="cat.id"
-        :to="cat.comingSoon ? undefined : { path: '/tienda', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
-        class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border transition-premium flex flex-col items-center justify-center p-6 text-center"
-        :class="[cat.comingSoon ? 'cursor-default bg-white/3' : 'cursor-pointer hover:scale-[1.02] bg-zinc-900']"
-        :style="{ borderColor: `${cat.accent}${cat.comingSoon ? '15' : '30'}` }"
-
-      >
-        <!-- Fondo -->
-        <div v-if="!cat.comingSoon && cat.cover" class="absolute inset-0 z-0">
-          <img
-            :src="optimizeImage(cat.cover, 600)"
-            :alt="cat.label"
-            class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-premium"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
-        </div>
-        <div v-else class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500 z-0"
-          :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }">
-        </div>
-        <div class="absolute -inset-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0"
-          :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent}20 0%, transparent 60%)` }">
-        </div>
-
-        <!-- Contenido Central -->
-        <div class="relative z-10 flex flex-col items-center gap-4">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-premium group-hover:scale-110 shadow-lg"
-            :style="{ borderColor: `${cat.accent}60`, background: `${cat.accent}15`, boxShadow: `0 0 20px ${cat.accent}20` }">
-            <div v-if="isImageUrl(cat.icon)"
-              class="w-10 h-10 sm:w-12 sm:h-12 transition-premium-fast"
-              :style="{ 
-                backgroundColor: cat.accent, 
-                mask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`, 
-                WebkitMask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain` 
-              }">
-            </div>
-            <fa-icon v-else :icon="['fas', (cat.icon || 'tag').replace('fas fa-', '')]" class="text-2xl sm:text-3xl transition-premium-fast" :style="{ color: cat.accent }" />
+      <template v-for="cat in [...activeCategories, ...otherComingSoonCategories]" :key="cat.id">
+        <!-- Tarjeta de Categoría Disponible -->
+        <NuxtLink
+          v-if="!cat.comingSoon"
+          :to="{ path: '/tienda', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
+          class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border border-white/10 transition-premium flex flex-col items-center justify-center p-6 text-center bg-zinc-900 hover:scale-[1.02]"
+          :style="{ borderColor: `${cat.accent}30` }"
+        >
+          <!-- Fondo -->
+          <div v-if="cat.cover" class="absolute inset-0 z-0">
+            <img
+              :src="optimizeImage(cat.cover, 600)"
+              :alt="getCategoryLabel(cat)"
+              class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-premium"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+          </div>
+          <div v-else class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500 z-0"
+            :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }">
+          </div>
+          <div class="absolute -inset-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0"
+            :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent}20 0%, transparent 60%)` }">
           </div>
 
-          <div class="flex flex-col items-center">
-            <span v-if="!cat.comingSoon" class="text-[10px] font-black tracking-[0.2em] uppercase mb-1 opacity-60 group-hover:opacity-100 transition-opacity" :style="{ color: cat.accent }">
-              {{ getCategoryCount(cat.id) }} PRODUCTOS
-            </span>
-            <h3 class="text-lg sm:text-xl font-black text-white tracking-tighter uppercase italic italic-heavy drop-shadow-md">
-              {{ cat.label }}
-            </h3>
-            <div class="mt-2">
-              <span v-if="cat.comingSoon" class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border border-white/10 bg-white/5 text-white/40">
-                Próximamente
+          <!-- Contenido Central -->
+          <div class="relative z-10 flex flex-col items-center gap-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-premium group-hover:scale-110 shadow-lg"
+              :style="{ borderColor: `${cat.accent}60`, background: `${cat.accent}15`, boxShadow: `0 0 20px ${cat.accent}20`, color: cat.accent }">
+              <div v-if="isImageUrl(cat.icon)"
+                class="w-10 h-10 sm:w-12 sm:h-12 transition-premium-fast"
+                :style="{ 
+                  backgroundColor: cat.accent, 
+                  mask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`, 
+                  WebkitMask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain` 
+                }">
+              </div>
+              <fa-icon v-else :icon="['fas', (cat.icon || 'tag').replace('fas fa-', '')]" class="text-2xl sm:text-3xl transition-premium-fast" />
+            </div>
+
+            <div class="flex flex-col items-center">
+              <span class="text-[10px] font-black tracking-[0.2em] uppercase mb-1 opacity-60 group-hover:opacity-100 transition-opacity" :style="{ color: cat.accent }">
+                {{ getCategoryCount(cat.id) }} {{ t('tienda.products').toUpperCase() }}
               </span>
-              <span v-else class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border transition-all duration-300"
-                :style="{ color: cat.accent, borderColor: `${cat.accent}40`, background: `${cat.accent}10` }">
-                Disponible
-              </span>
+              <h3 class="text-lg sm:text-xl font-black text-white tracking-tighter uppercase italic italic-heavy drop-shadow-md">
+                {{ getCategoryLabel(cat) }}
+              </h3>
+              <div class="mt-2">
+                <span class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border transition-all duration-300"
+                  :style="{ color: cat.accent, borderColor: `${cat.accent}40`, background: `${cat.accent}10` }">
+                  {{ t('tienda.available') }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </NuxtLink>
+
+        <!-- Tarjeta de Categoría Próximamente -->
+        <div
+          v-else
+          class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border border-white/10 transition-premium flex flex-col items-center justify-center p-6 text-center cursor-default bg-white/3"
+          :style="{ borderColor: `${cat.accent}15` }"
+        >
+          <div class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500 z-0"
+            :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }">
+          </div>
+
+          <!-- Contenido Central -->
+          <div class="relative z-10 flex flex-col items-center gap-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-premium group-hover:scale-110 shadow-lg"
+              :style="{ borderColor: `${cat.accent}60`, background: `${cat.accent}15`, boxShadow: `0 0 20px ${cat.accent}20`, color: cat.accent }">
+              <div v-if="isImageUrl(cat.icon)"
+                class="w-10 h-10 sm:w-12 sm:h-12 transition-premium-fast"
+                :style="{ 
+                  backgroundColor: cat.accent, 
+                  mask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`, 
+                  WebkitMask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain` 
+                }">
+              </div>
+              <fa-icon v-else :icon="['fas', (cat.icon || 'tag').replace('fas fa-', '')]" class="text-2xl sm:text-3xl transition-premium-fast" />
+            </div>
+
+            <div class="flex flex-col items-center">
+              <h3 class="text-lg sm:text-xl font-black text-white tracking-tighter uppercase italic italic-heavy drop-shadow-md">
+                {{ getCategoryLabel(cat) }}
+              </h3>
+              <div class="mt-2">
+                <span class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border border-white/10 bg-white/5 text-white/40">
+                  {{ t('tienda.comingSoon') }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </component>
+      </template>
     </div>
 
     <!-- SECCIÓN BOUTIQUE DESTACADO -->
@@ -130,13 +161,15 @@
               <fa-icon :icon="['fas', 'tshirt']" class="text-3xl sm:text-4xl text-pink-500" />
             </div>
             <div class="flex flex-col items-center sm:items-start text-center sm:text-left">
-              <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase italic italic-heavy">{{ cat.label }}</h3>
-              <p class="text-zinc-400 text-sm sm:text-base font-medium mt-1 max-w-sm">Diseños exclusivos, gorras y prendas con el sello PersonalBarber.</p>
+              <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase italic italic-heavy">{{ getCategoryLabel(cat) }}</h3>
+              <p class="text-zinc-400 text-sm sm:text-base font-medium mt-1 max-w-sm">
+                {{ t('tienda.boutiqueDesc') }}
+              </p>
             </div>
           </div>
           <div class="mt-6 flex items-center gap-4">
             <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-pink-500"></span>
-            <span class="text-xs font-bold tracking-widest text-pink-500 uppercase whitespace-nowrap">Muy Pronto</span>
+            <span class="text-xs font-bold tracking-widest text-pink-500 uppercase whitespace-nowrap">{{ t('tienda.verySoon') }}</span>
             <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-pink-500"></span>
           </div>
         </div>
@@ -156,7 +189,7 @@
         <div class="relative flex items-center gap-3">
           <fa-icon :icon="['fas', 'store']" class="transition-transform duration-300 group-hover:scale-125" :class="activeDepartment === 'men' ? 'text-neon-green' : (activeDepartment === 'merch' ? 'text-cyan-400' : 'text-pink-500')" />
           <span class="text-xl sm:text-2xl transition-colors duration-300" :class="activeDepartment === 'men' ? 'group-hover:text-neon-green' : (activeDepartment === 'merch' ? 'group-hover:text-cyan-400' : 'group-hover:text-pink-500')">
-            {{ activeDepartment === 'men' ? 'Explorar Tienda' : (activeDepartment === 'merch' ? 'Ver Colección' : 'Explorar Beauty Hub') }}
+            {{ t(`tienda.exploreBtn.${activeDepartment}`) }}
           </span>
         </div>
       </NuxtLink>
@@ -165,8 +198,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
 const NuxtLinkResolved = resolveComponent('NuxtLink')
 
+const { t, lang } = useLanguage()
 const { products, categories, isLoading } = useCatalog()
 const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
 
@@ -188,6 +224,12 @@ const otherComingSoonCategories = computed(() => {
   }
   return categories.value.filter(c => c.comingSoon && c.style !== 'premium' && c.department === activeDepartment.value)
 })
+
+function getCategoryLabel(cat: { id: string; label: string }) {
+  const key = `tienda.categorias.${cat.id}`
+  const translated = t(key)
+  return translated === key ? cat.label : translated
+}
 
 function getCategoryCount(catId: string) {
   return products.value.filter(p => p.category === catId).length

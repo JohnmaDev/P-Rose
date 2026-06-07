@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white relative">
+  <div class="bg-barber-black min-h-screen text-white relative pt-16">
     <!-- Barra de carga -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
@@ -14,18 +14,18 @@
     </Transition>
 
     <!-- Header fijo -->
-    <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
+    <div class="sticky top-16 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
         <NuxtLink to="/" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors duration-300">
           <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
-          <span class="text-xs font-semibold">Inicio</span>
+          <span class="text-xs font-semibold">{{ t('nav.home') }}</span>
         </NuxtLink>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1 transition-colors duration-500">
           <span :class="{
             'text-neon-green': activeDepartment === 'men',
             'text-cyan-400': activeDepartment === 'merch',
             'text-pink-500': activeDepartment === 'women'
-          }">Personal</span>Barber · Tienda
+          }">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -39,17 +39,17 @@
           <button @click="activeDepartment = 'men'; activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']">
-            <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">Para Él</span><span class="xs:hidden">Él</span>
+            <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
           <button @click="activeDepartment = 'merch'; activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']">
-            <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">Merch</span><span class="xs:hidden">Ropa</span>
+            <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
           </button>
           <button @click="activeDepartment = 'women'; activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']">
-            <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">Para Ella</span><span class="xs:hidden">Ella</span>
+            <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
           </button>
         </div>
       </div>
@@ -68,15 +68,15 @@
       <!-- Contador -->
       <div class="mb-6 text-center">
         <p class="text-gray-500 text-sm">
-          Mostrando <span class="font-bold transition-colors duration-300" :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">{{ filteredProducts.length }}</span> productos
-          <span v-if="activeFilter !== 'all'"> en <span class="text-white">{{ activeFilterLabel }}</span></span>
+          {{ t('tienda.showing') }} <span class="font-bold transition-colors duration-300" :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
+          <span v-if="activeFilter !== 'all'"> {{ t('tienda.in') }} <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="{'border-neon-green': activeDepartment === 'men','border-cyan-400': activeDepartment === 'merch','border-pink-500': activeDepartment === 'women'}"></div>
-        <p class="text-gray-400 font-medium">Cargando productos...</p>
+        <p class="text-gray-400 font-medium">{{ t('tienda.loading') }}</p>
       </div>
 
       <!-- Grid de productos -->
@@ -98,10 +98,10 @@
               loading="lazy"
             />
             <div v-if="product.stock <= 0" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-              <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Agotado</span>
+              <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">{{ t('tienda.soldOut') }}</span>
             </div>
             <div v-else-if="product.stock <= 3" class="absolute top-2 right-2">
-              <span class="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-lg animate-pulse">¡Últimas {{ product.stock }}!</span>
+              <span class="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-lg animate-pulse">{{ t('tienda.lastItems').replace('{n}', String(product.stock)) }}</span>
             </div>
           </div>
 
@@ -127,7 +127,7 @@
                     : (justAdded === product.id
                       ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white'))
                       : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500')))]"
-                :aria-label="isStockFull(product) ? 'Stock máximo alcanzado' : 'Agregar al carrito'">
+                :aria-label="isStockFull(product) ? t('tienda.maxStock') : t('tienda.addToCart')">
                 <fa-icon :icon="['fas', isStockFull(product) ? 'lock' : (justAdded === product.id ? 'check' : 'plus')]" class="text-[10px]" />
               </button>
               <button v-else disabled class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-700 cursor-not-allowed">
@@ -142,32 +142,35 @@
       <div v-if="errorMessage && !isLoading" class="flex flex-col items-center justify-center py-20 text-center px-4">
         <div class="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl max-w-md">
           <fa-icon :icon="['fas', 'exclamation-triangle']" class="text-red-500 text-3xl mb-4" />
-          <h3 class="text-white font-bold mb-2">Error de Conexión</h3>
+          <h3 class="text-white font-bold mb-2">{{ t('tienda.connError') }}</h3>
           <p class="text-zinc-400 text-sm mb-6">{{ errorMessage }}</p>
-          <button @click="fetchData" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-bold uppercase transition-all">Reintentar</button>
+          <button @click="fetchData" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-bold uppercase transition-all">{{ t('tienda.retry') }}</button>
         </div>
       </div>
 
       <!-- Empty State -->
       <div v-if="!isLoading && filteredProducts.length === 0 && !errorMessage" class="text-center py-24">
         <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600 mb-4" />
-        <p class="text-gray-500">No hay productos en esta categoría aún.</p>
+        <p class="text-gray-500">{{ t('tienda.emptySub') }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
 const route = useRoute()
 const router = useRouter()
 const { addToCart, isStockFull } = useCart()
 const { products, categories, isLoading, error: errorMessage, fetchCatalog } = useCatalog()
+const { t, lang } = useLanguage()
 
 useSeoMeta({
-  title: 'Tienda Online | PersonalBarber Medellín',
-  ogTitle: 'Tienda Online | PersonalBarber',
-  description: 'Descubre nuestros productos especializados para el cuidado de la barba y el cabello. Compra online en PersonalBarber.',
-  ogDescription: 'Productos premium de barbería en Medellín. Compra online.',
+  title: t('tienda.seoTitle'),
+  ogTitle: t('tienda.seoTitle'),
+  description: t('tienda.seoDesc'),
+  ogDescription: t('tienda.seoDesc'),
 })
 
 const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
@@ -175,18 +178,24 @@ const activeFilter = ref('all')
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
 
-// Cargar catálogo con SSR
-await fetchCatalog()
+
+function getCategoryLabel(catId: string) {
+  const cat = categories.value.find(c => c.id === catId)
+  const label = cat ? cat.label : catId
+  const key = `tienda.categorias.${catId}`
+  const translated = t(key)
+  return translated === key ? label : translated
+}
 
 const filters = computed(() => [
-  { id: 'all', label: 'Todos' },
+  { id: 'all', label: t('tienda.all') },
   ...categories.value
     .filter(c => {
       if (c.comingSoon) return false
       if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
       return c.department === activeDepartment.value
     })
-    .map(c => ({ id: c.id, label: c.label }))
+    .map(c => ({ id: c.id, label: getCategoryLabel(c.id) }))
 ])
 // Flag para evitar reseteo de filtro cuando syncFilter cambia activeDepartment desde URL
 let syncingFromRoute = false
@@ -288,6 +297,12 @@ function quickAddToCart(product: Parameters<typeof addToCart>[0]) {
     justAdded.value = product.id
     setTimeout(() => { justAdded.value = null }, 2000)
   }
+}
+// Cargar catálogo con SSR al final para no romper contexto
+if (import.meta.server) {
+  await fetchCatalog()
+} else {
+  fetchCatalog()
 }
 </script>
 

@@ -5,7 +5,7 @@
       <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
         <NuxtLink to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
           <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
-          <span class="text-xs font-semibold">Tienda</span>
+          <span class="text-xs font-semibold">{{ t('checkout.backStore') }}</span>
         </NuxtLink>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
           <span class="text-neon-green">Personal</span>Barber · Checkout
@@ -18,8 +18,8 @@
     <ClientOnly>
       <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
-        <p class="text-gray-500">Tu carrito está vacío</p>
-        <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← Explorar productos</NuxtLink>
+        <p class="text-gray-500">{{ t('checkout.emptyCart') }}</p>
+        <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">{{ t('checkout.exploreProducts') }}</NuxtLink>
       </div>
 
       <div v-else class="max-w-4xl mx-auto px-4 py-10 pb-40">
@@ -30,40 +30,40 @@
             <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
               <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
                 <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
-                Tus datos
+                {{ t('checkout.yourDetails') }}
               </h2>
               <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold block mb-1">Nombre</label>
+                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.firstName') }}</label>
                     <input v-model="form.firstName" @blur="touched.firstName = true" type="text" placeholder="Juan" class="input-field"
                       :class="{ 'border-red-500/50': touched.firstName && !form.firstName.trim() }" />
-                    <p v-if="touched.firstName && !form.firstName.trim()" class="text-[10px] text-red-400">El nombre es obligatorio</p>
+                    <p v-if="touched.firstName && !form.firstName.trim()" class="text-[10px] text-red-400">{{ t('checkout.firstNameRequired') }}</p>
                   </div>
                   <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold block mb-1">Apellido</label>
+                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.lastName') }}</label>
                     <input v-model="form.lastName" @blur="touched.lastName = true" type="text" placeholder="García" class="input-field"
                       :class="{ 'border-red-500/50': touched.lastName && !form.lastName.trim() }" />
-                    <p v-if="touched.lastName && !form.lastName.trim()" class="text-[10px] text-red-400">El apellido es obligatorio</p>
+                    <p v-if="touched.lastName && !form.lastName.trim()" class="text-[10px] text-red-400">{{ t('checkout.lastNameRequired') }}</p>
                   </div>
                 </div>
                 <div class="space-y-1">
-                  <label class="text-xs text-gray-400 font-semibold block mb-1">Email <span class="text-neon-green ml-1">*</span></label>
+                  <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.emailLabel') }} <span class="text-neon-green ml-1">*</span></label>
                   <input v-model="form.email" @blur="touched.email = true" type="email" placeholder="juan@email.com" class="input-field"
                     :class="{ 'border-red-500/50': touched.email && !isEmailValid }" />
-                  <p v-if="touched.email && !isEmailValid" class="text-[10px] text-red-400">Ingresa un correo válido</p>
+                  <p v-if="touched.email && !isEmailValid" class="text-[10px] text-red-400">{{ t('checkout.emailInvalid') }}</p>
                 </div>
                 <div class="space-y-1">
-                  <label class="text-xs text-gray-400 font-semibold block mb-1">Teléfono / WhatsApp</label>
+                  <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.phoneLabel') }}</label>
                   <input v-model="form.phone" @input="form.phone = form.phone.replace(/[^0-9+]/g, '')" @blur="touched.phone = true"
                     type="tel" inputmode="numeric" placeholder="+57 300 123 4567" class="input-field"
                     :class="{ 'border-red-500/50': touched.phone && !isPhoneValid }" />
-                  <p v-if="touched.phone && !isPhoneValid" class="text-[10px] text-red-400 mt-1">Ingresa un número colombiano válido</p>
+                  <p v-if="touched.phone && !isPhoneValid" class="text-[10px] text-red-400 mt-1">{{ t('checkout.phoneInvalid') }}</p>
                 </div>
-                <div><label class="text-xs text-gray-400 font-semibold block mb-1">Ciudad</label>
-                  <input v-model="form.city" type="text" placeholder="Medellín, Bogotá..." class="input-field" /></div>
-                <div><label class="text-xs text-gray-400 font-semibold block mb-1">Dirección (para envío)</label>
-                  <input v-model="form.address" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" /></div>
+                <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.cityLabel') }}</label>
+                  <input v-model="form.city" type="text" :placeholder="t('checkout.cityPlaceholder')" class="input-field" /></div>
+                <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.addressLabel') }}</label>
+                  <input v-model="form.address" type="text" :placeholder="t('checkout.addressPlaceholder')" class="input-field" /></div>
               </div>
             </div>
 
@@ -71,7 +71,7 @@
             <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
               <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
                 <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                Método de pago
+                {{ t('checkout.paymentMethod') }}
               </h2>
               <div class="space-y-3">
                 <label v-for="method in paymentMethods" :key="method.id"
@@ -95,7 +95,7 @@
               <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                 <p class="text-blue-300 text-xs leading-relaxed">
                   <fa-icon :icon="['fas', 'info-circle']" class="mr-1" />
-                  <strong>Modo Demo:</strong> Para activar cobros reales, conecta tu cuenta <strong>Wompi</strong> y agrega tu llave pública.
+                  <strong>{{ t('checkout.demoMode') }}</strong> {{ t('checkout.demoDesc') }} <strong>Wompi</strong> {{ t('checkout.demoSuffix') }}
                 </p>
               </div>
             </div>
@@ -104,7 +104,7 @@
           <!-- Resumen del pedido -->
           <div class="lg:col-span-2 sticky top-24">
             <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
-              <h2 class="text-sm font-bold text-white mb-4 tracking-wide uppercase">Resumen del pedido</h2>
+              <h2 class="text-sm font-bold text-white mb-4 tracking-wide uppercase">{{ t('checkout.orderSummary') }}</h2>
               <div class="space-y-3 mb-5">
                 <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
@@ -118,24 +118,24 @@
                 </div>
               </div>
               <div class="border-t border-white/10 pt-4 space-y-2">
-                <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-400">Envío</span><span class="text-gray-400">A coordinar</span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('cart.subtotal') }}</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('checkout.shipping') }}</span><span class="text-gray-400">{{ t('checkout.shippingValue') }}</span></div>
                 <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
-                  <span class="text-white">TOTAL</span><span class="text-neon-green">{{ cartTotalFormatted }}</span>
+                  <span class="text-white">{{ t('checkout.total') }}</span><span class="text-neon-green">{{ cartTotalFormatted }}</span>
                 </div>
               </div>
               <button @click="handleCheckout" :disabled="!formValid || isProcessing"
                 class="mt-5 w-full py-4 font-black text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                 :class="formValid && !isProcessing ? 'bg-neon-green hover:bg-neon-green-dark text-black' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                 <template v-if="isProcessing">
-                  <fa-icon :icon="['fas', 'spinner']" class="fa-spin" /> CREANDO ORDEN...
+                  <fa-icon :icon="['fas', 'spinner']" class="fa-spin" /> {{ t('checkout.processing') }}
                 </template>
                 <template v-else>
-                  <fa-icon :icon="['fas', 'lock']" class="text-xs" /> PAGAR {{ cartTotalFormatted }}
+                  <fa-icon :icon="['fas', 'lock']" class="text-xs" /> {{ t('checkout.payBtn') }} {{ cartTotalFormatted }}
                 </template>
               </button>
               <p class="text-center text-gray-600 text-[10px] mt-3">
-                <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />Pago seguro procesado por Wompi
+                <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />{{ t('checkout.securePayment') }}
               </p>
               <div class="flex items-center justify-center gap-3 mt-4 flex-wrap">
                 <span v-for="logo in paymentLogos" :key="logo" class="text-[10px] bg-white/5 border border-white/10 px-2 py-1 rounded-md text-gray-500 font-bold">{{ logo }}</span>
@@ -153,12 +153,12 @@
           <div class="w-20 h-20 bg-neon-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-neon-green">
             <fa-icon :icon="['fas', 'tools']" class="text-3xl" />
           </div>
-          <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tight">¡Próximamente disponible!</h3>
+          <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tight">{{ t('checkout.soonTitle') }}</h3>
           <p class="text-gray-400 text-sm leading-relaxed mb-8">
-            Estamos integrando los pagos automáticos. Por ahora, selecciona <span class="text-neon-green font-bold">"WhatsApp"</span> para coordinar directamente.
+            {{ t('checkout.soonDesc') }} <span class="text-neon-green font-bold">{{ t('checkout.soonDescHighlight') }}</span> {{ t('checkout.soonDescEnd') }}
           </p>
           <button @click="showSoonAlert = false" class="w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] uppercase text-sm">
-            Entendido
+            {{ t('checkout.soonBtn') }}
           </button>
         </div>
       </div>
@@ -167,7 +167,11 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({ title: 'Finalizar Compra | PersonalBarber' })
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
+
+useSeoMeta({ title: t('checkout.seoTitle') })
 
 const router = useRouter()
 const { cartItems, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
@@ -178,12 +182,12 @@ const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
 const isProcessing = ref(false)
 
-const paymentMethods = [
-  { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
-  { id: 'nequi', emoji: '💜', label: 'Nequi', desc: 'Pago directo desde tu app Nequi' },
-  { id: 'pse', emoji: '🏦', label: 'PSE', desc: 'Débito bancario en línea' },
-  { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta directamente al barber para acordar el pago' },
-]
+const paymentMethods = computed(() => [
+  { id: 'wompi', emoji: '💳', label: t('checkout.payWompi'), desc: t('checkout.payWompiDesc'), badge: t('checkout.payWompiRecommended') },
+  { id: 'nequi', emoji: '💜', label: t('checkout.payNequi'), desc: t('checkout.payNequiDesc') },
+  { id: 'pse', emoji: '🏦', label: t('checkout.payPse'), desc: t('checkout.payPseDesc') },
+  { id: 'whatsapp', emoji: '💬', label: t('checkout.payWhatsapp'), desc: t('checkout.payWhatsappDesc') },
+])
 
 const paymentLogos = ['Nequi', 'PSE', 'Visa', 'Mastercard', 'Amex']
 
@@ -207,18 +211,18 @@ async function handleCheckout() {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
       })
 
-      if (!data.ok) throw new Error('Error procesando orden')
+      if (!data.ok) throw new Error('Error processing order')
 
       const phone = '573045840264'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
-      const msg = `Hola Andrés, acabo de realizar un pedido:\n\n*ID Orden:* ${data.order.id}\n\n${itemsList}\n\n*TOTAL VERIFICADO:* $${data.order.total_format} COP\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
+      const msg = `${t('checkout.waGreeting')}\n\n*${t('checkout.waOrderId')}* ${data.order.id}\n\n${itemsList}\n\n*${t('checkout.waTotal')}* $${data.order.total_format} COP\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
 
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/tienda')
     } catch (e) {
       console.error(e)
-      alert('Error procesando tu orden. Por favor intenta de nuevo.')
+      alert(t('checkout.orderError'))
     } finally {
       isProcessing.value = false
     }

@@ -20,13 +20,13 @@
         <div class="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div class="flex items-center gap-3">
             <fa-icon :icon="['fas', 'shopping-bag']" class="text-neon-green" />
-            <h2 class="text-lg font-bold text-white tracking-tight">Tu Carrito</h2>
+            <h2 class="text-lg font-bold text-white tracking-tight">{{ t('cart.title') }}</h2>
             <span class="text-xs bg-neon-green text-black font-black px-2 py-0.5 rounded-full">{{ cartCount }}</span>
           </div>
           <button
             @click="$emit('close')"
             class="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors"
-            aria-label="Cerrar carrito"
+            :aria-label="t('cart.close')"
           >
             <fa-icon :icon="['fas', 'times']" class="text-sm text-white" />
           </button>
@@ -37,8 +37,8 @@
           <!-- Carrito vacío -->
           <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center h-full gap-4 text-center">
             <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
-            <p class="text-gray-500 text-sm">Tu carrito está vacío</p>
-            <button @click="$emit('close')" class="text-neon-green text-sm font-bold hover:underline">Ver productos →</button>
+            <p class="text-gray-500 text-sm">{{ t('cart.empty') }}</p>
+            <button @click="$emit('close')" class="text-neon-green text-sm font-bold hover:underline">{{ t('cart.viewProducts') }}</button>
           </div>
 
           <!-- Items -->
@@ -71,7 +71,7 @@
               </div>
               <!-- Eliminar + subtotal -->
               <div class="flex flex-col items-end justify-between flex-shrink-0">
-                <button @click="removeFromCart(item.id)" class="text-gray-600 hover:text-red-400 transition-colors text-xs" aria-label="Eliminar">
+                <button @click="removeFromCart(item.id)" class="text-gray-600 hover:text-red-400 transition-colors text-xs" :aria-label="t('cart.remove')">
                   <fa-icon :icon="['fas', 'trash-alt']" />
                 </button>
                 <span class="text-white text-xs font-bold">{{ formatPrice(parsePrice(item.price) * item.qty) }}</span>
@@ -83,23 +83,23 @@
         <!-- Footer con total y CTA -->
         <div v-if="cartItems.length > 0" class="border-t border-white/10 p-5 space-y-4">
           <div class="flex justify-between items-center">
-            <span class="text-gray-400 text-sm">Subtotal</span>
+            <span class="text-gray-400 text-sm">{{ t('cart.subtotal') }}</span>
             <span class="text-white font-bold">{{ cartTotalFormatted }}</span>
           </div>
-          <p class="text-gray-600 text-[10px] text-center">Envío y descuentos se calculan en el checkout</p>
+          <p class="text-gray-600 text-[10px] text-center">{{ t('cart.shippingNote') }}</p>
           <!-- CTA -->
           <NuxtLink
             to="/checkout"
             @click="$emit('close')"
             class="block w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black text-center rounded-xl transition-colors duration-300 tracking-wide"
           >
-            PROCEDER AL CHECKOUT →
+            {{ t('cart.checkout') }}
           </NuxtLink>
           <button
             @click="$emit('close')"
             class="block w-full py-3 glass border border-white/10 hover:border-white/30 text-gray-400 hover:text-white text-sm text-center rounded-xl transition-colors duration-300"
           >
-            Seguir comprando
+            {{ t('cart.continueShopping') }}
           </button>
         </div>
       </div>
@@ -108,6 +108,10 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '~/composables/useLanguage'
+
+const { t } = useLanguage()
+
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 

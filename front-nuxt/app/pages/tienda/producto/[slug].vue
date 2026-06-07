@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white relative">
+  <div class="bg-barber-black min-h-screen text-white relative pt-16">
     <!-- Barra de carga -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
@@ -12,14 +12,14 @@
     </Transition>
 
     <!-- Header -->
-    <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
+    <div class="sticky top-16 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <button @click="$router.back()" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
+        <NuxtLink to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
           <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
-          <span class="text-xs font-semibold">Volver</span>
-        </button>
+          <span class="text-xs font-semibold">{{ t('nav.store') }}</span>
+        </NuxtLink>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-neon-green">Personal</span>Barber · Tienda
+          <span class="text-neon-green">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -28,11 +28,20 @@
     <!-- Loading state -->
     <div v-if="isLoading && !product" class="flex flex-col items-center justify-center min-h-[60vh]">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-green mb-4"></div>
-      <p class="text-gray-400 font-medium">Cargando detalles...</p>
+      <p class="text-gray-400 font-medium">{{ t('tienda.loading') }}</p>
     </div>
 
     <!-- Contenido principal -->
     <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
+      <!-- Breadcrumb (Visible siempre al inicio en móvil y desktop) -->
+      <div class="flex items-center gap-2 text-xs text-gray-500 mb-6">
+        <NuxtLink to="/" class="hover:text-neon-green transition-colors">{{ t('nav.home') }}</NuxtLink>
+        <span>/</span>
+        <NuxtLink to="/tienda" class="hover:text-neon-green transition-colors">{{ t('nav.store') }}</NuxtLink>
+        <span>/</span>
+        <span class="text-gray-400">{{ product.name }}</span>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
 
         <!-- Galería de imágenes -->
@@ -65,15 +74,6 @@
 
         <!-- Info del producto -->
         <div class="flex flex-col gap-6">
-          <!-- Breadcrumb -->
-          <div class="flex items-center gap-2 text-xs text-gray-500">
-            <NuxtLink to="/" class="hover:text-neon-green transition-colors">Inicio</NuxtLink>
-            <span>/</span>
-            <NuxtLink to="/tienda" class="hover:text-neon-green transition-colors">Tienda</NuxtLink>
-            <span>/</span>
-            <span class="text-gray-400">{{ product.name }}</span>
-          </div>
-
           <!-- Marca y nombre -->
           <div>
             <span class="text-neon-green text-xs font-bold tracking-widest uppercase">{{ product.brand }}</span>
@@ -87,26 +87,26 @@
 
           <!-- Descripción -->
           <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
-            <h3 class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Descripción</h3>
+            <h3 class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">{{ t('tienda.description') }}</h3>
             <p class="text-gray-300 leading-relaxed text-sm">{{ product.description }}</p>
           </div>
 
           <!-- Detalles -->
           <div class="bg-white/5 rounded-2xl p-5 border border-white/10 space-y-3">
-            <h3 class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-3">Detalles</h3>
-            <div class="flex justify-between text-sm"><span class="text-gray-500">Marca</span><span class="text-white font-semibold">{{ product.brand }}</span></div>
-            <div class="flex justify-between text-sm"><span class="text-gray-500">Categoría</span><span class="text-white font-semibold capitalize">{{ getCategoryLabel(product.category) }}</span></div>
+            <h3 class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-3">{{ t('tienda.productDetails') }}</h3>
+            <div class="flex justify-between text-sm"><span class="text-gray-500">{{ t('tienda.brand') }}</span><span class="text-white font-semibold">{{ product.brand }}</span></div>
+            <div class="flex justify-between text-sm"><span class="text-gray-500">{{ t('tienda.category') }}</span><span class="text-white font-semibold capitalize">{{ getCategoryLabel(product.category) }}</span></div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-500 font-bold">Estado</span>
-              <span v-if="product.stock > 3" class="text-neon-green font-black italic uppercase tracking-tighter">✓ Disponible</span>
-              <span v-else-if="product.stock > 0" class="text-amber-500 font-black animate-pulse italic uppercase tracking-tighter">⚡ Solo quedan {{ product.stock }}</span>
-              <span v-else class="text-red-500 font-black uppercase tracking-widest bg-red-500/10 px-2 rounded">✗ Agotado</span>
+              <span class="text-gray-500 font-bold">{{ t('tienda.status') }}</span>
+              <span v-if="product.stock > 3" class="text-neon-green font-black italic uppercase tracking-tighter">✓ {{ t('tienda.available') }}</span>
+              <span v-else-if="product.stock > 0" class="text-amber-500 font-black animate-pulse italic uppercase tracking-tighter">⚡ {{ t('tienda.lastItems').replace('{n}', String(product.stock)) }}</span>
+              <span v-else class="text-red-500 font-black uppercase tracking-widest bg-red-500/10 px-2 rounded">✗ {{ t('tienda.soldOut') }}</span>
             </div>
           </div>
 
           <!-- Selector de cantidad -->
           <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-400 font-semibold">Cantidad</span>
+            <span class="text-sm text-gray-400 font-semibold">{{ t('tienda.quantity') }}</span>
             <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2">
               <button @click="qty = Math.max(1, qty - 1)" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white font-bold">−</button>
               <span class="text-white font-bold w-6 text-center">{{ qty }}</span>
@@ -121,19 +121,19 @@
             <button @click="handleAddToCart" :disabled="product.stock <= 0 || isStockFull(product)"
               class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-30 disabled:border-white/10 disabled:text-gray-500 disabled:cursor-not-allowed">
               <fa-icon :icon="['fas', 'shopping-bag']" />
-              {{ product.stock <= 0 ? 'Sin Stock' : (isStockFull(product) ? 'Límite en Carrito' : 'Agregar al Carrito') }}
+              {{ product.stock <= 0 ? t('tienda.soldOut') : (isStockFull(product) ? t('tienda.limitCart') : t('tienda.addBtn')) }}
             </button>
             <button @click="handleBuyNow" :disabled="product.stock <= 0 || isStockFull(product)"
               class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed">
               <fa-icon :icon="['fas', 'bolt']" />
-              {{ isStockFull(product) ? 'Límite Alcanzado' : 'Comprar Ahora' }}
+              {{ isStockFull(product) ? t('tienda.limitReached') : t('tienda.buyNow') }}
             </button>
           </div>
 
           <!-- Confirmación -->
           <Transition name="confirm-fade">
             <div v-if="showConfirm" class="flex items-center gap-2 text-green-400 text-sm font-semibold bg-green-400/10 border border-green-400/20 rounded-xl px-4 py-3">
-              <fa-icon :icon="['fas', 'check-circle']" /> ¡Producto agregado al carrito!
+              <fa-icon :icon="['fas', 'check-circle']" /> {{ t('tienda.addedToCart') }}
             </div>
           </Transition>
 
@@ -151,11 +151,11 @@
       <div v-if="recommendedProducts.length > 0" class="mt-20">
         <div class="flex items-center justify-between mb-8">
           <div>
-            <h2 class="text-xl font-black uppercase tracking-tight text-white">Recomendados para ti</h2>
-            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Completa tu kit de barbería</p>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">{{ t('tienda.recommended') }}</h2>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">{{ t('tienda.recommendedSub') }}</p>
           </div>
           <div class="h-px flex-1 bg-white/10 mx-6 hidden sm:block"></div>
-          <NuxtLink to="/tienda" class="text-neon-green text-sm font-bold hover:underline">Tienda →</NuxtLink>
+          <NuxtLink to="/tienda" class="text-neon-green text-sm font-bold hover:underline">{{ t('nav.store') }} →</NuxtLink>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <NuxtLink v-for="item in recommendedProducts" :key="item.id"
@@ -174,11 +174,11 @@
 
       <!-- Explorar categorías -->
       <div class="mt-20 pt-10 border-t border-white/10">
-        <h2 class="text-xl font-black uppercase tracking-tight text-white mb-6">Explorar por categoría</h2>
+        <h2 class="text-xl font-black uppercase tracking-tight text-white mb-6">{{ t('tienda.exploreCategory') }}</h2>
         <div class="flex flex-wrap gap-3">
           <NuxtLink v-for="cat in availableCategories" :key="cat.id" :to="{ path: '/tienda', query: { cat: cat.id } }"
             class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-neon-green hover:border-neon-green/50 transition-all duration-300">
-            {{ cat.label }}
+            {{ getCategoryLabel(cat.id) }}
           </NuxtLink>
         </div>
       </div>
@@ -187,22 +187,22 @@
     <!-- Producto no encontrado -->
     <div v-else class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600" />
-      <p class="text-gray-500">Producto no encontrado.</p>
-      <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← Volver a la tienda</NuxtLink>
+      <p class="text-gray-500">{{ t('tienda.emptyTitle') }}</p>
+      <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← {{ t('tienda.back') }}</NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Product } from '~/composables/useCatalog'
+import { useLanguage } from '~/composables/useLanguage'
 
 const route = useRoute()
 const router = useRouter()
 const { addToCart, getProductQty, isStockFull } = useCart()
 const { products, categories, isLoading, fetchCatalog } = useCatalog()
+const { t, lang } = useLanguage()
 
-// Cargar catálogo (SSR — el producto se renderiza en servidor para Google)
-await fetchCatalog()
 
 const slug = computed(() => route.params.slug as string)
 const productId = computed(() => getIdFromSlug(slug.value))
@@ -295,7 +295,11 @@ const recommendedProducts = computed(() => {
 const availableCategories = computed(() => categories.value.filter(c => c.id !== 'all'))
 
 function getCategoryLabel(catId: string) {
-  return categories.value.find(c => c.id === catId)?.label ?? catId
+  const cat = categories.value.find(c => c.id === catId)
+  const label = cat ? cat.label : catId
+  const key = `tienda.categorias.${catId}`
+  const translated = t(key)
+  return translated === key ? label : translated
 }
 
 function handleAddToCart() {
@@ -314,11 +318,17 @@ function handleBuyNow() {
   router.push('/checkout')
 }
 
-const badges = [
-  { icon: ['fas', 'shield-alt'], label: 'Productos originales' },
-  { icon: ['fas', 'truck'], label: 'Envío disponible' },
-  { icon: ['fas', 'comments'], label: 'Soporte directo' },
-]
+const badges = computed(() => [
+  { icon: ['fas', 'shield-alt'], label: t('tienda.badgeOriginal') },
+  { icon: ['fas', 'truck'], label: t('tienda.badgeShipping') },
+  { icon: ['fas', 'comments'], label: t('tienda.badgeSupport') },
+])
+// Cargar catálogo (SSR — el producto se renderiza en servidor para Google) al final para no romper contexto
+if (import.meta.server) {
+  await fetchCatalog()
+} else {
+  fetchCatalog()
+}
 </script>
 
 <style scoped>

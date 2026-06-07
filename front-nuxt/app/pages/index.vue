@@ -1,25 +1,30 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white flex flex-col items-center">
+  <div class="bg-barber-black min-h-screen text-white flex flex-col items-center relative overflow-hidden">
+    <!-- Ambient Glow Orbs that visually connect all sections into a single canvas -->
+    <div class="absolute top-[18%] left-[-15%] w-[50vw] h-[50vw] max-w-[600px] bg-neon-green/6 rounded-full blur-[140px] pointer-events-none z-0"></div>
+    <div class="absolute top-[45%] right-[-15%] w-[55vw] h-[55vw] max-w-[700px] bg-neon-green/4 rounded-full blur-[160px] pointer-events-none z-0"></div>
+    <div class="absolute top-[75%] left-[-10%] w-[45vw] h-[45vw] max-w-[550px] bg-neon-green/5 rounded-full blur-[130px] pointer-events-none z-0"></div>
+
     <!-- Hero section -->
-    <HeroSection @reserve="goToReserva" class="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out" />
+    <HeroSection @reserve="goToReserva" class="relative z-10" />
 
     <!-- Métricas — prueba social cuantitativa inmediata -->
-    <MetricsSection class="w-full" />
+    <MetricsSection class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-[1200ms] ease-out relative z-10" />
 
     <!-- Diferenciador: Barber a domicilio -->
-    <ServiceFeatureSection class="w-full" />
+    <ServiceFeatureSection class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-[1200ms] ease-out relative z-10" />
 
-    <div class="w-full max-w-6xl px-4 flex flex-col items-center pb-20 overflow-hidden">
-      <ShopCategories class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-1000 ease-out" />
-      <MasonryGallery class="animate-on-scroll w-full mt-8 opacity-0 translate-y-12 transition-all duration-1000 ease-out" />
+    <div class="w-full max-w-6xl px-4 flex flex-col items-center pb-20 overflow-hidden relative z-10">
+      <ShopCategories class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-[1200ms] ease-out" />
+      <MasonryGallery class="animate-on-scroll w-full mt-8 opacity-0 translate-y-12 transition-all duration-[1200ms] ease-out" />
     </div>
 
     <!-- Reviews — cierre de conversión -->
-    <ReviewsSection class="w-full" />
+    <ReviewsSection class="animate-on-scroll w-full opacity-0 translate-y-12 transition-all duration-[1200ms] ease-out relative z-10" />
 
     <!-- Footer -->
-    <div class="w-full max-w-6xl px-4">
-      <AppFooter class="mt-14 animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out" />
+    <div class="w-full max-w-6xl px-4 relative z-10">
+      <AppFooter class="mt-14 animate-on-scroll opacity-0 translate-y-8 transition-all duration-[1200ms] ease-out" />
     </div>
   </div>
 </template>
@@ -94,10 +99,7 @@ useHead({
 })
 
 const router = useRouter()
-
-// Precargar catálogo desde server para que ShopCategories tenga datos
 const { fetchCatalog } = useCatalog()
-await fetchCatalog()
 
 function goToReserva() {
   router.push({ name: 'agendar' })
@@ -119,4 +121,11 @@ onMounted(() => {
 
   onUnmounted(() => observer.disconnect())
 })
+
+// Precargar catálogo al final para no romper el contexto de hooks síncronos
+if (import.meta.server) {
+  await fetchCatalog()
+} else {
+  fetchCatalog()
+}
 </script>

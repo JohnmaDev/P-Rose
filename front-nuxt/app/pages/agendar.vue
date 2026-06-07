@@ -31,7 +31,7 @@
           <button @click="goToProducts" class="w-full py-4 bg-neon-green text-black font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-neon-green-dark transition-all shadow-[0_0_25px_rgba(57,255,20,0.4)] hover:scale-[1.02]">
             {{ t('agendar.successBtn') }}
           </button>
-          <NuxtLink to="/" class="block mt-4 text-xs text-zinc-600 hover:text-white transition-colors tracking-widest uppercase">← Volver al inicio</NuxtLink>
+          <NuxtLink to="/" class="block mt-4 text-xs text-zinc-600 hover:text-white transition-colors tracking-widest uppercase">← {{ t('agendar.backHome') }}</NuxtLink>
         </div>
 
         <!-- Form -->
@@ -201,15 +201,23 @@
 </template>
 
 <script setup lang="ts">
-import { servicios } from '~/constants/servicios'
+import { serviciosRaw } from '~/constants/servicios'
 import { useLanguage } from '~/composables/useLanguage'
 
-const { t } = useLanguage()
+const { t, lang } = useLanguage()
+
+// Servicios con labels traducidos dinámicamente
+const servicios = computed(() => serviciosRaw.map(s => ({
+  value: s.value,
+  label: t(s.labelKey),
+  desc: t(s.descKey),
+  icon: s.icon,
+})))
 
 useSeoMeta({
-  title: 'Agendar Cita | PersonalBarber Medellín',
-  ogTitle: 'Agendar Cita | PersonalBarber',
-  description: 'Reserva tu cita online en PersonalBarber. Selecciona tu barbero, servicio y horario preferido en Medellín.',
+  title: t('agendar.seoTitle'),
+  ogTitle: t('agendar.seoTitle'),
+  description: t('agendar.seoDesc'),
 })
 
 const route = useRoute()
@@ -250,16 +258,20 @@ const serviceCarouselRef = ref<HTMLElement | null>(null)
 const availableDays = computed(() => {
   const days = []
   const today = new Date()
-  const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
-  const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+  const dayNamesArr = t('agendar.dayNames').split(',').length > 1
+    ? t('agendar.dayNames').split(',')
+    : ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+  const monthNamesArr = t('agendar.monthNames').split(',').length > 1
+    ? t('agendar.monthNames').split(',')
+    : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
   for (let i = 1; i <= 14; i++) {
     const nextDate = new Date(today)
     nextDate.setDate(today.getDate() + i)
     days.push({
       rawDate: nextDate.toISOString().split('T')[0],
-      name: i === 1 ? 'Mañana' : dayNames[nextDate.getDay()],
+      name: i === 1 ? t('agendar.tomorrow') : dayNamesArr[nextDate.getDay()]?.trim() || '',
       number: nextDate.getDate(),
-      month: monthNames[nextDate.getMonth()],
+      month: monthNamesArr[nextDate.getMonth()]?.trim() || '',
     })
   }
   return days
@@ -396,7 +408,7 @@ async function submitForm() {
     servicio: form.servicio,
     fechaRaw: selectedDate.value,
     horaRaw: selectedTime.value,
-    fechaCompleta: `${selectedDate.value} a las ${selectedTime.value}`,
+    fechaCompleta: `${selectedDate.value} ${t('agendar.dateAt')} ${selectedTime.value}`,
     direccion: form.direccion,
     telefono: form.telefono,
     whatsappUrl: `https://wa.me/${numeroWA}`,
@@ -415,9 +427,9 @@ async function submitForm() {
     if (httpError.status === 409) {
       await cargarSlotsOcupados(selectedDate.value)
       selectedTime.value = null
-      alert('⚠️ Este turno ya fue reservado mientras completabas el formulario. Por favor elige otro horario.')
+      alert(t('agendar.alertSlotTaken'))
     } else {
-      const msg = httpError.data?.error || 'Ocurrió un problema enviando tu reserva.'
+      const msg = httpError.data?.error || t('agendar.alertError')
       alert(msg)
       cargarSlotsOcupados()
     }

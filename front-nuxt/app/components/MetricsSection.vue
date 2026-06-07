@@ -1,8 +1,5 @@
 <template>
   <section class="w-full py-24 relative overflow-hidden">
-    <!-- Fondo con patrón sutil -->
-    <div class="absolute inset-0 bg-gradient-to-b from-barber-black via-zinc-950 to-barber-black"></div>
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, white 40px, white 41px), repeating-linear-gradient(90deg, transparent, transparent 40px, white 40px, white 41px);"></div>
 
     <div class="relative max-w-5xl mx-auto px-4">
       <!-- Headline -->
@@ -21,21 +18,21 @@
         <div
           v-for="(metric, i) in metrics"
           :key="metric.key"
-          class="animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 group"
-          :style="`transition-delay: ${i * 100}ms`"
+          class="h-full animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 group"
+          :style="{ transitionDelay: `${i * 100}ms` }"
         >
-          <div class="relative bg-zinc-900/60 backdrop-blur-sm border border-white/8 rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center gap-3 overflow-hidden transition-all duration-500 hover:border-white/20 hover:bg-zinc-900/80">
+          <div class="h-full relative bg-zinc-900/60 backdrop-blur-sm border border-white/8 rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center gap-3 overflow-hidden transition-all duration-500 hover:border-white/20 hover:bg-zinc-900/80">
             <!-- Glow background on hover -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" :style="`background: radial-gradient(circle at 50% 0%, ${metric.color}15 0%, transparent 60%)`"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" :style="{ background: `radial-gradient(circle at 50% 0%, ${metric.color}15 0%, transparent 60%)` }"></div>
 
             <!-- Icon -->
-            <div class="relative w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110" :style="`background: ${metric.color}15; border: 1px solid ${metric.color}30`">
-              <fa-icon :icon="metric.icon" class="text-xl transition-all duration-300" :style="`color: ${metric.color}`" />
+            <div class="relative w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110" :style="{ background: `${metric.color}15`, border: `1px solid ${metric.color}30`, color: metric.color }">
+              <fa-icon :icon="metric.icon" class="text-xl transition-all duration-300" />
             </div>
 
             <!-- Number with count-up -->
             <div class="relative">
-              <p class="text-4xl sm:text-5xl font-black tracking-tighter leading-none" :style="`color: ${metric.color}`">
+              <p class="text-4xl sm:text-5xl font-black tracking-tighter leading-none tabular-nums" :style="{ color: metric.color }">
                 <span ref="counterRefs" :data-target="metric.value" :data-prefix="metric.prefix" :data-suffix="metric.suffix">
                   {{ metric.prefix }}{{ displayed[i] }}{{ metric.suffix }}
                 </span>

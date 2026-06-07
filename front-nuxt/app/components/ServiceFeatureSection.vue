@@ -1,9 +1,7 @@
 <template>
   <section class="w-full py-24 relative overflow-hidden">
-    <!-- Gradient background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-neon-green/5 via-barber-black to-barber-black"></div>
 
-    <div class="relative max-w-6xl mx-auto px-4">
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
       <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
         <!-- Left: Text Content -->
@@ -94,12 +92,12 @@
                 <div class="h-8 w-[1px] bg-white/10"></div>
                 <div class="text-center">
                   <p class="text-2xl font-black text-white">10+</p>
-                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Años</p>
+                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">{{ t('feature.statYears') }}</p>
                 </div>
                 <div class="h-8 w-[1px] bg-white/10"></div>
                 <div class="text-center">
                   <p class="text-2xl font-black text-white">Medellin</p>
-                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Cobertura</p>
+                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">{{ t('feature.statCoverage') }}</p>
                 </div>
               </div>
             </div>
@@ -122,9 +120,9 @@ const bullets = [
   { key: 'feature.bullet3', icon: ['fas', 'bolt'] as [string, string] },
 ]
 
-const featureServices = [
-  { name: 'Corte + Barba Combo', detail: 'A domicilio · Medellín', icon: ['fas', 'scissors'] as [string, string] },
-  { name: 'Arreglo de Barba', detail: 'Perfilado profesional', icon: ['fas', 'spa'] as [string, string] },
-  { name: 'Corte Clásico', detail: 'Fade, Undercut, Clásico', icon: ['fas', 'cut'] as [string, string] },
-]
+const featureServices = computed(() => [
+  { name: t('feature.service1Name'), detail: t('feature.service1Detail'), icon: ['fas', 'scissors'] as [string, string] },
+  { name: t('feature.service2Name'), detail: t('feature.service2Detail'), icon: ['fas', 'spa'] as [string, string] },
+  { name: t('feature.service3Name'), detail: t('feature.service3Detail'), icon: ['fas', 'cut'] as [string, string] },
+])
 </script>
