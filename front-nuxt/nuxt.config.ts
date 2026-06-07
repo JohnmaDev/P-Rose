@@ -83,7 +83,7 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/PersonalBarber.svg' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
@@ -100,9 +100,10 @@ export default defineNuxtConfig({
     preset: 'netlify',
   },
 
-  // Dev server proxy para API de Go
+  // Proxy de API: en dev apunta a la API de producción para visualizar los
+  // productos reales en local sin depender de la base de datos Go/MongoDB local.
+  // En producción (SSR build de Netlify), apunta a las funciones directas.
   routeRules: {
-    // Proxea la API de Go tanto en dev como en SSR de producción
     '/api/**': {
       proxy: process.env.NODE_ENV === 'development'
         ? 'https://personalbarber.vip/api/**'

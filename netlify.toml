@@ -7,6 +7,7 @@
 [build.environment]
   GO_VERSION = "1.21"
   NODE_VERSION = "20"
+  AWS_LAMBDA_JS_RUNTIME = "nodejs20.x"
 
 [[headers]]
   for = "/*"
@@ -26,4 +27,11 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[dev]
+  command = "npm run dev --prefix front-nuxt"
+  port = 8888
+  targetPort = 3000
+  publish = "front-nuxt/dist"
+
 
