@@ -1,5 +1,6 @@
 <template>
   <nav
+    ref="navRef"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="scrolled ? 'bg-barber-black/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]' : 'bg-transparent'"
   >
@@ -114,12 +115,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useLanguage } from '~/composables/useLanguage'
 
 const { lang, t, toggleLang } = useLanguage()
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
+const navRef = ref<HTMLElement | null>(null)
 
 const navLinks = computed(() => [
   { to: '/', label: t('nav.home'), icon: ['fas', 'store'] as [string, string] },
@@ -131,11 +134,22 @@ function handleScroll() {
   scrolled.value = window.scrollY > 30
 }
 
+function handleClickOutside(event: MouseEvent) {
+  if (mobileOpen.value && navRef.value && !navRef.value.contains(event.target as Node)) {
+    mobileOpen.value = false
+  }
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
+  document.addEventListener('click', handleClickOutside)
   handleScroll()
 })
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>
