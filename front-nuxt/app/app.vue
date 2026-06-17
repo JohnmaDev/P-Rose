@@ -33,6 +33,23 @@ import { useLanguage } from '~/composables/useLanguage'
 
 const { initLang, t } = useLanguage()
 const route = useRoute()
+const config = useRuntimeConfig()
+
+// Configurar URL Canónica Dinámica para evitar advertencias de contenido duplicado en Google Search Console
+useHead(() => {
+  const siteUrl = config.public.siteUrl || 'https://personalbarber.vip'
+  const cleanBase = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl
+  const canonicalUrl = `${cleanBase}${route.path}`
+  
+  return {
+    link: [
+      {
+        rel: 'canonical',
+        href: canonicalUrl
+      }
+    ]
+  }
+})
 
 const cartOpen = ref(false)
 const showScrollTop = ref(false)
