@@ -10,6 +10,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/resend/resend-go/v2"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -113,6 +114,43 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Body:       fmt.Sprintf(`{"error": "Failed to save reservation: %v"}`, err),
 		}, nil
 	}
+
+	// === ENVÍO DE NOTIFICACIÓN POR CORREO (RESEND) ===
+	resendKey := os.Getenv("RESEND_API_KEY")
+	if resendKey != "" {
+		clienteResend := resend.NewClient(resendKey)
+		
+		htmlContent := fmt.Sprintf(`
+			<h2>¡Nueva Reserva Recibida! 💈</h2>
+			<ul>
+				<li><strong>Cliente:</strong> %s</li>
+				<li><strong>Servicio:</strong> %s</li>
+				<li><strong>Fecha:</strong> %s</li>
+				<li><strong>Hora:</strong> %s</li>
+				<li><strong>Teléfono:</strong> %s</li>
+				<li><strong>Dirección:</strong> %s</li>
+			</ul>
+			<p><a href="%s">Abrir en WhatsApp</a></p>
+		`, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion, res.WhatsappUrl)
+
+		parametrosCorreo := &resend.SendEmailRequest{
+			From:    "onboarding@resend.dev",
+			To:      []string{"jhonechavarria0506@gmail.com"},
+			Subject: "💈 ¡Nueva Reserva de " + res.Nombre + "!",
+			Html:    htmlContent,
+		}
+
+		_, errResend := clienteResend.Emails.Send(parametrosCorreo)
+		if errResend != nil {
+			// Solo logueamos el error para no afectar la respuesta exitosa de la reserva al usuario
+			fmt.Printf("Error al enviar correo con Resend: %v\n", errResend)
+		} else {
+			fmt.Println("Correo de notificación enviado con éxito")
+		}
+	} else {
+		fmt.Println("No se encontró RESEND_API_KEY. Saltando el envío de correo.")
+	}
+	// =================================================
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
