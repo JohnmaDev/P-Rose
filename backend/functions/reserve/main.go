@@ -121,16 +121,71 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		clienteResend := resend.NewClient(resendKey)
 		
 		htmlContent := fmt.Sprintf(`
-			<h2>¡Nueva Reserva Recibida! 💈</h2>
-			<ul>
-				<li><strong>Cliente:</strong> %s</li>
-				<li><strong>Servicio:</strong> %s</li>
-				<li><strong>Fecha:</strong> %s</li>
-				<li><strong>Hora:</strong> %s</li>
-				<li><strong>Teléfono:</strong> %s</li>
-				<li><strong>Dirección:</strong> %s</li>
-			</ul>
-			<p><a href="%s">Abrir en WhatsApp</a></p>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+	body { margin: 0; padding: 0; background-color: #0f1014; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; }
+	.container { max-width: 600px; margin: 40px auto; background-color: #1a1c23; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #2a2d36; }
+	.header { background-color: #0f1014; padding: 30px 20px; text-align: center; border-bottom: 2px solid #39FF14; }
+	.header h1 { margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+	.header span { color: #39FF14; }
+	.content { padding: 40px 30px; }
+	.greeting { font-size: 18px; margin-bottom: 25px; color: #e2e8f0; }
+	.details-card { background-color: #242731; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 1px solid #2f3340; }
+	.detail-item { margin-bottom: 15px; display: flex; flex-direction: column; }
+	.detail-item:last-child { margin-bottom: 0; }
+	.detail-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; margin-bottom: 4px; font-weight: 600; }
+	.detail-value { font-size: 16px; color: #ffffff; font-weight: 500; }
+	.btn-container { text-align: center; margin-top: 35px; }
+	.btn { display: inline-block; background-color: #39FF14; color: #000000; text-decoration: none; padding: 14px 30px; border-radius: 50px; font-weight: 700; font-size: 16px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.4); }
+	.btn:hover { background-color: #2ce60d; box-shadow: 0 0 25px rgba(57, 255, 20, 0.6); }
+	.footer { text-align: center; padding: 20px; font-size: 12px; color: #64748b; background-color: #0f1014; border-top: 1px solid #1f222b; }
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>PERSONAL <span>BARBER</span> 💈</h1>
+		</div>
+		<div class="content">
+			<div class="greeting">¡Hola! Tienes una nueva reserva confirmada.</div>
+			
+			<div class="details-card">
+				<div class="detail-item">
+					<span class="detail-label">Cliente</span>
+					<span class="detail-value">%s</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Servicio</span>
+					<span class="detail-value">%s</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Fecha y Hora</span>
+					<span class="detail-value">%s a las %s</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Teléfono</span>
+					<span class="detail-value">%s</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Dirección</span>
+					<span class="detail-value">%s</span>
+				</div>
+			</div>
+
+			<div class="btn-container">
+				<a href="%s" class="btn">Abrir chat en WhatsApp</a>
+			</div>
+		</div>
+		<div class="footer">
+			Notificación automática generada por el sistema de reservas.
+		</div>
+	</div>
+</body>
+</html>
 		`, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion, res.WhatsappUrl)
 
 		parametrosCorreo := &resend.SendEmailRequest{
