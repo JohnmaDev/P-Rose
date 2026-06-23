@@ -33,8 +33,11 @@ func buildEmailHTML(res Reservation) string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nueva Reserva - Personal Barber</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+</style>
 </head>
-<body style="margin:0;padding:0;background-color:#0a0b0f;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#ffffff;">
+<body style="margin:0;padding:0;background-color:#0a0b0f;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;color:#ffffff;">
 
   <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0a0b0f;padding:30px 0;">
     <tr>
@@ -46,13 +49,13 @@ func buildEmailHTML(res Reservation) string {
             <td style="background:linear-gradient(160deg,#0d0f16 0%%,#0d1a10 100%%);padding:36px 30px 28px;text-align:center;border-bottom:1px solid #1a3d1a;">
               <img src="https://personalbarber.vip/icon-512.png" alt="Personal Barber" width="72" height="72"
                 style="border-radius:18px;border:2px solid rgba(57,255,20,0.25);display:block;margin:0 auto 16px;" />
-              <h1 style="margin:0 0 4px;font-size:22px;font-weight:900;letter-spacing:3px;color:#ffffff;text-transform:uppercase;">
+              <h1 style="margin:0 0 4px;font-size:28px;font-weight:700;letter-spacing:4px;color:#ffffff;text-transform:uppercase;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">
                 PERSONAL <span style="color:#39FF14;">BARBER</span>
               </h1>
-              <p style="margin:0 0 16px;font-size:11px;letter-spacing:2px;color:rgba(57,255,20,0.5);text-transform:uppercase;">
+              <p style="margin:0 0 16px;font-size:12px;letter-spacing:3px;color:rgba(57,255,20,0.5);text-transform:uppercase;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:400;">
                 Tu barbería de confianza
               </p>
-              <span style="display:inline-block;background-color:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);color:#39FF14;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 16px;border-radius:50px;">
+              <span style="display:inline-block;background-color:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);color:#39FF14;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:50px;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">
                 💈 Nueva reserva confirmada
               </span>
             </td>
@@ -62,53 +65,53 @@ func buildEmailHTML(res Reservation) string {
           <tr>
             <td style="padding:32px 30px;">
 
-              <p style="font-size:15px;color:#94a3b8;margin:0 0 24px;line-height:1.7;">
-                ¡Hola! Tienes una nueva cita en tu sistema. <strong style="color:#ffffff;">%s</strong> ha agendado
+              <p style="font-size:16px;color:#94a3b8;margin:0 0 24px;line-height:1.7;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:400;letter-spacing:0.5px;">
+                ¡Hola! Tienes una nueva cita en tu sistema. <strong style="color:#ffffff;font-weight:600;">%s</strong> ha agendado
                 un servicio. Aquí tienes todos los detalles:
               </p>
 
               <!-- DETAILS CARD -->
               <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:28px;">
 
-                <tr style="border-bottom:1px solid #1a1d28;">
+                <tr>
                   <td style="padding:14px 20px;border-bottom:1px solid #1a1d28;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">👤 Cliente</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">👤 Cliente</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding:14px 20px;border-bottom:1px solid #1a1d28;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">✂️ Servicio</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">✂️ Servicio</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding:14px 20px;border-bottom:1px solid #1a1d28;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">📅 Fecha</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">📅 Fecha</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding:14px 20px;border-bottom:1px solid #1a1d28;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">🕐 Hora</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">🕐 Hora</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding:14px 20px;border-bottom:1px solid #1a1d28;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">📞 Teléfono</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">📞 Teléfono</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
                 <tr>
                   <td style="padding:14px 20px;">
-                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#39FF14;">📍 Dirección</p>
-                    <p style="margin:0;font-size:15px;font-weight:500;color:#e2e8f0;">%s</p>
+                    <p style="margin:0 0 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#39FF14;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">📍 Dirección</p>
+                    <p style="margin:0;font-size:17px;font-weight:500;color:#e2e8f0;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:0.5px;">%s</p>
                   </td>
                 </tr>
 
@@ -126,7 +129,7 @@ func buildEmailHTML(res Reservation) string {
                 <tr>
                   <td align="center" style="padding-bottom:8px;">
                     <a href="%s"
-                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:15px 38px;border-radius:50px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:1.5px;">
+                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:15px 38px;border-radius:50px;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:2px;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">
                       Abrir Chat en WhatsApp →
                     </a>
                   </td>
@@ -139,9 +142,8 @@ func buildEmailHTML(res Reservation) string {
           <!-- FOOTER -->
           <tr>
             <td style="text-align:center;padding:20px 30px;background-color:#0a0b0f;border-top:1px solid #1a1d28;">
-              <p style="margin:0;font-size:11px;color:#374151;line-height:1.7;">
-                Notificación automática generada por el sistema de reservas.<br>
-                <a href="https://personalbarber.vip" style="color:rgba(57,255,20,0.4);text-decoration:none;">personalbarber.vip</a>
+              <p style="margin:0;font-size:11px;color:#374151;line-height:1.7;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;">
+                Notificación automática · <a href="https://personalbarber.vip" style="color:rgba(57,255,20,0.4);text-decoration:none;">personalbarber.vip</a>
               </p>
             </td>
           </tr>
@@ -178,7 +180,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	if len(res.Nombre) > 100 || len(res.Telefono) > 30 || len(res.Servicio) > 100 ||
 		len(res.Direccion) > 200 || len(res.FechaRaw) > 50 || len(res.HoraRaw) > 50 {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest, // 400 Bad Request
+			StatusCode: http.StatusBadRequest,
 			Body:       `{"error": "Payload excedió longitud máxima permitida por seguridad"}`,
 		}, nil
 	}
@@ -224,7 +226,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	if err == nil {
 		// Si no hay error, significa que encontró una reserva coincidente
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusConflict, // 409 Conflict
+			StatusCode: http.StatusConflict,
 			Body:       `{"error": "Este turno ya ha sido reservado por otra persona. Por favor elige otro."}`,
 		}, nil
 	} else if err != mongo.ErrNoDocuments {
@@ -258,7 +260,6 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 
 		_, errResend := clienteResend.Emails.Send(parametrosCorreo)
 		if errResend != nil {
-			// Solo logueamos el error para no afectar la respuesta exitosa de la reserva al usuario
 			fmt.Printf("Error al enviar correo con Resend: %v\n", errResend)
 		} else {
 			fmt.Println("Correo de notificación enviado con éxito")
