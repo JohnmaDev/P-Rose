@@ -134,7 +134,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		`, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion, res.WhatsappUrl)
 
 		parametrosCorreo := &resend.SendEmailRequest{
-			From:    "onboarding@resend.dev",
+			From:    "Personal Barber <reservas@personalbarber.vip>",
 			To:      []string{"jhonechavarria0506@gmail.com"},
 			Subject: "💈 ¡Nueva Reserva de " + res.Nombre + "!",
 			Html:    htmlContent,
