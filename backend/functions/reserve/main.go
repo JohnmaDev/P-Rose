@@ -33,11 +33,8 @@ func buildEmailHTML(res Reservation) string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nueva Reserva - Personal Barber</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
-</style>
 </head>
-<body style="margin:0;padding:0;background-color:#0a0b0f;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;color:#ffffff;">
+<body style="margin:0;padding:0;background-color:#0a0b0f;font-family:'Arial Narrow','Impact','Helvetica Neue',Helvetica,Arial,sans-serif;color:#ffffff;">
 
   <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0a0b0f;padding:30px 0;">
     <tr>
@@ -128,8 +125,8 @@ func buildEmailHTML(res Reservation) string {
               <table width="100%%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:8px;">
-                    <a href="%s"
-                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:15px 38px;border-radius:50px;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:2px;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">
+                    <a href="https://personalbarber.vip/wa"
+                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:15px 38px;border-radius:50px;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:2px;font-family:'Arial Narrow','Impact','Helvetica Neue',Helvetica,Arial,sans-serif;">
                       Abrir Chat en WhatsApp →
                     </a>
                   </td>
@@ -154,7 +151,7 @@ func buildEmailHTML(res Reservation) string {
   </table>
 
 </body>
-</html>`, res.Nombre, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion, res.WhatsappUrl)
+</html>`, res.Nombre, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion)
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
