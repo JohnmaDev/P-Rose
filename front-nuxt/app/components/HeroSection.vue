@@ -63,17 +63,22 @@
         </div>
 
         <!-- Trust bar -->
-        <div class="flex items-center gap-5 mt-10 animate-fade-in-up opacity-0" style="animation-delay:0.5s">
-          <div class="flex -space-x-2">
-            <div v-for="c in trustColors" :key="c" class="w-7 h-7 rounded-full border-2 border-barber-black" :style="`background:${c}`"></div>
-          </div>
-          <p class="text-gray-500 text-xs font-bold tracking-wider uppercase">
-            <span class="text-neon-green font-black">+50</span> {{ t('hero.trustClients') }}
-          </p>
-          <span class="text-white/15">·</span>
-          <div class="flex items-center gap-1">
-            <fa-icon v-for="s in 5" :key="s" :icon="['fas', 'star']" class="text-yellow-400 text-[10px]" />
-            <span class="text-gray-500 text-xs ml-1 font-bold">5.0</span>
+        <div class="flex flex-wrap items-center gap-4 mt-10 animate-fade-in-up opacity-0" style="animation-delay:0.5s">
+          <div class="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl">
+            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-neon-green/10 border border-neon-green/20">
+              <fa-icon :icon="['fas', 'users']" class="text-neon-green text-lg" />
+            </div>
+            <div class="flex flex-col">
+              <p class="text-white text-sm font-black tracking-wider uppercase">
+                +50 <span class="text-gray-400 text-xs">{{ t('hero.trustClients') }}</span>
+              </p>
+              <div class="flex items-center gap-2 mt-1">
+                <div class="flex gap-0.5">
+                  <fa-icon v-for="s in 5" :key="s" :icon="['fas', 'star']" class="text-neon-green text-[10px]" />
+                </div>
+                <span class="text-gray-500 text-[10px] font-bold tracking-widest">5.0</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -144,8 +149,6 @@
 import { useLanguage } from '~/composables/useLanguage'
 
 const { t } = useLanguage()
-
-const trustColors = ['#39FF14', '#25D366', '#a855f7', '#f59e0b', '#ec4899']
 
 const socials = [
   { name: 'WhatsApp', icon: ['fab', 'whatsapp'], link: 'https://api.whatsapp.com/send?phone=573045840264' },
