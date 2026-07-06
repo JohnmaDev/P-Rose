@@ -63,22 +63,18 @@
         </div>
 
         <!-- Trust bar -->
-        <div class="flex flex-wrap items-center gap-4 mt-10 animate-fade-in-up opacity-0" style="animation-delay:0.5s">
-          <div class="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl shadow-xl">
-            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-neon-green/10 border border-neon-green/20">
-              <fa-icon :icon="['fas', 'users']" class="text-neon-green text-lg" />
-            </div>
-            <div class="flex flex-col">
-              <p class="text-white text-sm font-black tracking-wider uppercase">
-                +50 <span class="text-gray-400 text-xs">{{ t('hero.trustClients') }}</span>
-              </p>
-              <div class="flex items-center gap-2 mt-1">
-                <div class="flex gap-0.5">
-                  <fa-icon v-for="s in 5" :key="s" :icon="['fas', 'star']" class="text-neon-green text-[10px]" />
-                </div>
-                <span class="text-gray-500 text-[10px] font-bold tracking-widest">5.0</span>
-              </div>
-            </div>
+        <div class="flex flex-wrap items-center gap-3 mt-10 animate-fade-in-up opacity-0" style="animation-delay:0.5s">
+          <!-- Clients pill -->
+          <div class="flex items-center gap-2 px-4 py-2 rounded-full border border-neon-green/25 bg-neon-green/5">
+            <span class="text-neon-green font-black text-sm">+50</span>
+            <span class="text-gray-400 text-xs font-medium tracking-wide">{{ t('hero.trustClients') }}</span>
+          </div>
+          <!-- Divider dot -->
+          <span class="text-white/15 text-xs">•</span>
+          <!-- Rating pill -->
+          <div class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5">
+            <span class="text-yellow-400 text-xs tracking-tight">★★★★★</span>
+            <span class="text-white text-xs font-black">5.0</span>
           </div>
         </div>
       </div>
