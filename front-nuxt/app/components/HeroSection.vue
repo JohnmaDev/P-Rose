@@ -33,10 +33,10 @@
           <span class="text-neon-green text-[10px] font-black tracking-[0.22em] uppercase">{{ t('hero.badge') }}</span>
         </div>
 
-        <h1 class="text-[3rem] leading-[0.9] sm:text-[4.5rem] lg:text-[110px] xl:text-[135px] font-black lg:leading-[0.9] tracking-tighter italic uppercase animate-fade-in-up opacity-0 text-shadow-premium" style="animation-delay:0.1s">
+        <h1 class="text-[3rem] leading-[0.9] sm:text-[4.5rem] lg:text-[110px] xl:text-[135px] font-black lg:leading-[0.9] tracking-tighter italic animate-fade-in-up opacity-0 text-shadow-premium" style="animation-delay:0.1s">
           <span class="text-neon-green block drop-shadow-[0_0_20px_rgba(57,255,20,0.4)]">{{ t('hero.line1') }}</span>
           <span class="text-white block">{{ t('hero.line2') }}</span>
-          <span class="text-white block">{{ t('hero.line3') }}</span>
+          <span class="text-white block pt-4">{{ t('hero.line3') }}</span>
         </h1>
 
         <p class="text-base sm:text-xl lg:text-2xl text-gray-400 mt-6 mb-10 font-medium max-w-xl mx-auto lg:mx-0 animate-fade-in-up opacity-0 leading-relaxed" style="animation-delay: 0.2s;">
