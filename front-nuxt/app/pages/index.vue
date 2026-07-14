@@ -71,17 +71,6 @@
           </div>
         </div>
 
-        <!-- Columna derecha: números de credibilidad (compactos, sin protagonismo) -->
-        <div class="flex lg:flex-col gap-3 flex-shrink-0">
-          <div class="flex flex-col items-center px-5 py-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
-            <span class="text-2xl font-black text-neon-green">+50</span>
-            <span class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">{{ t('hero.trustClients') }}</span>
-          </div>
-          <div class="flex flex-col items-center px-5 py-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
-            <span class="text-2xl font-black text-yellow-400">5.0★</span>
-            <span class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">Rating</span>
-          </div>
-        </div>
       </div>
 
       <!-- Scroll indicator -->
