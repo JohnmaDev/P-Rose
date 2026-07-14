@@ -7,9 +7,8 @@
       :aria-label="t('whatsapp.label')"
       class="fixed bottom-6 left-6 z-50 group"
     >
-      <!-- Pulse rings -->
-      <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-30 animate-ping"></span>
-      <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-20 animate-ping [animation-delay:0.4s]"></span>
+      <!-- Glow base suave -->
+      <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-20 blur-md"></span>
 
       <!-- Main button -->
       <div class="relative w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-[0_0_25px_rgba(37,211,102,0.5)] group-hover:shadow-[0_0_40px_rgba(37,211,102,0.8)] group-hover:scale-110 transition-all duration-300">
