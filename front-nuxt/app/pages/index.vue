@@ -14,68 +14,80 @@
       </div>
     </Transition>
 
-    <!-- ─── STORE HERO BANNER ─── -->
-    <div class="relative w-full overflow-hidden pt-16">
-      <!-- Fondo con gradiente -->
-      <div class="absolute inset-0 bg-gradient-to-br from-zinc-950 via-barber-black to-zinc-950 z-0" />
-      <div class="absolute top-0 left-[10%] w-[500px] h-[300px] bg-neon-green/5 rounded-full blur-[120px] z-0 pointer-events-none" />
-      <div class="absolute bottom-0 right-[5%] w-[400px] h-[200px] bg-neon-green/4 rounded-full blur-[100px] z-0 pointer-events-none" />
+    <!-- ─── STORE HERO — fondo dramático + identidad de tienda ─── -->
+    <div class="relative w-full min-h-[88svh] flex flex-col justify-center overflow-hidden">
 
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 flex flex-col sm:flex-row items-center gap-8 sm:gap-12">
+      <!-- Imagen de fondo con overlay multicapa -->
+      <div class="absolute inset-0 z-0">
+        <picture>
+          <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
+          <img
+            src="/bg_vertical.webp"
+            alt="PersonalBarber Store"
+            class="w-full h-full object-cover object-top"
+            style="filter: brightness(0.28) saturate(0.85)"
+            fetchpriority="high"
+          />
+        </picture>
+        <!-- Gradiente profundo hacia abajo -->
+        <div class="absolute inset-0 bg-gradient-to-b from-barber-black/40 via-transparent to-barber-black"></div>
+        <!-- Vignette lateral -->
+        <div class="absolute inset-0 bg-gradient-to-r from-barber-black/70 via-transparent to-barber-black/50"></div>
+      </div>
 
-        <!-- Texto principal -->
-        <div class="flex-1 flex flex-col gap-4 text-center sm:text-left">
-          <!-- Badge -->
-          <div class="inline-flex items-center gap-2 self-center sm:self-start px-3 py-1 rounded-full border border-neon-green/30 bg-neon-green/5 w-fit">
-            <span class="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse shadow-[0_0_6px_rgba(57,255,20,0.8)]"></span>
-            <span class="text-neon-green text-[9px] font-black tracking-[0.2em] uppercase">Medellín · Premium Store</span>
+      <!-- Glow ambiental neón -->
+      <div class="absolute top-1/3 left-1/4 w-[45vw] h-[45vw] max-w-[500px] bg-neon-green/7 rounded-full blur-[130px] pointer-events-none z-0"></div>
+
+      <!-- Contenido hero -->
+      <div class="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-16 w-full flex flex-col lg:flex-row items-center lg:items-end gap-10 lg:gap-20">
+
+        <!-- Columna izquierda: tipografía masiva -->
+        <div class="flex-1 flex flex-col gap-5">
+
+          <!-- Badge live -->
+          <div class="inline-flex items-center gap-2 self-start px-4 py-1.5 rounded-full border border-neon-green/30 bg-neon-green/5 backdrop-blur-sm">
+            <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.9)]"></span>
+            <span class="text-neon-green text-[10px] font-black tracking-[0.22em] uppercase">Medellín · Premium Store</span>
           </div>
 
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-white leading-none">
-            {{ t('store.heroTitle1') }}<br/>
-            <span class="text-neon-green">{{ t('store.heroTitle2') }}</span>
+          <!-- Título masivo estilo tienda -->
+          <h1 class="text-[3.2rem] sm:text-[5rem] lg:text-[7.5rem] xl:text-[9rem] font-black tracking-tighter italic leading-[0.88] text-shadow-premium">
+            <span class="text-neon-green block drop-shadow-[0_0_25px_rgba(57,255,20,0.35)]">{{ t('store.heroTitle1') }}</span>
+            <span class="text-white block pt-2">{{ t('store.heroTitle2') }}</span>
           </h1>
-          <p class="text-gray-400 text-sm sm:text-base max-w-md mx-auto sm:mx-0 leading-relaxed">
+
+          <!-- Subtítulo -->
+          <p class="text-gray-300 text-base sm:text-lg max-w-lg leading-relaxed font-medium">
             {{ t('store.heroSub') }}
           </p>
 
-          <!-- Badges de confianza -->
-          <div class="flex flex-wrap gap-3 justify-center sm:justify-start mt-2">
-            <span v-for="badge in trustBadges" :key="badge" class="flex items-center gap-1.5 text-[10px] text-gray-400 font-semibold">
-              <fa-icon :icon="['fas', 'circle-check']" class="text-neon-green text-[10px]" />
+          <!-- Trust badges -->
+          <div class="flex flex-wrap gap-4 mt-1">
+            <span v-for="badge in trustBadges" :key="badge"
+              class="flex items-center gap-2 text-[11px] text-gray-300 font-semibold">
+              <fa-icon :icon="['fas', 'circle-check']" class="text-neon-green" />
               {{ badge }}
             </span>
           </div>
         </div>
 
-        <!-- Stats rápidos -->
-        <div class="flex sm:flex-col gap-4 sm:gap-3 flex-shrink-0">
-          <div v-for="stat in quickStats" :key="stat.label"
-            class="flex flex-col items-center sm:items-end gap-0.5 px-4 py-3 rounded-2xl bg-white/5 border border-white/8">
-            <span class="text-2xl font-black text-neon-green">{{ stat.value }}</span>
-            <span class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{{ stat.label }}</span>
+        <!-- Columna derecha: números de credibilidad (compactos, sin protagonismo) -->
+        <div class="flex lg:flex-col gap-3 flex-shrink-0">
+          <div class="flex flex-col items-center px-5 py-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
+            <span class="text-2xl font-black text-neon-green">+50</span>
+            <span class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">{{ t('hero.trustClients') }}</span>
+          </div>
+          <div class="flex flex-col items-center px-5 py-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
+            <span class="text-2xl font-black text-yellow-400">5.0★</span>
+            <span class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">Rating</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ─── BANNER RESERVA CITA (estilo Amazon Prime — discreto pero visible) ─── -->
-    <div class="w-full bg-gradient-to-r from-zinc-900 via-zinc-800/80 to-zinc-900 border-y border-white/8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center flex-shrink-0">
-            <fa-icon :icon="['fas', 'scissors']" class="text-neon-green text-xs" />
-          </div>
-          <div>
-            <p class="text-white text-xs font-bold">{{ t('store.barberBannerTitle') }}</p>
-            <p class="text-gray-500 text-[10px]">{{ t('store.barberBannerSub') }}</p>
-          </div>
-        </div>
-        <NuxtLink to="/agendar"
-          class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border border-neon-green/40 text-neon-green text-[10px] font-black tracking-widest uppercase hover:bg-neon-green/10 hover:border-neon-green transition-all duration-300">
-          {{ t('store.barberBannerCta') }}
-          <fa-icon :icon="['fas', 'arrow-right']" class="text-[8px]" />
-        </NuxtLink>
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce pointer-events-none">
+        <span class="text-[9px] text-white/20 font-black tracking-[0.3em] uppercase">Explorar</span>
+        <div class="w-[1px] h-7 bg-gradient-to-b from-white/20 to-transparent rounded-full"></div>
       </div>
     </div>
 
@@ -268,11 +280,6 @@ const trustBadges = computed(() => [
   t('tienda.badgeSupport'),
 ])
 
-const quickStats = computed(() => [
-  { value: '+50', label: t('hero.trustClients') },
-  { value: '5.0★', label: 'Rating' },
-  { value: '100%', label: 'Original' },
-])
 
 function getCategoryLabel(catId: string) {
   const cat = categories.value.find(c => c.id === catId)
