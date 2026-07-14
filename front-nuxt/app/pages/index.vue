@@ -17,7 +17,7 @@
     </Transition>
 
     <!-- ─── STORE HERO — fondo dramático + identidad de tienda ─── -->
-    <div class="relative w-full min-h-[88svh] flex flex-col justify-center overflow-hidden">
+    <div class="relative w-full min-h-[100svh] sm:min-h-[92svh] flex flex-col justify-center overflow-hidden">
 
       <!-- Imagen de fondo con overlay multicapa -->
       <div class="absolute inset-0 z-0">
@@ -31,54 +31,61 @@
             fetchpriority="high"
           />
         </picture>
-        <div class="absolute inset-0 bg-gradient-to-b from-barber-black/40 via-transparent to-barber-black"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-barber-black/70 via-transparent to-barber-black/50"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-barber-black/60 via-transparent to-barber-black"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-barber-black/80 via-transparent to-barber-black/60"></div>
       </div>
 
       <!-- Glow ambiental — cambia con el departamento -->
       <div
-        class="absolute top-1/3 left-1/4 w-[45vw] h-[45vw] max-w-[500px] rounded-full blur-[130px] pointer-events-none z-0 transition-all duration-700"
-        style="background-color: var(--dept-color); opacity: 0.07"
+        class="absolute top-1/2 -translate-y-1/2 left-0 w-[70vw] h-[70vw] max-w-[600px] rounded-full blur-[150px] pointer-events-none z-0 transition-all duration-700"
+        style="background-color: var(--dept-color); opacity: 0.06"
       ></div>
 
-      <!-- Contenido hero -->
-      <div class="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-16 w-full flex flex-col lg:flex-row items-center lg:items-end gap-10 lg:gap-20">
+      <!-- Contenido hero — mejor centrado en móvil -->
+      <div class="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20 pb-24 sm:pt-28 sm:pb-20 flex flex-col gap-6 justify-center">
 
-        <!-- Columna izquierda: tipografía masiva -->
-        <div class="flex-1 flex flex-col gap-5">
+        <!-- Badge live — color dinámico -->
+        <div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full backdrop-blur-sm dept-badge transition-all duration-500">
+          <span class="w-1.5 h-1.5 rounded-full animate-pulse dept-bg" style="box-shadow: 0 0 6px var(--dept-color)"></span>
+          <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">Medellín · Premium Store</span>
+        </div>
 
-          <!-- Badge live — color dinámico -->
-          <div class="inline-flex items-center gap-2 self-start px-4 py-1.5 rounded-full backdrop-blur-sm dept-badge transition-all duration-500">
-            <span class="w-2 h-2 rounded-full animate-pulse dept-bg" style="box-shadow: 0 0 8px var(--dept-color)"></span>
-            <span class="text-[10px] font-black tracking-[0.22em] uppercase dept-text">Medellín · Premium Store</span>
-          </div>
+        <!-- Título masivo — 3 niveles de jerarquía -->
+        <div class="flex flex-col gap-0">
+          <!-- Línea decorativa -->
+          <div class="w-12 h-[3px] dept-bg rounded-full mb-4 transition-all duration-500"></div>
 
-          <!-- Título masivo -->
-          <h1 class="text-[3.2rem] sm:text-[5rem] lg:text-[7.5rem] xl:text-[9rem] font-black tracking-tighter italic leading-[0.88] text-shadow-premium">
-            <span class="dept-text block transition-all duration-500" style="filter: drop-shadow(0 0 25px var(--dept-glow))">{{ t('store.heroTitle1') }}</span>
-            <span class="text-white block pt-2">{{ t('store.heroTitle2') }}</span>
-          </h1>
-
-          <!-- Subtítulo -->
-          <p class="text-gray-300 text-base sm:text-lg max-w-lg leading-relaxed font-medium">
-            {{ t('store.heroSub') }}
-          </p>
-
-          <!-- Trust badges -->
-          <div class="flex flex-wrap gap-4 mt-1">
-            <span v-for="badge in trustBadges" :key="badge"
-              class="flex items-center gap-2 text-[11px] text-gray-300 font-semibold">
-              <fa-icon :icon="['fas', 'circle-check']" class="dept-text" />
-              {{ badge }}
+          <h1 class="font-black tracking-tighter italic leading-[0.85] text-shadow-premium">
+            <!-- Línea 1: accent + grande -->
+            <span
+              class="dept-text block text-[2.6rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+              style="filter: drop-shadow(0 0 20px var(--dept-glow))"
+            >{{ t('store.heroTitle1') }}</span>
+            <!-- Línea 2: blanco + mediano -->
+            <span class="text-white block text-[2.1rem] xs:text-[2.5rem] sm:text-[3.8rem] lg:text-[5.5rem] xl:text-[7rem] leading-[0.9] pt-1">
+              {{ t('store.heroTitle2') }}
             </span>
-          </div>
+          </h1>
+        </div>
+
+        <!-- Subtítulo -->
+        <p class="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed">
+          {{ t('store.heroSub') }}
+        </p>
+
+        <!-- Trust badges — más compactos en móvil -->
+        <div class="flex flex-wrap gap-x-4 gap-y-2">
+          <span v-for="badge in trustBadges" :key="badge"
+            class="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-gray-400 font-semibold">
+            <fa-icon :icon="['fas', 'circle-check']" class="dept-text text-[9px]" />
+            {{ badge }}
+          </span>
         </div>
       </div>
 
       <!-- Scroll indicator -->
-      <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce pointer-events-none">
-        <span class="text-[9px] text-white/20 font-black tracking-[0.3em] uppercase">Explorar</span>
-        <div class="w-[1px] h-7 bg-gradient-to-b from-white/20 to-transparent rounded-full"></div>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce pointer-events-none">
+        <div class="w-[1px] h-6 dept-bg rounded-full opacity-30 transition-all duration-500"></div>
       </div>
     </div>
 
