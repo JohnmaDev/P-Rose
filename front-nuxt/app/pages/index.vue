@@ -17,7 +17,7 @@
     </Transition>
 
     <!-- ─── STORE HERO — fondo dramático + identidad de tienda ─── -->
-    <div class="relative w-full min-h-[100svh] sm:min-h-[92svh] flex flex-col justify-center overflow-hidden">
+    <div class="relative w-full min-h-[85svh] sm:min-h-[92svh] flex flex-col justify-center overflow-hidden">
 
       <!-- Imagen de fondo con overlay multicapa -->
       <div class="absolute inset-0 z-0">
