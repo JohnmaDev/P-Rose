@@ -5,7 +5,8 @@
       <button
         @click="$emit('open')"
         :aria-label="t('cart.openCart')"
-        class="fixed bottom-24 right-5 z-50 w-14 h-14 rounded-full bg-neon-green text-black flex items-center justify-center shadow-lg shadow-neon-green/30 hover:bg-neon-green-dark transition-all duration-300 hover:scale-110 active:scale-95"
+        :class="['fixed right-5 z-50 w-14 h-14 rounded-full bg-neon-green text-black flex items-center justify-center shadow-lg shadow-neon-green/30 hover:bg-neon-green-dark transition-all duration-500 ease-out hover:scale-110 active:scale-95',
+          y > 50 ? 'bottom-24' : 'bottom-6 right-6']"
       >
         <fa-icon :icon="['fas', 'shopping-bag']" class="text-lg" />
         <!-- Badge de cantidad -->
@@ -24,10 +25,12 @@
 
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
+import { useWindowScroll } from '@vueuse/core'
 
 const { t } = useLanguage()
 defineEmits<{ open: [] }>()
 const { cartCount } = useCart()
+const { y } = useWindowScroll()
 </script>
 
 <style scoped>
