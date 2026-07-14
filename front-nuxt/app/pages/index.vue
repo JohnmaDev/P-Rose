@@ -55,14 +55,14 @@
           <!-- Línea decorativa -->
           <div class="w-12 h-[3px] dept-bg rounded-full mb-4 transition-all duration-500"></div>
 
-          <h1 class="font-black tracking-tighter italic leading-[0.85] text-shadow-premium">
+          <h1 class="font-black tracking-tighter italic leading-[0.95] text-shadow-premium">
             <!-- Línea 1: accent + grande -->
             <span
               class="dept-text block text-[2.6rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
               style="filter: drop-shadow(0 0 20px var(--dept-glow))"
             >{{ t('store.heroTitle1') }}</span>
             <!-- Línea 2: blanco + mediano -->
-            <span class="text-white block text-[2.1rem] xs:text-[2.5rem] sm:text-[3.8rem] lg:text-[5.5rem] xl:text-[7rem] leading-[0.9] pt-1">
+            <span class="text-white block text-[2.1rem] xs:text-[2.5rem] sm:text-[3.8rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-2 sm:pt-4">
               {{ t('store.heroTitle2') }}
             </span>
           </h1>
