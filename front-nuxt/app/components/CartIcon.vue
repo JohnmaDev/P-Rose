@@ -25,12 +25,24 @@
 
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
-import { useWindowScroll } from '@vueuse/core'
 
 const { t } = useLanguage()
 defineEmits<{ open: [] }>()
 const { cartCount } = useCart()
-const { y } = useWindowScroll()
+
+const y = ref(0)
+
+onMounted(() => {
+  const onScroll = () => {
+    y.value = window.scrollY
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+  
+  onUnmounted(() => {
+    window.removeEventListener('scroll', onScroll)
+  })
+})
 </script>
 
 <style scoped>
