@@ -159,10 +159,10 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
-              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5"
+              <h2 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5"
                 :class="{'group-hover:text-neon-green': activeDepartment === 'men','group-hover:text-cyan-400': activeDepartment === 'merch','group-hover:text-pink-500': activeDepartment === 'women'}">
                 {{ product.name }}
-              </h3>
+              </h2>
             </div>
             <div class="flex items-center justify-between mt-4">
               <span class="font-bold text-sm transition-colors duration-300"
@@ -179,7 +179,7 @@
                 :aria-label="isStockFull(product) ? t('tienda.maxStock') : t('tienda.addToCart')">
                 <fa-icon :icon="['fas', isStockFull(product) ? 'lock' : (justAdded === product.id ? 'check' : 'plus')]" class="text-[10px]" />
               </button>
-              <button v-else disabled class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-700 cursor-not-allowed">
+              <button v-else disabled :aria-label="t('tienda.soldOut')" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-700 cursor-not-allowed">
                 <fa-icon :icon="['fas', 'times']" />
               </button>
             </div>

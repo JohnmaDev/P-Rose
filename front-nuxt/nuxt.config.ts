@@ -61,12 +61,12 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       htmlAttrs: { lang: 'es' },
-      title: 'PersonalBarber — Barbería Premium en Medellín',
+      title: 'PersonalBarber — Tienda Online de Barbería | Medellín',
       meta: [
-        { name: 'description', content: 'Barbería premium en Medellín con el mejor estilo. Cortes exclusivos, barba profesional y productos especializados. Reserva tu cita online al instante.' },
+        { name: 'description', content: 'Tienda online de productos profesionales de barbería, cuidado personal y moda en Medellín. Envíos a toda Colombia. También agenda tu cita con el barber a domicilio.' },
         { name: 'theme-color', content: '#0A0A0A' },
-        { property: 'og:title', content: 'PersonalBarber — Barbería Premium en Medellín' },
-        { property: 'og:description', content: 'Barbería premium en Medellín con el mejor estilo. Cortes exclusivos, barba profesional y productos especializados. Reserva tu cita online al instante.' },
+        { property: 'og:title', content: 'PersonalBarber — Tienda Online de Barbería | Medellín' },
+        { property: 'og:description', content: 'Tienda online de barbería premium. Ceras, maquinas, cuidado de barba, skincare y más. Compra online con envío a toda Colombia.' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'PersonalBarber' },
         { property: 'og:url', content: 'https://personalbarber.vip' },
@@ -75,19 +75,30 @@ export default defineNuxtConfig({
         { property: 'og:image:type', content: 'image/webp' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
-        { property: 'og:image:alt', content: 'PersonalBarber — Barbería Premium en Medellín' },
+        { property: 'og:image:alt', content: 'PersonalBarber — Tienda Online de Barbería en Medellín' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'PersonalBarber — Barbería Premium en Medellín' },
-        { name: 'twitter:description', content: 'Barbería premium en Medellín con el mejor estilo. Cortes exclusivos, barba profesional y productos especializados. Reserva tu cita online al instante.' },
+        { name: 'twitter:title', content: 'PersonalBarber — Tienda Online de Barbería | Medellín' },
+        { name: 'twitter:description', content: 'Tienda online de barbería premium en Medellín. Compra online con envío a toda Colombia.' },
         { name: 'twitter:image', content: 'https://personalbarber.vip/og-image.webp' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        // Preload hero image — mejora LCP crítico
+        { rel: 'preload', as: 'image', href: '/bg_vertical.webp', fetchpriority: 'high' },
+        // Google Fonts: preconnect primero, luego preload para no bloquear render
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap' },
+        {
+          rel: 'preload',
+          as: 'style',
+          href: 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap',
+          onload: "this.onload=null;this.rel='stylesheet'"
+        },
+      ],
+      noscript: [
+        { innerHTML: '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap">' }
       ]
     }
   },
