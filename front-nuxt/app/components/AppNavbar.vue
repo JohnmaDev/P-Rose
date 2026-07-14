@@ -126,7 +126,6 @@ const navRef = ref<HTMLElement | null>(null)
 
 const navLinks = computed(() => [
   { to: '/', label: t('nav.home'), icon: ['fas', 'store'] as [string, string] },
-  { to: '/tienda', label: t('nav.store'), icon: ['fas', 'shopping-bag'] as [string, string] },
   { to: '/agendar', label: t('nav.book'), icon: ['fas', 'calendar-check'] as [string, string] },
 ])
 

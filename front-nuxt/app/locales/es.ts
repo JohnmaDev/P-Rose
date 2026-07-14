@@ -2,9 +2,17 @@
 
 export const es = {
   nav: {
-    home: 'Inicio',
+    home: 'Tienda',
     store: 'Tienda',
     book: 'Agendar',
+  },
+  store: {
+    heroTitle1: 'Todo lo que',
+    heroTitle2: 'necesitas.',
+    heroSub: 'Productos profesionales de barbería, cuidado personal y moda. Envíos a Medellín y toda Colombia.',
+    barberBannerTitle: 'PersonalBarber · Servicio a Domicilio',
+    barberBannerSub: 'Andrés lleva la barbería premium directamente donde estás',
+    barberBannerCta: 'Agendar cita',
   },
   whatsapp: {
     label: 'Chatea con nosotros por WhatsApp',

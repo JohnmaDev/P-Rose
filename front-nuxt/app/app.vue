@@ -59,9 +59,9 @@ const showNavbar = computed(() =>
   route.name !== 'checkout' && route.name !== 'admin'
 )
 
-// Mostrar carrito solo en páginas que lo necesitan (no en Home, admin ni checkout)
+// Mostrar carrito en todas las páginas de tienda (home, producto, etc.) excepto admin y checkout
 const showCart = computed(() =>
-  route.name !== 'index' && route.name !== 'admin' && route.name !== 'checkout'
+  route.name !== 'admin' && route.name !== 'checkout'
 )
 
 function scrollToTop() {
