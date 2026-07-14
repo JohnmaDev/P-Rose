@@ -1,16 +1,18 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white relative">
+  <div
+    class="bg-barber-black min-h-screen text-white relative"
+    :style="{
+      '--dept-color': accentColor,
+      '--dept-glow': accentGlow,
+      '--dept-color-10': accentColor + '1a',
+      '--dept-color-30': accentColor + '4d',
+    }"
+  >
 
     <!-- ─── Barra de carga top ─── -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
-        <div class="h-full animate-progress-bar transition-colors duration-500"
-          :class="{
-            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
-            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
-            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
-          }">
-        </div>
+        <div class="h-full animate-progress-bar dept-bg" style="box-shadow: 0 0 10px var(--dept-color)"></div>
       </div>
     </Transition>
 
@@ -29,14 +31,15 @@
             fetchpriority="high"
           />
         </picture>
-        <!-- Gradiente profundo hacia abajo -->
         <div class="absolute inset-0 bg-gradient-to-b from-barber-black/40 via-transparent to-barber-black"></div>
-        <!-- Vignette lateral -->
         <div class="absolute inset-0 bg-gradient-to-r from-barber-black/70 via-transparent to-barber-black/50"></div>
       </div>
 
-      <!-- Glow ambiental neón -->
-      <div class="absolute top-1/3 left-1/4 w-[45vw] h-[45vw] max-w-[500px] bg-neon-green/7 rounded-full blur-[130px] pointer-events-none z-0"></div>
+      <!-- Glow ambiental — cambia con el departamento -->
+      <div
+        class="absolute top-1/3 left-1/4 w-[45vw] h-[45vw] max-w-[500px] rounded-full blur-[130px] pointer-events-none z-0 transition-all duration-700"
+        style="background-color: var(--dept-color); opacity: 0.07"
+      ></div>
 
       <!-- Contenido hero -->
       <div class="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-16 w-full flex flex-col lg:flex-row items-center lg:items-end gap-10 lg:gap-20">
@@ -44,15 +47,15 @@
         <!-- Columna izquierda: tipografía masiva -->
         <div class="flex-1 flex flex-col gap-5">
 
-          <!-- Badge live -->
-          <div class="inline-flex items-center gap-2 self-start px-4 py-1.5 rounded-full border border-neon-green/30 bg-neon-green/5 backdrop-blur-sm">
-            <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.9)]"></span>
-            <span class="text-neon-green text-[10px] font-black tracking-[0.22em] uppercase">Medellín · Premium Store</span>
+          <!-- Badge live — color dinámico -->
+          <div class="inline-flex items-center gap-2 self-start px-4 py-1.5 rounded-full backdrop-blur-sm dept-badge transition-all duration-500">
+            <span class="w-2 h-2 rounded-full animate-pulse dept-bg" style="box-shadow: 0 0 8px var(--dept-color)"></span>
+            <span class="text-[10px] font-black tracking-[0.22em] uppercase dept-text">Medellín · Premium Store</span>
           </div>
 
-          <!-- Título masivo estilo tienda -->
+          <!-- Título masivo -->
           <h1 class="text-[3.2rem] sm:text-[5rem] lg:text-[7.5rem] xl:text-[9rem] font-black tracking-tighter italic leading-[0.88] text-shadow-premium">
-            <span class="text-neon-green block drop-shadow-[0_0_25px_rgba(57,255,20,0.35)]">{{ t('store.heroTitle1') }}</span>
+            <span class="dept-text block transition-all duration-500" style="filter: drop-shadow(0 0 25px var(--dept-glow))">{{ t('store.heroTitle1') }}</span>
             <span class="text-white block pt-2">{{ t('store.heroTitle2') }}</span>
           </h1>
 
@@ -65,12 +68,11 @@
           <div class="flex flex-wrap gap-4 mt-1">
             <span v-for="badge in trustBadges" :key="badge"
               class="flex items-center gap-2 text-[11px] text-gray-300 font-semibold">
-              <fa-icon :icon="['fas', 'circle-check']" class="text-neon-green" />
+              <fa-icon :icon="['fas', 'circle-check']" class="dept-text" />
               {{ badge }}
             </span>
           </div>
         </div>
-
       </div>
 
       <!-- Scroll indicator -->
@@ -87,18 +89,18 @@
       <div class="flex justify-center mt-2 mb-8">
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <button @click="activeDepartment = 'men'; activeFilter = 'all'"
-            :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-400 hover:text-white']">
+            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
+            :class="activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-400 hover:text-white'">
             <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
           <button @click="activeDepartment = 'merch'; activeFilter = 'all'"
-            :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']">
+            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
+            :class="activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-400 hover:text-white'">
             <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
           </button>
           <button @click="activeDepartment = 'women'; activeFilter = 'all'"
-            :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']">
+            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
+            :class="activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-400 hover:text-white'">
             <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
           </button>
         </div>
@@ -107,10 +109,8 @@
       <!-- Filtros de categoría -->
       <div class="flex flex-wrap gap-3 mb-8 justify-center">
         <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
-          :class="['px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300',
-            activeFilter === f.id
-              ? (activeDepartment === 'men' ? 'bg-neon-green text-black border-neon-green' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black border-cyan-400' : 'bg-pink-500 text-white border-pink-500'))
-              : (activeDepartment === 'men' ? 'glass border-white/20 text-gray-300 hover:border-neon-green/50 hover:text-white' : (activeDepartment === 'merch' ? 'glass border-white/20 text-gray-300 hover:border-cyan-400/50 hover:text-white' : 'glass border-white/20 text-gray-300 hover:border-pink-500/50 hover:text-white'))]">
+          class="px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300"
+          :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
           {{ f.label }}
         </button>
       </div>
@@ -118,14 +118,14 @@
       <!-- Contador -->
       <div class="mb-6 text-center">
         <p class="text-gray-400 text-sm">
-          {{ t('tienda.showing') }} <span class="font-bold transition-colors duration-300" :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
+          {{ t('tienda.showing') }} <span class="font-bold transition-all duration-500 dept-text">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
           <span v-if="activeFilter !== 'all'"> {{ t('tienda.in') }} <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="{'border-neon-green': activeDepartment === 'men','border-cyan-400': activeDepartment === 'merch','border-pink-500': activeDepartment === 'women'}"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-all duration-500 dept-border"></div>
         <p class="text-gray-400 font-medium">{{ t('tienda.loading') }}</p>
       </div>
 
@@ -135,8 +135,7 @@
         :class="{'opacity-40 pointer-events-none': isLoading}">
         <div v-for="(product, index) in filteredProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          :class="['group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium',
-            activeDepartment === 'men' ? 'hover:border-neon-green/50' : (activeDepartment === 'merch' ? 'hover:border-cyan-400/50' : 'hover:border-pink-500/50')]">
+          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card">
 
           <!-- Imagen -->
           <div class="aspect-square overflow-hidden bg-white/5 relative cursor-pointer" @click="goToDetail(product)">
@@ -159,23 +158,18 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-400 uppercase tracking-widest">{{ product.brand }}</span>
-              <h2 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5"
-                :class="{'group-hover:text-neon-green': activeDepartment === 'men','group-hover:text-cyan-400': activeDepartment === 'merch','group-hover:text-pink-500': activeDepartment === 'women'}">
+              <h2 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5 dept-hover-text">
                 {{ product.name }}
               </h2>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="font-bold text-sm transition-colors duration-300"
-                :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">
+              <span class="font-bold text-sm transition-all duration-500 dept-text">
                 {{ formatPrice(product.price) }}
               </span>
               <button v-if="product.stock > 0" @click.stop="quickAddToCart(product)"
                 :disabled="isStockFull(product)"
-                :class="['w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
-                  isStockFull(product) ? 'opacity-20 cursor-not-allowed border-transparent'
-                    : (justAdded === product.id
-                      ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white'))
-                      : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500')))]"
+                class="w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white dept-hover-btn"
+                :class="isStockFull(product) ? 'opacity-20 cursor-not-allowed' : (justAdded === product.id ? 'dept-bg !text-black' : '')"
                 :aria-label="isStockFull(product) ? t('tienda.maxStock') : t('tienda.addToCart')">
                 <fa-icon :icon="['fas', isStockFull(product) ? 'lock' : (justAdded === product.id ? 'check' : 'plus')]" class="text-[10px]" />
               </button>
@@ -263,12 +257,23 @@ const activeFilter = ref('all')
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
 
+// ─── Tema de color por departamento ───
+const accentColor = computed(() => {
+  if (activeDepartment.value === 'men')   return '#39FF14'
+  if (activeDepartment.value === 'merch') return '#22d3ee'
+  return '#ec4899'
+})
+const accentGlow = computed(() => {
+  if (activeDepartment.value === 'men')   return 'rgba(57,255,20,0.35)'
+  if (activeDepartment.value === 'merch') return 'rgba(34,211,238,0.35)'
+  return 'rgba(236,72,153,0.35)'
+})
+
 const trustBadges = computed(() => [
   t('tienda.badgeOriginal'),
   t('tienda.badgeShipping'),
   t('tienda.badgeSupport'),
 ])
-
 
 function getCategoryLabel(catId: string) {
   const cat = categories.value.find(c => c.id === catId)
@@ -381,6 +386,44 @@ if (import.meta.server) {
 </script>
 
 <style scoped>
+/* ─── Tema dinámico por departamento via CSS Custom Properties ─── */
+.dept-text       { color: var(--dept-color); transition: color 0.5s ease; }
+.dept-bg         { background-color: var(--dept-color); transition: background-color 0.5s ease; }
+.dept-border     { border-color: var(--dept-color); transition: border-color 0.5s ease; }
+
+.dept-badge {
+  border: 1px solid color-mix(in srgb, var(--dept-color) 30%, transparent);
+  background: color-mix(in srgb, var(--dept-color) 8%, transparent);
+  transition: border-color 0.5s ease, background-color 0.5s ease;
+}
+
+/* Hover en tarjeta de producto */
+.dept-hover-card { transition: border-color 0.3s ease; }
+.dept-hover-card:hover { border-color: color-mix(in srgb, var(--dept-color) 50%, transparent); }
+
+/* Hover en nombre de producto */
+.dept-hover-text { transition: color 0.3s ease; }
+.group:hover .dept-hover-text { color: var(--dept-color); }
+
+/* Botón + de agregar al carrito */
+.dept-hover-btn { transition: background-color 0.3s ease, color 0.3s ease; }
+.dept-hover-btn:not(:disabled):hover {
+  background-color: var(--dept-color);
+  color: #000;
+}
+
+/* Filtros activos */
+.dept-active-filter {
+  background-color: var(--dept-color) !important;
+  color: #000 !important;
+  border-color: var(--dept-color) !important;
+}
+.dept-hover-filter:hover {
+  border-color: color-mix(in srgb, var(--dept-color) 50%, transparent);
+  color: white;
+}
+
+/* Transiciones del grid */
 .products-grid-move,
 .products-grid-enter-active,
 .products-grid-leave-active {

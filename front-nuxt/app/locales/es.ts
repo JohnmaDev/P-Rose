@@ -7,8 +7,8 @@ export const es = {
     book: 'Agendar',
   },
   store: {
-    heroTitle1: 'Todo lo que',
-    heroTitle2: 'necesitas.',
+    heroTitle1: 'Todo lo que necesitas',
+    heroTitle2: 'para el cuidado personal.',
     heroSub: 'Productos profesionales de barbería, cuidado personal y moda. Envíos a Medellín y toda Colombia.',
     barberBannerTitle: 'PersonalBarber · Servicio a Domicilio',
     barberBannerSub: 'Andrés lleva la barbería premium directamente donde estás',

@@ -7,8 +7,8 @@ export const en = {
     book: 'Book Now',
   },
   store: {
-    heroTitle1: 'Everything you',
-    heroTitle2: 'need.',
+    heroTitle1: 'Everything you need',
+    heroTitle2: 'for personal care.',
     heroSub: 'Professional barbershop products, grooming and fashion. Shipping to Medellín and all Colombia.',
     barberBannerTitle: 'PersonalBarber · Home Service',
     barberBannerSub: 'Andrés brings the premium barber experience directly to you',
