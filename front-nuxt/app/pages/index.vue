@@ -88,7 +88,7 @@
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <button @click="activeDepartment = 'men'; activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']">
+              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-400 hover:text-white']">
             <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
           <button @click="activeDepartment = 'merch'; activeFilter = 'all'"
@@ -117,7 +117,7 @@
 
       <!-- Contador -->
       <div class="mb-6 text-center">
-        <p class="text-gray-500 text-sm">
+        <p class="text-gray-400 text-sm">
           {{ t('tienda.showing') }} <span class="font-bold transition-colors duration-300" :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
           <span v-if="activeFilter !== 'all'"> {{ t('tienda.in') }} <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
@@ -141,7 +141,7 @@
           <!-- Imagen -->
           <div class="aspect-square overflow-hidden bg-white/5 relative cursor-pointer" @click="goToDetail(product)">
             <img
-              :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
+              :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 200)"
               :alt="product.name"
               class="w-full h-full object-cover transition-premium group-hover:scale-110"
               :class="{'grayscale opacity-50': product.stock <= 0}"
@@ -158,7 +158,7 @@
           <!-- Info -->
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
-              <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
+              <span class="text-[10px] text-gray-400 uppercase tracking-widest">{{ product.brand }}</span>
               <h2 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5"
                 :class="{'group-hover:text-neon-green': activeDepartment === 'men','group-hover:text-cyan-400': activeDepartment === 'merch','group-hover:text-pink-500': activeDepartment === 'women'}">
                 {{ product.name }}

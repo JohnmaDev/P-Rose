@@ -2,9 +2,17 @@
 
 export const en = {
   nav: {
-    home: 'Home',
+    home: 'Store',
     store: 'Store',
     book: 'Book Now',
+  },
+  store: {
+    heroTitle1: 'Everything you',
+    heroTitle2: 'need.',
+    heroSub: 'Professional barbershop products, grooming and fashion. Shipping to Medellín and all Colombia.',
+    barberBannerTitle: 'PersonalBarber · Home Service',
+    barberBannerSub: 'Andrés brings the premium barber experience directly to you',
+    barberBannerCta: 'Book appointment',
   },
   whatsapp: {
     label: 'Chat with us on WhatsApp',
