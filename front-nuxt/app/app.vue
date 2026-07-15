@@ -12,8 +12,8 @@
         <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
       </template>
 
-      <!-- Botón flotante de WhatsApp — siempre visible -->
-      <WhatsAppFab v-if="!cartOpen" />
+      <!-- Botón flotante de WhatsApp — oculto en checkout -->
+      <WhatsAppFab v-if="!cartOpen && route.name !== 'checkout'" />
 
       <!-- Botón Scroll Top -->
       <button

@@ -1,150 +1,180 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white">
-    <!-- Header -->
-    <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
-      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <NuxtLink to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
-          <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
-          <span class="text-xs font-semibold">{{ t('checkout.backStore') }}</span>
+  <div class="bg-barber-black min-h-screen text-white flex flex-col">
+
+    <!-- ─── Header estilo G59: Logo + breadcrumb ─── -->
+    <header class="w-full border-b border-white/8 bg-barber-black">
+      <div class="max-w-5xl mx-auto px-6 py-5 flex flex-col items-center gap-3">
+
+        <!-- Logo -->
+        <NuxtLink to="/" class="block">
+          <img src="/favicon.svg" alt="PersonalBarber" class="h-9 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
         </NuxtLink>
-        <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-neon-green">Personal</span>Barber · Checkout
-        </h1>
-        <div class="w-10 sm:w-16 flex-shrink-0"></div>
+
+        <!-- Breadcrumb de pasos -->
+        <nav class="flex items-center gap-2 text-xs font-semibold tracking-wide" aria-label="Pasos del checkout">
+          <NuxtLink to="/tienda" class="text-neon-green hover:underline flex items-center gap-1">
+            <fa-icon :icon="['fas', 'arrow-left']" class="text-[10px]" />
+            {{ t('checkout.backStore') }}
+          </NuxtLink>
+          <span class="text-white/20 mx-1">·</span>
+          <span class="text-white/40">{{ t('checkout.stepInfo') }}</span>
+          <span class="text-white/20">›</span>
+          <span class="text-white/40">{{ t('checkout.stepShipping') }}</span>
+          <span class="text-white/20">›</span>
+          <span class="text-white font-bold">{{ t('checkout.stepPayment') }}</span>
+        </nav>
       </div>
-    </div>
+    </header>
 
-    <!-- Carrito vacío -->
-    <ClientOnly>
-      <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
-        <p class="text-gray-500">{{ t('checkout.emptyCart') }}</p>
-        <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">{{ t('checkout.exploreProducts') }}</NuxtLink>
-      </div>
+    <!-- ─── Contenido principal ─── -->
+    <main class="flex-1">
+      <!-- Carrito vacío -->
+      <ClientOnly>
+        <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+          <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
+          <p class="text-gray-500">{{ t('checkout.emptyCart') }}</p>
+          <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">{{ t('checkout.exploreProducts') }}</NuxtLink>
+        </div>
 
-      <div v-else class="max-w-4xl mx-auto px-4 py-10 pb-40">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div v-else class="max-w-5xl mx-auto px-4 py-10">
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
 
-          <!-- Columna izquierda: Formulario -->
-          <div class="lg:col-span-3 space-y-6">
-            <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-              <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
-                {{ t('checkout.yourDetails') }}
-              </h2>
-              <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.firstName') }}</label>
-                    <input v-model="form.firstName" @blur="touched.firstName = true" type="text" placeholder="Juan" class="input-field"
-                      :class="{ 'border-red-500/50': touched.firstName && !form.firstName.trim() }" />
-                    <p v-if="touched.firstName && !form.firstName.trim()" class="text-[10px] text-red-400">{{ t('checkout.firstNameRequired') }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.lastName') }}</label>
-                    <input v-model="form.lastName" @blur="touched.lastName = true" type="text" placeholder="García" class="input-field"
-                      :class="{ 'border-red-500/50': touched.lastName && !form.lastName.trim() }" />
-                    <p v-if="touched.lastName && !form.lastName.trim()" class="text-[10px] text-red-400">{{ t('checkout.lastNameRequired') }}</p>
-                  </div>
-                </div>
-                <div class="space-y-1">
-                  <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.emailLabel') }} <span class="text-neon-green ml-1">*</span></label>
-                  <input v-model="form.email" @blur="touched.email = true" type="email" placeholder="juan@email.com" class="input-field"
-                    :class="{ 'border-red-500/50': touched.email && !isEmailValid }" />
-                  <p v-if="touched.email && !isEmailValid" class="text-[10px] text-red-400">{{ t('checkout.emailInvalid') }}</p>
-                </div>
-                <div class="space-y-1">
-                  <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.phoneLabel') }}</label>
-                  <input v-model="form.phone" @input="form.phone = form.phone.replace(/[^0-9+]/g, '')" @blur="touched.phone = true"
-                    type="tel" inputmode="numeric" placeholder="+57 300 123 4567" class="input-field"
-                    :class="{ 'border-red-500/50': touched.phone && !isPhoneValid }" />
-                  <p v-if="touched.phone && !isPhoneValid" class="text-[10px] text-red-400 mt-1">{{ t('checkout.phoneInvalid') }}</p>
-                </div>
-                <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.cityLabel') }}</label>
-                  <input v-model="form.city" type="text" :placeholder="t('checkout.cityPlaceholder')" class="input-field" /></div>
-                <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.addressLabel') }}</label>
-                  <input v-model="form.address" type="text" :placeholder="t('checkout.addressPlaceholder')" class="input-field" /></div>
-              </div>
-            </div>
-
-            <!-- Método de pago -->
-            <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-              <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                {{ t('checkout.paymentMethod') }}
-              </h2>
-              <div class="space-y-3">
-                <label v-for="method in paymentMethods" :key="method.id"
-                  class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                  :class="selectedPayment === method.id ? 'border-neon-green bg-neon-green/10' : 'border-white/10 hover:border-white/20'">
-                  <input type="radio" v-model="selectedPayment" :value="method.id" class="hidden" />
-                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
-                    :class="selectedPayment === method.id ? 'border-neon-green' : 'border-gray-600'">
-                    <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full bg-neon-green"></div>
-                  </div>
-                  <div class="flex items-center gap-3 flex-1">
-                    <div class="text-2xl">{{ method.emoji }}</div>
-                    <div>
-                      <p class="text-white font-bold text-sm">{{ method.label }}</p>
-                      <p class="text-gray-500 text-xs">{{ method.desc }}</p>
+            <!-- Columna izquierda: Formulario -->
+            <div class="lg:col-span-3 space-y-6">
+              <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                  <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
+                  {{ t('checkout.yourDetails') }}
+                </h2>
+                <div class="space-y-4">
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                      <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.firstName') }}</label>
+                      <input v-model="form.firstName" @blur="touched.firstName = true" type="text" placeholder="Juan" class="input-field"
+                        :class="{ 'border-red-500/50': touched.firstName && !form.firstName.trim() }" />
+                      <p v-if="touched.firstName && !form.firstName.trim()" class="text-[10px] text-red-400">{{ t('checkout.firstNameRequired') }}</p>
+                    </div>
+                    <div class="space-y-1">
+                      <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.lastName') }}</label>
+                      <input v-model="form.lastName" @blur="touched.lastName = true" type="text" placeholder="García" class="input-field"
+                        :class="{ 'border-red-500/50': touched.lastName && !form.lastName.trim() }" />
+                      <p v-if="touched.lastName && !form.lastName.trim()" class="text-[10px] text-red-400">{{ t('checkout.lastNameRequired') }}</p>
                     </div>
                   </div>
-                  <span v-if="method.badge" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/30 px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
-                </label>
+                  <div class="space-y-1">
+                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.emailLabel') }} <span class="text-neon-green ml-1">*</span></label>
+                    <input v-model="form.email" @blur="touched.email = true" type="email" placeholder="juan@email.com" class="input-field"
+                      :class="{ 'border-red-500/50': touched.email && !isEmailValid }" />
+                    <p v-if="touched.email && !isEmailValid" class="text-[10px] text-red-400">{{ t('checkout.emailInvalid') }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.phoneLabel') }}</label>
+                    <input v-model="form.phone" @input="form.phone = form.phone.replace(/[^0-9+]/g, '')" @blur="touched.phone = true"
+                      type="tel" inputmode="numeric" placeholder="+57 300 123 4567" class="input-field"
+                      :class="{ 'border-red-500/50': touched.phone && !isPhoneValid }" />
+                    <p v-if="touched.phone && !isPhoneValid" class="text-[10px] text-red-400 mt-1">{{ t('checkout.phoneInvalid') }}</p>
+                  </div>
+                  <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.cityLabel') }}</label>
+                    <input v-model="form.city" type="text" :placeholder="t('checkout.cityPlaceholder')" class="input-field" /></div>
+                  <div><label class="text-xs text-gray-400 font-semibold block mb-1">{{ t('checkout.addressLabel') }}</label>
+                    <input v-model="form.address" type="text" :placeholder="t('checkout.addressPlaceholder')" class="input-field" /></div>
+                </div>
               </div>
-              <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                <p class="text-blue-300 text-xs leading-relaxed">
-                  <fa-icon :icon="['fas', 'info-circle']" class="mr-1" />
-                  <strong>{{ t('checkout.demoMode') }}</strong> {{ t('checkout.demoDesc') }} <strong>Wompi</strong> {{ t('checkout.demoSuffix') }}
-                </p>
+
+              <!-- Método de pago -->
+              <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                  <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+                  {{ t('checkout.paymentMethod') }}
+                </h2>
+                <div class="space-y-3">
+                  <label v-for="method in paymentMethods" :key="method.id"
+                    class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
+                    :class="selectedPayment === method.id ? 'border-neon-green bg-neon-green/10' : 'border-white/10 hover:border-white/20'">
+                    <input type="radio" v-model="selectedPayment" :value="method.id" class="hidden" />
+                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
+                      :class="selectedPayment === method.id ? 'border-neon-green' : 'border-gray-600'">
+                      <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full bg-neon-green"></div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-1">
+                      <div class="text-2xl">{{ method.emoji }}</div>
+                      <div>
+                        <p class="text-white font-bold text-sm">{{ method.label }}</p>
+                        <p class="text-gray-500 text-xs">{{ method.desc }}</p>
+                      </div>
+                    </div>
+                    <span v-if="method.badge" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/30 px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
+                  </label>
+                </div>
+                <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                  <p class="text-blue-300 text-xs leading-relaxed">
+                    <fa-icon :icon="['fas', 'info-circle']" class="mr-1" />
+                    <strong>{{ t('checkout.demoMode') }}</strong> {{ t('checkout.demoDesc') }} <strong>Wompi</strong> {{ t('checkout.demoSuffix') }}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Resumen del pedido -->
-          <div class="lg:col-span-2 sticky top-24">
-            <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
-              <h2 class="text-sm font-bold text-white mb-4 tracking-wide uppercase">{{ t('checkout.orderSummary') }}</h2>
-              <div class="space-y-3 mb-5">
-                <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                    <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" />
+            <!-- Resumen del pedido -->
+            <div class="lg:col-span-2 sticky top-6">
+              <div class="bg-white/5 rounded-2xl p-5 border border-white/10">
+                <h2 class="text-sm font-bold text-white mb-4 tracking-wide uppercase">{{ t('checkout.orderSummary') }}</h2>
+                <div class="space-y-3 mb-5">
+                  <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                      <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
+                      <p class="text-gray-500 text-xs">× {{ item.qty }}</p>
+                    </div>
+                    <span class="text-neon-green text-xs font-bold flex-shrink-0">{{ formatPrice(parsePrice(item.price) * item.qty) }}</span>
                   </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
-                    <p class="text-gray-500 text-xs">× {{ item.qty }}</p>
+                </div>
+                <div class="border-t border-white/10 pt-4 space-y-2">
+                  <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('cart.subtotal') }}</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
+                  <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('checkout.shipping') }}</span><span class="text-gray-400">{{ t('checkout.shippingValue') }}</span></div>
+                  <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
+                    <span class="text-white">{{ t('checkout.total') }}</span><span class="text-neon-green">{{ cartTotalFormatted }}</span>
                   </div>
-                  <span class="text-neon-green text-xs font-bold flex-shrink-0">{{ formatPrice(parsePrice(item.price) * item.qty) }}</span>
                 </div>
-              </div>
-              <div class="border-t border-white/10 pt-4 space-y-2">
-                <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('cart.subtotal') }}</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-400">{{ t('checkout.shipping') }}</span><span class="text-gray-400">{{ t('checkout.shippingValue') }}</span></div>
-                <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
-                  <span class="text-white">{{ t('checkout.total') }}</span><span class="text-neon-green">{{ cartTotalFormatted }}</span>
+                <button @click="handleCheckout" :disabled="!formValid || isProcessing"
+                  class="mt-5 w-full py-4 font-black text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                  :class="formValid && !isProcessing ? 'bg-neon-green hover:bg-neon-green-dark text-black shadow-[0_0_20px_rgba(57,255,20,0.3)] hover:shadow-[0_0_35px_rgba(57,255,20,0.5)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
+                  <template v-if="isProcessing">
+                    <fa-icon :icon="['fas', 'spinner']" class="fa-spin" /> {{ t('checkout.processing') }}
+                  </template>
+                  <template v-else>
+                    <fa-icon :icon="['fas', 'lock']" class="text-xs" /> {{ t('checkout.payBtn') }} {{ cartTotalFormatted }}
+                  </template>
+                </button>
+                <p class="text-center text-gray-600 text-[10px] mt-3">
+                  <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />{{ t('checkout.securePayment') }}
+                </p>
+                <div class="flex items-center justify-center gap-3 mt-4 flex-wrap">
+                  <span v-for="logo in paymentLogos" :key="logo" class="text-[10px] bg-white/5 border border-white/10 px-2 py-1 rounded-md text-gray-500 font-bold">{{ logo }}</span>
                 </div>
-              </div>
-              <button @click="handleCheckout" :disabled="!formValid || isProcessing"
-                class="mt-5 w-full py-4 font-black text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
-                :class="formValid && !isProcessing ? 'bg-neon-green hover:bg-neon-green-dark text-black' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
-                <template v-if="isProcessing">
-                  <fa-icon :icon="['fas', 'spinner']" class="fa-spin" /> {{ t('checkout.processing') }}
-                </template>
-                <template v-else>
-                  <fa-icon :icon="['fas', 'lock']" class="text-xs" /> {{ t('checkout.payBtn') }} {{ cartTotalFormatted }}
-                </template>
-              </button>
-              <p class="text-center text-gray-600 text-[10px] mt-3">
-                <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />{{ t('checkout.securePayment') }}
-              </p>
-              <div class="flex items-center justify-center gap-3 mt-4 flex-wrap">
-                <span v-for="logo in paymentLogos" :key="logo" class="text-[10px] bg-white/5 border border-white/10 px-2 py-1 rounded-md text-gray-500 font-bold">{{ logo }}</span>
               </div>
             </div>
           </div>
         </div>
+      </ClientOnly>
+    </main>
+
+    <!-- ─── Footer de políticas estilo G59 ─── -->
+    <footer class="w-full border-t border-white/8 mt-auto">
+      <div class="max-w-5xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <NuxtLink to="/tienda" class="checkout-footer-link">{{ t('checkout.footerStore') }}</NuxtLink>
+        <NuxtLink to="/agendar" class="checkout-footer-link">{{ t('checkout.footerBook') }}</NuxtLink>
+        <NuxtLink to="/politicas/envios" class="checkout-footer-link">{{ t('checkout.footerShipping') }}</NuxtLink>
+        <NuxtLink to="/politicas/reembolsos" class="checkout-footer-link">{{ t('checkout.footerRefund') }}</NuxtLink>
+        <NuxtLink to="/politicas/privacidad" class="checkout-footer-link">{{ t('checkout.footerPrivacy') }}</NuxtLink>
+        <NuxtLink to="/politicas/terminos" class="checkout-footer-link">{{ t('checkout.footerTerms') }}</NuxtLink>
+        <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" rel="noopener" class="checkout-footer-link">
+          {{ t('checkout.footerContact') }}
+        </a>
       </div>
-    </ClientOnly>
+    </footer>
 
     <!-- Modal 'Próximamente' -->
     <Transition name="fade">
@@ -240,4 +270,14 @@ async function handleCheckout() {
 }
 .input-field::placeholder { color: #4b5563; }
 .input-field:focus { border-color: rgba(57,255,20,0.5); background: rgba(255,255,255,0.08); }
+
+.checkout-footer-link {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+.checkout-footer-link:hover { color: #fff; }
 </style>
