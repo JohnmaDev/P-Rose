@@ -239,7 +239,7 @@
                       class="px-8 py-3 bg-neon-green hover:bg-neon-green-dark text-black font-black text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(57,255,20,0.3)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                       <fa-icon v-if="isProcessing" :icon="['fas', 'spinner']" class="fa-spin" />
                       <fa-icon v-else :icon="['fas', 'lock']" class="text-xs" />
-                      {{ isProcessing ? 'Procesando...' : `Pagar ${cartTotalFormatted}` }}
+                      {{ isProcessing ? 'Procesando...' : `Pagar ${grandTotalFormatted}` }}
                     </button>
                   </div>
                 </div>
@@ -266,11 +266,17 @@
                   <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-400">Envío</span>
-                    <span class="text-neon-green font-semibold">{{ step >= 2 && currentShipping ? currentShipping.price : 'Calculando...' }}</span>
+                    <span class="font-semibold" :class="shippingCost === 0 && step >= 2 && currentShipping ? 'text-neon-green' : 'text-gray-400'">
+                      {{ step >= 2 && currentShipping ? (shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)) : 'Calculando...' }}
+                    </span>
+                  </div>
+                  <div v-if="step >= 2 && currentShipping?.id === 'nacional'" class="flex justify-between text-sm">
+                    <span class="text-yellow-400 text-xs">+ Costo transportadora</span>
+                    <span class="text-yellow-400 text-xs font-semibold">Por confirmar</span>
                   </div>
                   <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
                     <span class="text-white">TOTAL</span>
-                    <span class="text-neon-green">{{ cartTotalFormatted }}</span>
+                    <span class="text-neon-green">{{ grandTotalFormatted }}</span>
                   </div>
                 </div>
                 <p class="text-center text-gray-600 text-[10px] mt-4">
@@ -354,6 +360,7 @@ const shippingMethods = computed(() => {
         label: 'PersonalBarber Express',
         desc: 'Entrega en 24–48 horas · Medellín y área metropolitana',
         price: '$8.000 COP',
+        cost: 8000,
         badge: 'Más rápido',
       },
       {
@@ -362,6 +369,7 @@ const shippingMethods = computed(() => {
         label: 'Recogida coordinada',
         desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
         price: 'Gratis',
+        cost: 0,
       },
     ]
   }
@@ -372,6 +380,7 @@ const shippingMethods = computed(() => {
       label: 'PersonalBarber Envíos Nacionales',
       desc: 'Buscamos la transportadora más conveniente para tu destino (Envia, Coordinadora, Interrapidísimo, Servientrega, etc.)',
       price: 'A cotizar',
+      cost: 0,
       badge: 'Te contactamos',
       info: 'Una vez confirmes tu pedido, te enviamos por WhatsApp el costo exacto de envío a tu ciudad antes de procesar el pago.',
     },
@@ -381,6 +390,7 @@ const shippingMethods = computed(() => {
       label: 'Recogida coordinada',
       desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
       price: 'Gratis',
+      cost: 0,
     },
   ]
 })
@@ -396,6 +406,12 @@ const paymentMethods = [
 ]
 
 const currentShipping = computed(() => shippingMethods.value.find(s => s.id === selectedShipping.value))
+const shippingCost = computed(() => currentShipping.value?.cost ?? 0)
+const grandTotal = computed(() => cartTotal.value + shippingCost.value)
+const grandTotalFormatted = computed(() => {
+  if (currentShipping.value?.id === 'nacional') return `${cartTotalFormatted.value} + envío`
+  return formatPrice(grandTotal.value)
+})
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
 const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
@@ -437,7 +453,8 @@ async function handleCheckout() {
       const phone = '573045840264'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
       const shipping = currentShipping.value?.label || 'PersonalBarber Envíos'
-      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Envío:* ${shipping}\n*Total:* $${data.order.total_format} COP\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
+      const shippingLabel = currentShipping.value?.id === 'nacional' ? `${shipping} (costo por confirmar)` : `${shipping} · ${currentShipping.value?.price}`
+      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal:* $${data.order.total_format} COP\n*Envío:* ${shippingLabel}\n*TOTAL:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/tienda')
