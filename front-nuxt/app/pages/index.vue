@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-barber-black min-h-screen text-white relative"
+    class="min-h-screen text-white relative"
     :style="{
       '--dept-color': accentColor,
       '--dept-glow': accentGlow,
@@ -9,6 +9,25 @@
     }"
   >
 
+    <!-- ─── Fondo fijo global — toda la web navega sobre él ─── -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+      <picture>
+        <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
+        <img
+          src="/bg_vertical.webp"
+          alt=""
+          aria-hidden="true"
+          class="w-full h-full object-cover object-top"
+          style="filter: brightness(0.22) saturate(0.8)"
+          fetchpriority="high"
+        />
+      </picture>
+      <!-- Vignette lateral izquierda -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/40"></div>
+      <!-- Fade gradual hacia abajo conforme el usuario scrollea -->
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black"></div>
+    </div>
+
     <!-- ─── Barra de carga top ─── -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
@@ -16,33 +35,17 @@
       </div>
     </Transition>
 
-    <!-- ─── STORE HERO — fondo dramático + identidad de tienda ─── -->
-    <div class="relative w-full min-h-[85svh] sm:min-h-[92svh] flex flex-col justify-center overflow-hidden">
-
-      <!-- Imagen de fondo con overlay multicapa -->
-      <div class="absolute inset-0 z-0">
-        <picture>
-          <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
-          <img
-            src="/bg_vertical.webp"
-            alt="PersonalBarber Store"
-            class="w-full h-full object-cover object-top"
-            style="filter: brightness(0.28) saturate(0.85)"
-            fetchpriority="high"
-          />
-        </picture>
-        <div class="absolute inset-0 bg-gradient-to-b from-barber-black/60 via-transparent to-barber-black"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-barber-black/80 via-transparent to-barber-black/60"></div>
-      </div>
+    <!-- ─── STORE HERO — texto top-left, fondo viene del layer fijo ─── -->
+    <div class="relative w-full flex flex-col overflow-hidden">
 
       <!-- Glow ambiental — cambia con el departamento -->
       <div
-        class="absolute top-1/2 -translate-y-1/2 left-0 w-[70vw] h-[70vw] max-w-[600px] rounded-full blur-[150px] pointer-events-none z-0 transition-all duration-700"
-        style="background-color: var(--dept-color); opacity: 0.06"
+        class="fixed top-0 left-0 w-[60vw] h-[60vw] max-w-[500px] rounded-full blur-[160px] pointer-events-none z-[1] transition-all duration-700"
+        style="background-color: var(--dept-color); opacity: 0.05"
       ></div>
 
-      <!-- Contenido hero — mejor centrado en móvil -->
-      <div class="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20 pb-24 sm:pt-28 sm:pb-20 flex flex-col gap-6 justify-center">
+      <!-- Contenido hero — alineado arriba izquierda, compacto -->
+      <div class="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24 pb-10 sm:pt-28 sm:pb-14 flex flex-col gap-5">
 
         <!-- Badge live — color dinámico -->
         <div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full backdrop-blur-sm dept-badge transition-all duration-500">
@@ -50,19 +53,15 @@
           <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">Medellín · Premium Store</span>
         </div>
 
-        <!-- Título masivo — 3 niveles de jerarquía -->
+        <!-- Título masivo -->
         <div class="flex flex-col gap-0">
-          <!-- Línea decorativa -->
-          <div class="w-12 h-[3px] dept-bg rounded-full mb-4 transition-all duration-500"></div>
-
-          <h1 class="font-black tracking-tighter italic leading-[0.95] text-shadow-premium">
-            <!-- Línea 1: accent + grande -->
+          <div class="w-12 h-[3px] dept-bg rounded-full mb-3 transition-all duration-500"></div>
+          <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
             <span
-              class="dept-text block text-[2.6rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+              class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
               style="filter: drop-shadow(0 0 20px var(--dept-glow))"
             >{{ t('store.heroTitle1') }}</span>
-            <!-- Línea 2: blanco + mediano -->
-            <span class="text-white block text-[2.1rem] xs:text-[2.5rem] sm:text-[3.8rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-2 sm:pt-4">
+            <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
               {{ t('store.heroTitle2') }}
             </span>
           </h1>
@@ -73,7 +72,7 @@
           {{ t('store.heroSub') }}
         </p>
 
-        <!-- Trust badges — más compactos en móvil -->
+        <!-- Trust badges -->
         <div class="flex flex-wrap gap-x-4 gap-y-2">
           <span v-for="badge in trustBadges" :key="badge"
             class="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-gray-400 font-semibold">
@@ -82,15 +81,12 @@
           </span>
         </div>
       </div>
-
-      <!-- Scroll indicator -->
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce pointer-events-none">
-        <div class="w-[1px] h-6 dept-bg rounded-full opacity-30 transition-all duration-500"></div>
-      </div>
     </div>
 
     <!-- ─── CONTENIDO TIENDA ─── -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-20 pt-8">
+    <!-- Panel que sube sobre el fondo fijo -->
+    <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pb-20 pt-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
       <!-- Switch de Departamento -->
       <div class="flex justify-center mt-2 mb-8">
@@ -203,11 +199,14 @@
         <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600 mb-4" />
         <p class="text-gray-500">{{ t('tienda.emptySub') }}</p>
       </div>
-    </div>
+      </div><!-- /max-w-7xl -->
+    </div><!-- /store panel -->
 
     <!-- Footer -->
-    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6">
-      <AppFooter class="mt-10" />
+    <div class="relative z-10 bg-barber-black w-full px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto">
+        <AppFooter class="mt-10" />
+      </div>
     </div>
   </div>
 </template>

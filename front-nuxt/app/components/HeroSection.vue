@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full min-h-[100svh] flex flex-col items-center justify-between overflow-hidden bg-barber-black">
+  <section class="relative w-full min-h-[520px] flex flex-col items-center justify-between overflow-hidden bg-barber-black">
 
     <!-- Background Image with Multi-layer Overlay -->
     <div class="absolute inset-0 z-0">
@@ -22,7 +22,7 @@
     <div class="absolute top-1/2 left-1/4 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[500px] bg-neon-green/8 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
     <!-- ─── Main Content ─── -->
-    <div class="relative z-10 w-full flex-1 container mx-auto px-6 pt-28 pb-8 lg:pt-24 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-10 lg:gap-16">
+    <div class="relative z-10 w-full flex-1 container mx-auto px-6 pt-20 pb-8 lg:pt-20 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-8 lg:gap-16">
 
       <!-- Left Column: Massive Typography -->
       <div class="w-full lg:w-3/5 text-center lg:text-left z-20 flex flex-col items-center lg:items-start">
@@ -80,7 +80,7 @@
       </div>
 
       <!-- Right Column: Profile Card (Redesigned) -->
-      <div class="w-full max-w-[320px] lg:max-w-[380px] relative animate-fade-in-up opacity-0 z-20 flex-shrink-0" style="animation-delay: 0.55s;">
+      <div class="hidden lg:block w-full max-w-[320px] lg:max-w-[380px] relative animate-fade-in-up opacity-0 z-20 flex-shrink-0" style="animation-delay: 0.55s;">
         <!-- Multi-layer glow -->
         <div class="absolute -inset-6 bg-neon-green/10 rounded-[50px] blur-3xl"></div>
         <div class="absolute inset-0 bg-neon-green rounded-[40px] translate-x-3 translate-y-3 opacity-20 blur-md"></div>
