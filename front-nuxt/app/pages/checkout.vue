@@ -117,18 +117,10 @@
 
                 <!-- Método de envío -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                      <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                      Método de envío
-                    </h2>
-                    <!-- Chip ciudad detectada -->
-                    <span class="text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5"
-                      :class="isMetroCity ? 'bg-neon-green/15 text-neon-green border border-neon-green/30' : 'bg-white/8 text-gray-400 border border-white/15'">
-                      <span class="w-1.5 h-1.5 rounded-full" :class="isMetroCity ? 'bg-neon-green' : 'bg-gray-500'"></span>
-                      {{ isMetroCity ? 'Área metro Medellín' : 'Envío nacional' }}
-                    </span>
-                  </div>
+                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+                    Método de envío
+                  </h2>
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
@@ -148,15 +140,6 @@
                       </div>
                       <span class="text-white font-bold text-sm flex-shrink-0">{{ s.price }}</span>
                     </label>
-                  </div>
-
-                  <!-- Banner info envio nacional -->
-                  <div v-if="!isMetroCity && selectedShipping === 'nacional'" class="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-                    <p class="text-yellow-300 text-xs leading-relaxed">
-                      <fa-icon :icon="['fas', 'truck']" class="mr-1" />
-                      <strong>Sin costo adicional sorpresa:</strong> Confirmado tu pedido, te enviamos el costo exacto de envío a <strong>{{ form.city }}</strong> por WhatsApp antes de cobrar.
-                      Trabajamos con <span class="text-white">Envia, Coordinadora, Interrapidísimo y Servientrega</span> según lo que mejor le sirva a tu ciudad.
-                    </p>
                   </div>
 
                   <div class="mt-6 flex items-center justify-between">
@@ -334,69 +317,22 @@ const { cartItems, cartTotal, cartTotalFormatted, formatPrice, parsePrice, clear
 const step = ref(1)
 const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city: '', address: '', notes: '' })
 const touched = reactive({ firstName: false, lastName: false, email: false, phone: false, city: false, address: false })
-const selectedShipping = ref('')
+const selectedShipping = ref('express')
 const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
 const isProcessing = ref(false)
 
-// Ciudades del área metropolitana de Medellín
-const MEDELLIN_METRO = [
-  'medellín', 'medellin', 'bello', 'itagüí', 'itagui', 'envigado', 'sabaneta',
-  'la estrella', 'caldas', 'copacabana', 'girardota', 'barbosa', 'rionegro',
-  'guarne', 'el retiro', 'la ceja', 'marinilla', 'el santuario',
+const shippingMethods = [
+  {
+    id: 'express',
+    emoji: '⚡',
+    label: 'PersonalBarber Express',
+    desc: 'Entrega en 24–48 horas · Todo Colombia',
+    price: '$10.000 COP',
+    cost: 10000,
+    badge: 'Envío rápido',
+  },
 ]
-
-const isMetroCity = computed(() => {
-  const city = form.city.trim().toLowerCase()
-  return MEDELLIN_METRO.some(m => city.includes(m))
-})
-
-const shippingMethods = computed(() => {
-  if (isMetroCity.value) {
-    return [
-      {
-        id: 'express',
-        emoji: '⚡',
-        label: 'PersonalBarber Express',
-        desc: 'Entrega en 24–48 horas · Medellín y área metropolitana',
-        price: '$8.000 COP',
-        cost: 8000,
-        badge: 'Más rápido',
-      },
-      {
-        id: 'pickup',
-        emoji: '🏠',
-        label: 'Recogida coordinada',
-        desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
-        price: 'Gratis',
-        cost: 0,
-      },
-    ]
-  }
-  return [
-    {
-      id: 'nacional',
-      emoji: '🚚',
-      label: 'PersonalBarber Envíos Nacionales',
-      desc: 'Buscamos la transportadora más conveniente para tu destino (Envia, Coordinadora, Interrapidísimo, Servientrega, etc.)',
-      price: 'A cotizar',
-      cost: 0,
-      badge: 'Te contactamos',
-      info: 'Una vez confirmes tu pedido, te enviamos por WhatsApp el costo exacto de envío a tu ciudad antes de procesar el pago.',
-    },
-    {
-      id: 'pickup',
-      emoji: '🏠',
-      label: 'Recogida coordinada',
-      desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
-      price: 'Gratis',
-      cost: 0,
-    },
-  ]
-})
-
-// Resetear método de envío cuando cambia la ciudad
-watch(isMetroCity, () => { selectedShipping.value = '' })
 
 const paymentMethods = [
   { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
@@ -405,13 +341,10 @@ const paymentMethods = [
   { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta al barber para acordar el pago' },
 ]
 
-const currentShipping = computed(() => shippingMethods.value.find(s => s.id === selectedShipping.value))
+const currentShipping = computed(() => shippingMethods.find(s => s.id === selectedShipping.value))
 const shippingCost = computed(() => currentShipping.value?.cost ?? 0)
 const grandTotal = computed(() => cartTotal.value + shippingCost.value)
-const grandTotalFormatted = computed(() => {
-  if (currentShipping.value?.id === 'nacional') return `${cartTotalFormatted.value} + envío`
-  return formatPrice(grandTotal.value)
-})
+const grandTotalFormatted = computed(() => formatPrice(grandTotal.value))
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
 const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
