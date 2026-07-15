@@ -67,16 +67,18 @@
                       <h3 class="text-sm font-bold text-white mb-3">Dirección de envío</h3>
                       <div class="space-y-3">
                         <div>
-                          <label class="label-xs">Ciudad</label>
-                          <input v-model="form.city" type="text" placeholder="Medellín, Bogotá..." class="input-field" />
+                          <label class="label-xs">Ciudad *</label>
+                          <input v-model="form.city" @blur="touched.city=true" type="text" placeholder="Medellín, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
+                          <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
                         </div>
                         <div>
-                          <label class="label-xs">Dirección completa</label>
-                          <input v-model="form.address" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" />
+                          <label class="label-xs">Dirección completa *</label>
+                          <input v-model="form.address" @blur="touched.address=true" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" :class="{'border-red-500/50': touched.address && !form.address.trim()}" />
+                          <p v-if="touched.address && !form.address.trim()" class="err">La dirección es obligatoria</p>
                         </div>
                         <div>
-                          <label class="label-xs">Notas adicionales (opcional)</label>
-                          <input v-model="form.notes" type="text" placeholder="Torre A, conjunto cerrado, etc." class="input-field" />
+                          <label class="label-xs">Notas adicionales <span class="text-gray-600 font-normal">(opcional)</span></label>
+                          <input v-model="form.notes" type="text" placeholder="Torre A, conjunto cerrado, timbre 302..." class="input-field" />
                         </div>
                       </div>
                     </div>
@@ -115,10 +117,18 @@
 
                 <!-- Método de envío -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                    Método de envío
-                  </h2>
+                  <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                      <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+                      Método de envío
+                    </h2>
+                    <!-- Chip ciudad detectada -->
+                    <span class="text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5"
+                      :class="isMetroCity ? 'bg-neon-green/15 text-neon-green border border-neon-green/30' : 'bg-white/8 text-gray-400 border border-white/15'">
+                      <span class="w-1.5 h-1.5 rounded-full" :class="isMetroCity ? 'bg-neon-green' : 'bg-gray-500'"></span>
+                      {{ isMetroCity ? 'Área metro Medellín' : 'Envío nacional' }}
+                    </span>
+                  </div>
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
@@ -140,12 +150,22 @@
                     </label>
                   </div>
 
+                  <!-- Banner info envio nacional -->
+                  <div v-if="!isMetroCity && selectedShipping === 'nacional'" class="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                    <p class="text-yellow-300 text-xs leading-relaxed">
+                      <fa-icon :icon="['fas', 'truck']" class="mr-1" />
+                      <strong>Sin costo adicional sorpresa:</strong> Confirmado tu pedido, te enviamos el costo exacto de envío a <strong>{{ form.city }}</strong> por WhatsApp antes de cobrar.
+                      Trabajamos con <span class="text-white">Envia, Coordinadora, Interrapidísimo y Servientrega</span> según lo que mejor le sirva a tu ciudad.
+                    </p>
+                  </div>
+
                   <div class="mt-6 flex items-center justify-between">
                     <button @click="step = 1" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver
                     </button>
-                    <button @click="step = 3"
-                      class="px-8 py-3 bg-neon-green hover:bg-neon-green-dark text-black font-black text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(57,255,20,0.3)] flex items-center gap-2">
+                    <button @click="step = 3" :disabled="!selectedShipping"
+                      class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
+                      :class="selectedShipping ? 'bg-neon-green hover:bg-neon-green-dark text-black shadow-[0_0_20px_rgba(57,255,20,0.3)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                       Continuar al pago <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
                     </button>
                   </div>
@@ -307,36 +327,66 @@ const { cartItems, cartTotalFormatted, formatPrice, parsePrice, clearCart } = us
 
 const step = ref(1)
 const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city: '', address: '', notes: '' })
-const touched = reactive({ firstName: false, lastName: false, email: false, phone: false })
-const selectedShipping = ref('standard')
+const touched = reactive({ firstName: false, lastName: false, email: false, phone: false, city: false, address: false })
+const selectedShipping = ref('')
 const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
 const isProcessing = ref(false)
 
-const shippingMethods = [
-  {
-    id: 'express',
-    emoji: '⚡',
-    label: 'PersonalBarber Express',
-    desc: 'Entrega en 24–48h · Medellín y área metropolitana',
-    price: '$8.000 COP',
-    badge: 'Recomendado',
-  },
-  {
-    id: 'standard',
-    emoji: '📦',
-    label: 'PersonalBarber Envíos',
-    desc: 'Entrega en 3–5 días hábiles · Todo Colombia',
-    price: '$12.000 COP',
-  },
-  {
-    id: 'free',
-    emoji: '🏠',
-    label: 'Recogida en punto',
-    desc: 'Coordinar dirección de entrega por WhatsApp',
-    price: 'Gratis',
-  },
+// Ciudades del área metropolitana de Medellín
+const MEDELLIN_METRO = [
+  'medellín', 'medellin', 'bello', 'itagüí', 'itagui', 'envigado', 'sabaneta',
+  'la estrella', 'caldas', 'copacabana', 'girardota', 'barbosa', 'rionegro',
+  'guarne', 'el retiro', 'la ceja', 'marinilla', 'el santuario',
 ]
+
+const isMetroCity = computed(() => {
+  const city = form.city.trim().toLowerCase()
+  return MEDELLIN_METRO.some(m => city.includes(m))
+})
+
+const shippingMethods = computed(() => {
+  if (isMetroCity.value) {
+    return [
+      {
+        id: 'express',
+        emoji: '⚡',
+        label: 'PersonalBarber Express',
+        desc: 'Entrega en 24–48 horas · Medellín y área metropolitana',
+        price: '$8.000 COP',
+        badge: 'Más rápido',
+      },
+      {
+        id: 'pickup',
+        emoji: '🏠',
+        label: 'Recogida coordinada',
+        desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
+        price: 'Gratis',
+      },
+    ]
+  }
+  return [
+    {
+      id: 'nacional',
+      emoji: '🚚',
+      label: 'PersonalBarber Envíos Nacionales',
+      desc: 'Buscamos la transportadora más conveniente para tu destino (Envia, Coordinadora, Interrapidísimo, Servientrega, etc.)',
+      price: 'A cotizar',
+      badge: 'Te contactamos',
+      info: 'Una vez confirmes tu pedido, te enviamos por WhatsApp el costo exacto de envío a tu ciudad antes de procesar el pago.',
+    },
+    {
+      id: 'pickup',
+      emoji: '🏠',
+      label: 'Recogida coordinada',
+      desc: 'Acuerda el punto de entrega directo por WhatsApp · Gratis',
+      price: 'Gratis',
+    },
+  ]
+})
+
+// Resetear método de envío cuando cambia la ciudad
+watch(isMetroCity, () => { selectedShipping.value = '' })
 
 const paymentMethods = [
   { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
@@ -345,16 +395,24 @@ const paymentMethods = [
   { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta al barber para acordar el pago' },
 ]
 
-const currentShipping = computed(() => shippingMethods.find(s => s.id === selectedShipping.value))
+const currentShipping = computed(() => shippingMethods.value.find(s => s.id === selectedShipping.value))
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
 const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
-const step1Valid = computed(() => form.firstName.trim() && form.lastName.trim() && isEmailValid.value && isPhoneValid.value)
+const step1Valid = computed(() =>
+  form.firstName.trim() && form.lastName.trim() &&
+  isEmailValid.value && isPhoneValid.value &&
+  form.city.trim() && form.address.trim()
+)
 
 function nextStep() {
   if (step.value === 1) {
     Object.keys(touched).forEach(k => (touched as Record<string, boolean>)[k] = true)
     if (!step1Valid.value) return
+    // Pre-seleccionar primer método de envío disponible
+    if (!selectedShipping.value && shippingMethods.value.length > 0) {
+      selectedShipping.value = shippingMethods.value[0].id
+    }
   }
   step.value++
 }
