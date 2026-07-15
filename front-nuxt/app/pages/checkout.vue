@@ -329,7 +329,7 @@
 useSeoMeta({ title: 'Finalizar Compra | PersonalBarber' })
 
 const router = useRouter()
-const { cartItems, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
+const { cartItems, cartTotal, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
 
 const step = ref(1)
 const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city: '', address: '', notes: '' })
