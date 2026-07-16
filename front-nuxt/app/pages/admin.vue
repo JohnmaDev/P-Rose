@@ -121,10 +121,13 @@ async function verificarPin() {
   }
 }
 
+const router = useRouter()
+
 function salir() {
   autenticado.value = false
   pinIngresado.value = ''
   sessionStorage.removeItem('admin_pin')
+  window.location.href = '/'
 }
 
 onMounted(() => {
