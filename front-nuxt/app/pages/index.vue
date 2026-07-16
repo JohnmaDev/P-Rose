@@ -109,11 +109,37 @@
         </div>
       </div>
 
-      <!-- Filtros de categoría -->
-      <div class="flex flex-wrap gap-3 mb-8 justify-center">
+      <!-- Buscador Rápido y Botón de Filtros Avanzados -->
+      <div class="flex items-center justify-between gap-3 mb-6 max-w-2xl mx-auto">
+        <div class="relative flex-1 group">
+          <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors pointer-events-none" />
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Buscar por nombre o marca..." 
+            class="w-full pl-11 pr-10 py-2.5 bg-zinc-900/90 border border-zinc-800 rounded-2xl text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+          />
+          <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+            <fa-icon :icon="['fas', 'times-circle']" />
+          </button>
+        </div>
+        <button 
+          @click="drawerOpen = true" 
+          class="flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-zinc-900/90 border border-zinc-800 hover:border-zinc-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-md shrink-0 group"
+        >
+          <span class="w-5 h-5 rounded-lg dept-bg flex items-center justify-center text-black font-black text-[10px]">⚡</span>
+          <span>Filtros</span>
+          <span v-if="activeFilterCount > 0" class="w-5 h-5 rounded-full dept-bg text-black font-black text-[10px] flex items-center justify-center animate-pulse">
+            {{ activeFilterCount }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Filtros de categoría (Carrusel horizontal deslizable no-scrollbar) -->
+      <div class="flex overflow-x-auto no-scrollbar gap-2.5 mb-8 py-1 px-1 justify-start sm:justify-center max-w-full">
         <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
-          class="px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300"
-          :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
+          class="px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wide border transition-all duration-300 whitespace-nowrap shrink-0"
+          :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter shadow-md font-black scale-105' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
           {{ f.label }}
         </button>
       </div>
@@ -202,6 +228,21 @@
       </div><!-- /max-w-7xl -->
     </div><!-- /store panel -->
 
+    <!-- Drawer lateral de Filtros Avanzados -->
+    <ClientOnly>
+      <ShopFiltersDrawer 
+        :is-open="drawerOpen"
+        :brands="availableBrands"
+        :categories="filters"
+        :search-query="searchQuery"
+        :selected-brands="selectedBrands"
+        :selected-category="activeFilter"
+        :sort-by="sortBy"
+        @close="drawerOpen = false"
+        @update:filters="handleFilterUpdate"
+      />
+    </ClientOnly>
+
     <!-- Footer -->
     <div class="relative z-10 bg-barber-black w-full px-4 sm:px-6">
       <div class="max-w-7xl mx-auto">
@@ -260,6 +301,10 @@ useHead({
 
 const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
 const activeFilter = ref('all')
+const searchQuery = ref('')
+const selectedBrands = ref<string[]>([])
+const sortBy = ref('default')
+const drawerOpen = ref(false)
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
 
@@ -355,6 +400,34 @@ watch(activeFilter, (newFilter) => {
   useSeoMeta({ title: `${label} | PersonalBarber Medellín` })
 }, { immediate: false })
 
+const availableBrands = computed(() => {
+  const activeDeptCats = categories.value
+    .filter(c => {
+      if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+      return c.department === activeDepartment.value
+    })
+    .map(c => c.id)
+  const list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
+  const brands = list.map(p => p.brand ? p.brand.trim() : '').filter(Boolean)
+  return [...new Set(brands)].sort()
+})
+
+const activeFilterCount = computed(() => {
+  let count = 0
+  if (searchQuery.value) count++
+  if (selectedBrands.value.length > 0) count += selectedBrands.value.length
+  if (sortBy.value !== 'default') count++
+  if (activeFilter.value !== 'all') count++
+  return count
+})
+
+function handleFilterUpdate(payload: { searchQuery: string; selectedBrands: string[]; selectedCategory: string; sortBy: string }) {
+  searchQuery.value = payload.searchQuery
+  selectedBrands.value = payload.selectedBrands
+  activeFilter.value = payload.selectedCategory
+  sortBy.value = payload.sortBy
+}
+
 const filteredProducts = computed(() => {
   const activeDeptCats = categories.value
     .filter(c => {
@@ -363,9 +436,24 @@ const filteredProducts = computed(() => {
     })
     .map(c => c.id)
   let list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
+  
   if (activeFilter.value !== 'all') {
     list = list.filter(p => p.category === activeFilter.value)
   }
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(p => p.name.toLowerCase().includes(q) || (p.brand && p.brand.toLowerCase().includes(q)))
+  }
+  if (selectedBrands.value.length > 0) {
+    list = list.filter(p => p.brand && selectedBrands.value.includes(p.brand.trim()))
+  }
+  
+  if (sortBy.value === 'price-asc') {
+    list = [...list].sort((a, b) => (a.price || 0) - (b.price || 0))
+  } else if (sortBy.value === 'price-desc') {
+    list = [...list].sort((a, b) => (b.price || 0) - (a.price || 0))
+  }
+  
   return list
 })
 

@@ -18,27 +18,59 @@
       </div>
     </div>
 
-    <!-- Buscador y Filtro -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+    <!-- Buscador y Filtros (4 columnas) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div class="relative group">
         <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
         <input 
           v-model="searchQuery" 
           type="text" 
-          placeholder="Buscar productos..." 
+          placeholder="Buscar por nombre o marca..." 
           class="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 transition-all placeholder:text-zinc-600"
         >
       </div>
       
-      <!-- Selector de Categorías Desplegable -->
+      <!-- Selector de Categorías -->
       <div class="relative group">
         <fa-icon :icon="['fas', 'layer-group']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
         <select 
           v-model="filterCategory" 
           class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
         >
-          <option value="all">Todas las Secciones</option>
+          <option value="all">Todas las Categorías</option>
           <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+        </select>
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+        </div>
+      </div>
+
+      <!-- Selector de Marcas -->
+      <div class="relative group">
+        <fa-icon :icon="['fas', 'tag']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+        <select 
+          v-model="filterBrand" 
+          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+        >
+          <option value="all">Todas las Marcas</option>
+          <option v-for="b in availableBrands" :key="b" :value="b">{{ b }}</option>
+        </select>
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+        </div>
+      </div>
+
+      <!-- Selector de Estado / Stock -->
+      <div class="relative group">
+        <fa-icon :icon="['fas', 'boxes']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+        <select 
+          v-model="filterStock" 
+          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+        >
+          <option value="all">Cualquier Stock</option>
+          <option value="in_stock">En Stock (> 0)</option>
+          <option value="low_stock">Pocas Unidades (≤ 3)</option>
+          <option value="out_of_stock">Agotados (0)</option>
         </select>
         <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
           <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
@@ -57,8 +89,8 @@
 
       <div v-else-if="filteredProducts.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
         <fa-icon :icon="['fas', 'search']" class="text-4xl text-zinc-700 mb-4" />
-        <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan.</p>
-        <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
+        <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan con los filtros.</p>
+        <button v-if="searchQuery || filterCategory !== 'all' || filterBrand !== 'all' || filterStock !== 'all'" @click="searchQuery = ''; filterCategory = 'all'; filterBrand = 'all'; filterStock = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar todos los filtros</button>
       </div>
 
       <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
@@ -116,7 +148,10 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Marca</label>
-                <input v-model="prodForm.brand" type="text" class="input-modern" placeholder="Nishman">
+                <input v-model="prodForm.brand" list="brands-datalist" type="text" class="input-modern" placeholder="Ej: Wahl, Babyliss, Nishman">
+                <datalist id="brands-datalist">
+                  <option v-for="b in availableBrands" :key="b" :value="b" />
+                </datalist>
               </div>
               <div class="space-y-1">
                 <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Categoría</label>
@@ -189,6 +224,8 @@ export default {
       categorias: [],
       searchQuery: '',
       filterCategory: 'all',
+      filterBrand: 'all',
+      filterStock: 'all',
       errorMessage: null,
       showModal: false,
       editando: false,
@@ -209,12 +246,23 @@ export default {
     this.cargarProductos()
   },
   computed: {
+    availableBrands() {
+      const brands = this.productos.map(p => p.brand ? p.brand.trim() : '').filter(Boolean);
+      return [...new Set(brands)].sort();
+    },
     filteredProducts() {
       return this.productos.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        const matchesSearch = !this.searchQuery || p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
                              (p.brand && p.brand.toLowerCase().includes(this.searchQuery.toLowerCase()));
         const matchesCategory = this.filterCategory === 'all' || p.category === this.filterCategory;
-        return matchesSearch && matchesCategory;
+        const matchesBrand = this.filterBrand === 'all' || (p.brand && p.brand.trim() === this.filterBrand);
+        
+        let matchesStock = true;
+        if (this.filterStock === 'in_stock') matchesStock = (p.stock || 0) > 0;
+        else if (this.filterStock === 'low_stock') matchesStock = (p.stock || 0) > 0 && (p.stock || 0) <= 3;
+        else if (this.filterStock === 'out_of_stock') matchesStock = (p.stock || 0) <= 0;
+
+        return matchesSearch && matchesCategory && matchesBrand && matchesStock;
       });
     }
   },
@@ -277,6 +325,9 @@ export default {
     async guardarProducto() {
       this.guardando = true;
       try {
+        if (this.prodForm.brand) {
+          this.prodForm.brand = this.prodForm.brand.trim();
+        }
         const url = `/api/manage_products?token=${this.adminPin}`;
         const res = await fetch(url, {
           method: 'POST',
