@@ -52,6 +52,7 @@ type Order struct {
 	TotalFormat   string    `bson:"total_format" json:"total_format"`
 	PaymentMethod string    `bson:"paymentMethod" json:"paymentMethod"`
 	Status        string    `bson:"status" json:"status"`
+	ClientIP      string    `bson:"clientIp,omitempty" json:"clientIp,omitempty"`
 	CreatedAt     time.Time `bson:"createdAt" json:"createdAt"`
 }
 
@@ -104,6 +105,26 @@ func formatNumberIntl(num float64) string {
 		}
 	}
 	return strings.Join(res, ".")
+}
+
+func getClientIP(req events.APIGatewayProxyRequest) string {
+	for k, v := range req.Headers {
+		lower := strings.ToLower(k)
+		if lower == "x-nf-client-connection-ip" && v != "" {
+			return v
+		}
+	}
+	for k, v := range req.Headers {
+		lower := strings.ToLower(k)
+		if lower == "x-forwarded-for" && v != "" {
+			parts := strings.Split(v, ",")
+			return strings.TrimSpace(parts[0])
+		}
+	}
+	if req.RequestContext.Identity.SourceIP != "" {
+		return req.RequestContext.Identity.SourceIP
+	}
+	return "desconocida"
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -204,6 +225,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		TotalFormat:   formatNumberIntl(total),
 		PaymentMethod: body.PaymentMethod,
 		Status:        "PENDING",
+		ClientIP:      getClientIP(request),
 		CreatedAt:     time.Now(),
 	}
 

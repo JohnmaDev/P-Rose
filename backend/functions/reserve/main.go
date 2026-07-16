@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -23,6 +24,7 @@ type Reservation struct {
 	HoraRaw     string    `json:"horaRaw" bson:"horaRaw"`
 	Direccion   string    `json:"direccion" bson:"direccion"`
 	WhatsappUrl string    `json:"whatsappUrl" bson:"whatsappUrl"`
+	ClientIP    string    `json:"clientIp,omitempty" bson:"clientIp,omitempty"`
 	CreatedAt   time.Time `json:"createdAt" bson:"createdAt"`
 }
 
@@ -154,6 +156,26 @@ func buildEmailHTML(res Reservation) string {
 </html>`, res.Nombre, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion)
 }
 
+func getClientIP(req events.APIGatewayProxyRequest) string {
+	for k, v := range req.Headers {
+		lower := strings.ToLower(k)
+		if lower == "x-nf-client-connection-ip" && v != "" {
+			return v
+		}
+	}
+	for k, v := range req.Headers {
+		lower := strings.ToLower(k)
+		if lower == "x-forwarded-for" && v != "" {
+			parts := strings.Split(v, ",")
+			return strings.TrimSpace(parts[0])
+		}
+	}
+	if req.RequestContext.Identity.SourceIP != "" {
+		return req.RequestContext.Identity.SourceIP
+	}
+	return "desconocida"
+}
+
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	// Solo aceptamos POST
 	if request.HTTPMethod != "POST" {
@@ -183,6 +205,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	}
 
 	res.CreatedAt = time.Now()
+	res.ClientIP = getClientIP(request)
 
 	// Conectar a MongoDB
 	uri := os.Getenv("MONGODB_URI")
