@@ -45,15 +45,6 @@
           </button>
         </ClientOnly>
 
-        <!-- Desktop Book CTA -->
-        <NuxtLink
-          to="/agendar"
-          class="hidden md:flex items-center gap-2 px-5 py-2 bg-neon-green text-black text-xs font-black tracking-widest uppercase rounded-full transition-all duration-300 hover:bg-neon-green-dark hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] hover:scale-105"
-        >
-          {{ t('nav.book') }}
-          <fa-icon :icon="['fas', 'calendar-check']" class="text-[10px]" />
-        </NuxtLink>
-
         <!-- Mobile Hamburger -->
         <button
           @click="mobileOpen = !mobileOpen"
@@ -96,18 +87,11 @@
           <ClientOnly>
             <button
               @click="toggleLang"
-              class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 text-xs font-black tracking-widest uppercase text-gray-400 hover:border-neon-green/50 hover:text-neon-green transition-all duration-300"
+              class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 text-xs font-black tracking-widest uppercase text-gray-400 hover:border-neon-green/50 hover:text-neon-green transition-all duration-300"
             >
               <span>{{ lang === 'es' ? '🇨🇴 ES' : '🇺🇸 EN' }}</span>
             </button>
           </ClientOnly>
-          <NuxtLink
-            to="/agendar"
-            @click="mobileOpen = false"
-            class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-neon-green text-black text-xs font-black tracking-widest uppercase rounded-xl transition-all duration-300 hover:bg-neon-green-dark"
-          >
-            {{ t('nav.book') }}
-          </NuxtLink>
         </div>
       </div>
     </Transition>
