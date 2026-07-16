@@ -169,7 +169,7 @@
           <!-- Imagen -->
           <div class="aspect-square overflow-hidden bg-white/5 relative cursor-pointer" @click="goToDetail(product)">
             <img
-              :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 200)"
+              :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
               :alt="product.name"
               class="w-full h-full object-cover transition-premium group-hover:scale-110"
               :class="{'grayscale opacity-50': product.stock <= 0}"
