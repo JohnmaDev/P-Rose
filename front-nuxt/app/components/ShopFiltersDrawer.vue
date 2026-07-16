@@ -196,6 +196,10 @@ function close() {
 </script>
 
 <style scoped>
+/* Tema dinámico por departamento */
+.dept-bg { background-color: var(--dept-color); transition: background-color 0.5s ease; }
+.dept-text { color: var(--dept-color); transition: color 0.5s ease; }
+
 .drawer-enter-active,
 .drawer-leave-active {
   transition: opacity 0.3s ease;
