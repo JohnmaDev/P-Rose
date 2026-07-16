@@ -5,7 +5,7 @@
     <header class="w-full border-b border-white/8 bg-barber-black">
       <div class="max-w-5xl mx-auto px-6 py-5 flex flex-col items-center gap-3">
         <NuxtLink to="/">
-          <img src="/favicon.svg" alt="PersonalBarber" class="h-9 w-auto opacity-90 hover:opacity-100 transition-opacity" />
+          <img src="/favicon.svg" alt="PersonalBarber" class="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
         </NuxtLink>
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-xs font-semibold tracking-wide">
@@ -279,12 +279,11 @@
     <footer class="w-full border-t border-white/8 mt-auto">
       <div class="max-w-5xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
         <NuxtLink to="/tienda" class="checkout-footer-link">Tienda</NuxtLink>
-        <NuxtLink to="/agendar" class="checkout-footer-link">Agendar Cita</NuxtLink>
-        <NuxtLink to="/politicas/envios" class="checkout-footer-link">Política de Envíos</NuxtLink>
-        <NuxtLink to="/politicas/reembolsos" class="checkout-footer-link">Reembolsos</NuxtLink>
-        <NuxtLink to="/politicas/privacidad" class="checkout-footer-link">Privacidad</NuxtLink>
-        <NuxtLink to="/politicas/terminos" class="checkout-footer-link">Términos</NuxtLink>
-        <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" rel="noopener" class="checkout-footer-link">Contacto</a>
+        <button @click="openPolicy('envios')" class="checkout-footer-link">Política de Envíos</button>
+        <button @click="openPolicy('reembolsos')" class="checkout-footer-link">Reembolsos</button>
+        <button @click="openPolicy('privacidad')" class="checkout-footer-link">Privacidad</button>
+        <button @click="openPolicy('terminos')" class="checkout-footer-link">Términos</button>
+        <button @click="openPolicy('contacto')" class="checkout-footer-link">Contacto</button>
       </div>
     </footer>
 
@@ -305,6 +304,205 @@
         </div>
       </div>
     </Transition>
+
+    <!-- ═══ MODAL DE POLÍTICAS ═══ -->
+    <Transition name="fade">
+      <div v-if="activePolicy" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-md" @click.self="activePolicy = null">
+        <div class="policy-modal bg-[#0d0d0d] border border-white/10 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
+
+          <!-- Header del modal -->
+          <div class="flex items-center justify-between px-6 py-5 border-b border-white/8 flex-shrink-0">
+            <div class="flex items-center gap-3">
+              <div v-if="policies[activePolicy]?.icon" class="w-8 h-8 rounded-xl flex items-center justify-center text-sm" :class="policies[activePolicy]?.iconBg">
+                {{ policies[activePolicy]?.icon }}
+              </div>
+              <h3 class="text-white font-black text-base tracking-tight">{{ policies[activePolicy]?.title }}</h3>
+            </div>
+            <button @click="activePolicy = null" class="w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200">
+              <fa-icon :icon="['fas', 'xmark']" class="text-sm" />
+            </button>
+          </div>
+
+          <!-- Cuerpo scrolleable -->
+          <div class="overflow-y-auto px-6 py-5 space-y-4 flex-1 policy-scroll">
+            
+            <!-- Política de Reembolsos -->
+            <div v-if="activePolicy === 'reembolsos'" class="policy-body flex flex-col items-center justify-center py-6 text-center space-y-4">
+              <p class="text-white/90 font-bold text-base tracking-wide uppercase">
+                Todas las ventas son definitivas.
+              </p>
+              <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                Sin devoluciones. Sin cancelaciones. Sin cambios.
+              </p>
+              <div class="border-t border-white/10 w-full pt-4 mt-2 space-y-3">
+                <p class="text-xs text-gray-500 leading-relaxed text-left">
+                  <strong>Productos de cuidado e higiene:</strong> Por razones de seguridad sanitaria, no aceptamos cambios ni devoluciones en ceras, tratamientos o productos de uso directo una vez confirmada la compra.
+                </p>
+                <p class="text-xs text-gray-500 leading-relaxed text-left">
+                  <strong>Equipos eléctricos:</strong> Las máquinas de corte, secadoras y barberas cuentan con garantía de fábrica por defectos. En caso de fallas, el equipo estará sujeto a un diagnóstico técnico para autorizar su reparación o reemplazo.
+                </p>
+              </div>
+            </div>
+
+            <!-- Política de Envíos -->
+            <div v-if="activePolicy === 'envios'" class="policy-body">
+              <p class="policy-lead">PersonalBarber realiza envíos a todo el territorio colombiano a través de operadores logísticos aliados.</p>
+              <div class="policy-alert-box" style="--alert-color: #39ff14;">
+                <div>
+                  <p class="policy-alert-title">PersonalBarber Express · $10.000 COP</p>
+                  <p class="policy-alert-sub">Tarifa fija para todo Colombia. Entrega estimada en 24–48 horas hábiles.</p>
+                </div>
+              </div>
+              <h4 class="policy-section-title">Detalles del envío</h4>
+              <ul class="policy-list">
+                <li>Los pedidos se despachan dentro de las <strong>24 horas hábiles</strong> siguientes a la confirmación del pago.</li>
+                <li>El tiempo de tránsito varía según la ciudad destino: 1–2 días para ciudades principales, 2–5 días para municipios.</li>
+                <li>Se enviará número de guía por WhatsApp o correo electrónico para seguimiento.</li>
+                <li>PersonalBarber no se responsabiliza por demoras causadas por la transportadora o fuerza mayor.</li>
+              </ul>
+              <h4 class="policy-section-title">Dirección de entrega</h4>
+              <p class="policy-note">El cliente es responsable de suministrar una dirección exacta y completa. En caso de paquetes no entregados por dirección incorrecta, el costo de reenvío correrá por cuenta del comprador.</p>
+            </div>
+
+            <!-- Política de Privacidad -->
+            <div v-if="activePolicy === 'privacidad'" class="policy-body">
+              <p class="policy-lead">En <strong>PersonalBarber</strong>, respetamos su privacidad y protegemos su información personal bajo los más altos estándares de seguridad y la normativa colombiana vigente (Ley 1581 de 2012).</p>
+              
+              <h4 class="policy-section-title">1. Información que recopilamos</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Al realizar una compra o agendar una cita, recopilamos información personal necesaria para procesar su solicitud, como su nombre, dirección de envío, correo electrónico y número de teléfono o WhatsApp. Al navegar por nuestra tienda, también podemos recibir automáticamente su dirección IP para fines analíticos de rendimiento y seguridad.
+              </p>
+
+              <h4 class="policy-section-title">2. Consentimiento y Uso</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Al proporcionarnos sus datos para completar una transacción, coordinar un envío o agendar un servicio, usted acepta que recopilemos y utilicemos dicha información exclusivamente para ese fin. Podremos comunicarnos con usted vía WhatsApp o correo electrónico para enviarle actualizaciones de su pedido, recordatorios de citas o soporte técnico.
+              </p>
+
+              <h4 class="policy-section-title">3. Pagos y Seguridad</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Su información de pago es procesada de forma segura mediante pasarelas certificadas que cumplen con el estándar internacional PCI-DSS. PersonalBarber no almacena ni tiene acceso a los datos completos de sus tarjetas. Toda la transferencia de información en nuestro sitio web está protegida mediante encriptación SSL.
+              </p>
+
+              <h4 class="policy-section-title">4. Terceros</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                No venderemos ni alquilaremos su información a terceros. Solo compartiremos sus datos básicos con proveedores de servicios estrictamente necesarios, como las empresas de mensajería encargadas de entregar su pedido.
+              </p>
+
+              <div class="border-t border-white/10 mt-6 pt-5">
+                <p class="text-sm text-white font-bold mb-3">Contacto y Derechos</p>
+                <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                  Si desea acceder, corregir o eliminar su información, o si necesita ayuda, comuníquese con nosotros por cualquiera de estos canales:
+                </p>
+                <div class="flex flex-col gap-3">
+                  <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
+                    <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold uppercase tracking-wider">Chat WhatsApp</span>
+                      <span class="text-[10px] opacity-80">+57 304 584 0264</span>
+                    </div>
+                  </a>
+                  <a href="mailto:pb@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
+                    <fa-icon :icon="['fas', 'envelope']" class="text-lg" />
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold uppercase tracking-wider">Correo Electrónico</span>
+                      <span class="text-[10px] opacity-80">pb@personalbarber.vip</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Términos y Condiciones -->
+            <div v-if="activePolicy === 'terminos'" class="policy-body">
+              <p class="policy-lead">Al utilizar nuestro sitio web y realizar compras en <strong>PersonalBarber</strong>, usted acepta los siguientes términos y condiciones de servicio.</p>
+
+              <h4 class="policy-section-title">1. Política de Ventas Finales</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Todas las ventas son definitivas. No aceptamos devoluciones, cancelaciones ni cambios. No emitiremos reembolsos por artículos pedidos por error o si el cliente ingresó los datos incorrectamente. Si cometió un error en su pedido, contáctenos inmediatamente, pero no garantizamos poder modificarlo si ya pasó a proceso de despacho.
+              </p>
+
+              <h4 class="policy-section-title">2. Tiempos y Detalles de Envío</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Los envíos operan exclusivamente a nivel nacional (Colombia). El tiempo estimado de entrega mediante PersonalBarber Express es de 24 a 48 horas hábiles. Debido al volumen de pedidos, esto es una estimación y no una garantía estricta.
+              </p>
+
+              <h4 class="policy-section-title">3. Direcciones de Envío</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Por favor, verifique cuidadosamente su dirección antes de enviar el pedido. Si requiere una modificación, haremos lo posible por ayudarle antes del despacho, pero no es garantizado. Si un paquete debe ser reenviado por problemas en la dirección proporcionada, el cliente es responsable del 100% de las tarifas logísticas adicionales.
+              </p>
+
+              <h4 class="policy-section-title">4. Responsabilidad y Garantía de Entrega</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Nosotros respaldamos tu compra. Si un paquete se extravía, sufre daños severos o es robado mientras está en poder de la transportadora, PersonalBarber asumirá el inconveniente. Gestionaremos el reclamo directamente con la empresa logística y nos aseguraremos de enviarte un reemplazo o procesar una solución para que tu inversión siempre esté protegida. (Nota: Las demoras por fuerza mayor en las vías pueden ocurrir, pero siempre te acompañaremos hasta que recibas tu pedido).
+              </p>
+
+              <h4 class="policy-section-title">5. Artículos Defectuosos o Dañados</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Si recibe un artículo dañado o defectuoso de fábrica (especialmente equipos eléctricos), debe contactarnos en un plazo máximo de <strong>2 a 3 días</strong> tras la entrega. Incluya su número de orden, fotografías y videos claros del artículo y su empaque original. Revisaremos su caso y haremos todo lo posible por resolver el problema. No se aceptarán reclamos presentados fuera de este periodo.
+              </p>
+
+              <div class="border-t border-white/10 mt-6 pt-5">
+                <p class="text-sm text-white font-bold mb-3">Soporte y Reclamos</p>
+                <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                  Para cualquier duda relacionada con su pedido, comuníquese con nosotros por cualquiera de estos canales:
+                </p>
+                <div class="flex flex-col gap-3">
+                  <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
+                    <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold uppercase tracking-wider">Chat WhatsApp</span>
+                      <span class="text-[10px] opacity-80">+57 304 584 0264</span>
+                    </div>
+                  </a>
+                  <a href="mailto:pb@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
+                    <fa-icon :icon="['fas', 'envelope']" class="text-lg" />
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold uppercase tracking-wider">Correo Electrónico</span>
+                      <span class="text-[10px] opacity-80">pb@personalbarber.vip</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Modal de Contacto Global -->
+            <div v-if="activePolicy === 'contacto'" class="policy-body flex flex-col items-center justify-center py-4 text-center">
+              <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
+                <img src="/favicon.svg" alt="PersonalBarber" class="w-8 h-8 opacity-80" />
+              </div>
+              <h3 class="text-white font-black text-lg mb-2">¿Necesitas ayuda?</h3>
+              <p class="text-gray-400 text-xs leading-relaxed max-w-sm mb-6">
+                Nuestro equipo de soporte está listo para ayudarte con tu pedido, reservas o cualquier duda que tengas. Selecciona tu canal preferido:
+              </p>
+              
+              <div class="w-full flex flex-col gap-3">
+                <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] transition-all text-black font-black text-sm shadow-[0_0_15px_rgba(37,211,102,0.3)]">
+                  <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
+                  Escribir por WhatsApp
+                </a>
+                <a href="mailto:pb@personalbarber.vip" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-all text-white font-bold text-sm border border-white/10">
+                  <fa-icon :icon="['fas', 'envelope']" class="text-lg text-neon-green" />
+                  pb@personalbarber.vip
+                </a>
+              </div>
+              
+              <p class="text-[10px] text-gray-500 mt-6 uppercase tracking-widest font-semibold leading-relaxed">
+                Respuesta usual en menos de 2 horas<br>
+                <span class="opacity-70 normal-case tracking-normal">(Dentro de nuestro horario: 11:00 AM - 7:00 PM)</span>
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Footer del modal -->
+          <div class="px-6 py-4 border-t border-white/8 flex-shrink-0">
+            <button @click="activePolicy = null" class="w-full py-3 bg-white/8 hover:bg-white/12 text-white/70 hover:text-white font-semibold text-sm rounded-xl transition-all duration-200">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -321,6 +519,18 @@ const selectedShipping = ref('express')
 const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
 const isProcessing = ref(false)
+
+// ── Políticas ──────────────────────────────────────────────
+const activePolicy = ref<string | null>(null)
+function openPolicy(id: string) { activePolicy.value = id }
+
+const policies: Record<string, { title: string; icon?: string; iconBg?: string }> = {
+  reembolsos: { title: 'Política de Reembolsos' },
+  envios: { title: 'Política de Envíos' },
+  privacidad: { title: 'Aviso de Privacidad' },
+  terminos: { title: 'Términos y Condiciones' },
+  contacto: { title: 'Atención al Cliente' },
+}
 
 const shippingMethods = [
   {
@@ -413,6 +623,37 @@ async function handleCheckout() {
 .input-field:focus { border-color: rgba(57,255,20,0.5); background: rgba(255,255,255,0.08); }
 .label-xs { display: block; font-size: 0.75rem; color: #9ca3af; font-weight: 600; margin-bottom: 0.25rem; }
 .err { font-size: 0.625rem; color: #f87171; margin-top: 0.25rem; }
-.checkout-footer-link { font-size: 0.7rem; font-weight: 600; color: #6b7280; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+.checkout-footer-link { font-size: 0.7rem; font-weight: 600; color: #6b7280; text-decoration: none; background: none; border: none; cursor: pointer; letter-spacing: 0.05em; transition: color 0.2s; padding: 0; }
 .checkout-footer-link:hover { color: #fff; }
+
+/* ── Policy Modal ── */
+.policy-modal { animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.policy-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+.policy-scroll::-webkit-scrollbar { width: 4px; }
+.policy-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* Policy body styles (used inside dynamic components) */
+:deep(.policy-body) { font-size: 0.8rem; line-height: 1.6; color: #9ca3af; }
+:deep(.policy-lead) { font-size: 0.85rem; color: #d1d5db; line-height: 1.7; }
+:deep(.policy-lead strong) { color: #fff; }
+:deep(.policy-alert-box) {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 0.75rem; padding: 1rem; margin: 0.75rem 0;
+}
+:deep(.policy-alert-icon) { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+:deep(.policy-alert-title) { font-size: 0.8rem; font-weight: 700; color: #fca5a5; margin-bottom: 0.25rem; }
+:deep(.policy-alert-sub) { font-size: 0.72rem; color: #9ca3af; }
+:deep(.policy-section-title) { font-size: 0.78rem; font-weight: 700; color: #e5e7eb; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1rem; margin-bottom: 0.4rem; padding-bottom: 0.3rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+:deep(.policy-list) { padding-left: 1.2rem; space-y: 0.25rem; }
+:deep(.policy-list li) { margin-bottom: 0.35rem; }
+:deep(.policy-list li strong) { color: #e5e7eb; }
+:deep(.policy-list--ol) { list-style-type: decimal; }
+:deep(.policy-note) { font-size: 0.75rem; color: #9ca3af; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.5rem; padding: 0.75rem; margin-top: 0.5rem; }
+:deep(.policy-footer-note) { font-size: 0.72rem; color: #6b7280; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem; margin-top: 0.75rem; }
+
+/* Fade transition */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>
