@@ -9,9 +9,9 @@
         </NuxtLink>
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-xs font-semibold tracking-wide">
-          <button @click="goToStep(1)" :class="step >= 1 ? 'text-neon-green' : 'text-white/30'" class="hover:underline">Información</button>
+          <button @click="goToStep(1)" :class="step >= 1 ? 'dept-text font-bold' : 'text-white/30'" class="hover:underline">Información</button>
           <span class="text-white/20">›</span>
-          <button @click="goToStep(2)" :class="step >= 2 ? 'text-neon-green' : 'text-white/30'" :disabled="step < 2" class="disabled:cursor-not-allowed hover:underline">Envío</button>
+          <button @click="goToStep(2)" :class="step >= 2 ? 'dept-text font-bold' : 'text-white/30'" :disabled="step < 2" class="disabled:cursor-not-allowed hover:underline">Envío</button>
           <span class="text-white/20">›</span>
           <span :class="step === 3 ? 'text-white font-bold' : 'text-white/30'">Pago</span>
         </nav>
@@ -24,7 +24,7 @@
         <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
           <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
           <p class="text-gray-500">Tu carrito está vacío</p>
-          <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← Explorar productos</NuxtLink>
+          <NuxtLink to="/tienda" class="dept-text hover:underline text-sm font-bold">← Explorar productos</NuxtLink>
         </div>
 
         <div v-else class="max-w-5xl mx-auto px-4 py-10">
@@ -37,7 +37,7 @@
               <div v-if="step === 1">
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
+                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
                     Información de contacto
                   </h2>
                   <div class="space-y-4">
@@ -89,7 +89,7 @@
                     </NuxtLink>
                     <button @click="nextStep" :disabled="!step1Valid"
                       class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
-                      :class="step1Valid ? 'bg-neon-green hover:bg-neon-green-dark text-black shadow-[0_0_20px_rgba(57,255,20,0.3)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
+                      :class="step1Valid ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                       Continuar con el envío <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
                     </button>
                   </div>
@@ -111,30 +111,30 @@
                         <span class="text-white">{{ form.firstName }} {{ form.lastName }}, {{ form.city }}</span>
                       </div>
                     </div>
-                    <button @click="step = 1" class="text-neon-green text-xs hover:underline font-semibold">Cambiar</button>
+                    <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                 </div>
 
                 <!-- Método de envío -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
                     Método de envío
                   </h2>
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                      :class="selectedShipping === s.id ? 'border-neon-green bg-neon-green/10' : 'border-white/10 hover:border-white/20'">
+                      :class="selectedShipping === s.id ? 'dept-border bg-white/10' : 'border-white/10 hover:border-white/20'">
                       <input type="radio" v-model="selectedShipping" :value="s.id" class="hidden" />
                       <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                        :class="selectedShipping === s.id ? 'border-neon-green' : 'border-gray-600'">
-                        <div v-if="selectedShipping === s.id" class="w-2.5 h-2.5 rounded-full bg-neon-green"></div>
+                        :class="selectedShipping === s.id ? 'dept-border' : 'border-gray-600'">
+                        <div v-if="selectedShipping === s.id" class="w-2.5 h-2.5 rounded-full dept-bg"></div>
                       </div>
                       <div class="flex-1">
                         <div class="flex items-center gap-2 mb-0.5">
                           <span class="text-xl">{{ s.emoji }}</span>
                           <p class="text-white font-bold text-sm">{{ s.label }}</p>
-                          <span v-if="s.badge" class="text-[9px] bg-neon-green/20 text-neon-green border border-neon-green/30 px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
+                          <span v-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
                         </div>
                         <p class="text-gray-500 text-xs">{{ s.desc }}</p>
                       </div>
@@ -148,7 +148,7 @@
                     </button>
                     <button @click="step = 3" :disabled="!selectedShipping"
                       class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
-                      :class="selectedShipping ? 'bg-neon-green hover:bg-neon-green-dark text-black shadow-[0_0_20px_rgba(57,255,20,0.3)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
+                      :class="selectedShipping ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                       Continuar al pago <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
                     </button>
                   </div>
@@ -164,38 +164,38 @@
                       <span class="text-gray-500 w-16">Contacto</span>
                       <span class="text-white">{{ form.email }}</span>
                     </div>
-                    <button @click="step = 1" class="text-neon-green text-xs hover:underline font-semibold">Cambiar</button>
+                    <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                   <div class="flex items-center justify-between text-sm py-3">
                     <div class="flex gap-4">
                       <span class="text-gray-500 w-16">Enviar a</span>
                       <span class="text-white">{{ form.firstName }} {{ form.lastName }}, {{ form.address }}, {{ form.city }}</span>
                     </div>
-                    <button @click="step = 1" class="text-neon-green text-xs hover:underline font-semibold">Cambiar</button>
+                    <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                   <div class="flex items-center justify-between text-sm pt-3">
                     <div class="flex gap-4">
                       <span class="text-gray-500 w-16">Envío</span>
                       <span class="text-white">{{ currentShipping?.label }} · {{ currentShipping?.price }}</span>
                     </div>
-                    <button @click="step = 2" class="text-neon-green text-xs hover:underline font-semibold">Cambiar</button>
+                    <button @click="step = 2" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                 </div>
 
                 <!-- Métodos de pago -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">3</span>
+                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">3</span>
                     Método de pago
                   </h2>
                   <div class="space-y-3">
                     <label v-for="method in paymentMethods" :key="method.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                      :class="selectedPayment === method.id ? 'border-neon-green bg-neon-green/10' : 'border-white/10 hover:border-white/20'">
+                      :class="selectedPayment === method.id ? 'dept-border bg-white/10' : 'border-white/10 hover:border-white/20'">
                       <input type="radio" v-model="selectedPayment" :value="method.id" class="hidden" />
                       <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                        :class="selectedPayment === method.id ? 'border-neon-green' : 'border-gray-600'">
-                        <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full bg-neon-green"></div>
+                        :class="selectedPayment === method.id ? 'dept-border' : 'border-gray-600'">
+                        <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full dept-bg"></div>
                       </div>
                       <div class="flex items-center gap-3 flex-1">
                         <div class="text-2xl">{{ method.emoji }}</div>
@@ -204,7 +204,7 @@
                           <p class="text-gray-500 text-xs">{{ method.desc }}</p>
                         </div>
                       </div>
-                      <span v-if="method.badge" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/30 px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
+                      <span v-if="method.badge" class="text-[10px] dept-badge dept-text px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
                     </label>
                   </div>
                   <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
@@ -219,7 +219,7 @@
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver
                     </button>
                     <button @click="handleCheckout" :disabled="isProcessing"
-                      class="px-8 py-3 bg-neon-green hover:bg-neon-green-dark text-black font-black text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(57,255,20,0.3)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                      class="px-8 py-3 dept-bg hover:opacity-90 text-black font-black text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_var(--dept-glow)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                       <fa-icon v-if="isProcessing" :icon="['fas', 'spinner']" class="fa-spin" />
                       <fa-icon v-else :icon="['fas', 'lock']" class="text-xs" />
                       {{ isProcessing ? 'Procesando...' : `Pagar ${grandTotalFormatted}` }}
@@ -242,14 +242,14 @@
                       <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
                       <p class="text-gray-500 text-xs">× {{ item.qty }}</p>
                     </div>
-                    <span class="text-neon-green text-xs font-bold flex-shrink-0">{{ formatPrice(parsePrice(item.price) * item.qty) }}</span>
+                    <span class="dept-text text-xs font-bold flex-shrink-0">{{ formatPrice(parsePrice(item.price) * item.qty) }}</span>
                   </div>
                 </div>
                 <div class="border-t border-white/10 pt-4 space-y-2">
                   <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-400">Envío</span>
-                    <span class="font-semibold" :class="shippingCost === 0 && step >= 2 && currentShipping ? 'text-neon-green' : 'text-gray-400'">
+                    <span class="font-semibold" :class="shippingCost === 0 && step >= 2 && currentShipping ? 'dept-text' : 'text-gray-400'">
                       {{ step >= 2 && currentShipping ? (shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)) : 'Calculando...' }}
                     </span>
                   </div>
@@ -259,7 +259,7 @@
                   </div>
                   <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
                     <span class="text-white">TOTAL</span>
-                    <span class="text-neon-green">{{ grandTotalFormatted }}</span>
+                    <span class="dept-text">{{ grandTotalFormatted }}</span>
                   </div>
                 </div>
                 <p class="text-center text-gray-600 text-[10px] mt-4">

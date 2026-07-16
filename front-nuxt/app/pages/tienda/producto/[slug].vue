@@ -3,23 +3,19 @@
     <!-- Barra de carga -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
-        <div class="h-full animate-progress-bar" :class="{
-          'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
-          'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
-          'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
-        }"></div>
+        <div class="h-full animate-progress-bar dept-bg shadow-[0_0_10px_var(--dept-glow)]"></div>
       </div>
     </Transition>
 
     <!-- Header -->
     <div class="sticky top-16 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <NuxtLink to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
+        <NuxtLink to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:dept-text transition-colors">
           <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
           <span class="text-xs font-semibold">{{ t('nav.store') }}</span>
         </NuxtLink>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-neon-green">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
+          <span class="dept-text">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -35,9 +31,9 @@
     <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
       <!-- Breadcrumb (Visible siempre al inicio en móvil y desktop) -->
       <div class="flex items-center gap-2 text-xs text-gray-500 mb-6">
-        <NuxtLink to="/" class="hover:text-neon-green transition-colors">{{ t('nav.home') }}</NuxtLink>
+        <NuxtLink to="/" class="hover:dept-text transition-colors">{{ t('nav.home') }}</NuxtLink>
         <span>/</span>
-        <NuxtLink to="/tienda" class="hover:text-neon-green transition-colors">{{ t('nav.store') }}</NuxtLink>
+        <NuxtLink to="/tienda" class="hover:dept-text transition-colors">{{ t('nav.store') }}</NuxtLink>
         <span>/</span>
         <span class="text-gray-400">{{ product.name }}</span>
       </div>
@@ -59,14 +55,14 @@
           <!-- Dots indicadores -->
           <div v-if="product.images && product.images.length > 1" class="flex justify-center gap-2 sm:hidden mt-[-10px] pb-2">
             <div v-for="(_, idx) in product.images" :key="idx" class="w-1.5 h-1.5 rounded-full transition-all duration-300"
-              :class="activeIdx === idx ? 'bg-neon-green w-4' : 'bg-white/20'"></div>
+              :class="activeIdx === idx ? 'dept-bg w-4' : 'bg-white/20'"></div>
           </div>
 
           <!-- Miniaturas Desktop -->
           <div v-if="product.images && product.images.length > 1" class="hidden sm:flex flex-wrap gap-3">
             <button v-for="(img, idx) in product.images" :key="idx" @click="scrollToImage(idx)"
               class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0"
-              :class="activeIdx === idx ? 'border-neon-green scale-105' : 'border-transparent opacity-60 hover:opacity-100'">
+              :class="activeIdx === idx ? 'dept-border scale-105' : 'border-transparent opacity-60 hover:opacity-100'">
               <img :src="optimizeImage(img, 100)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-cover" />
             </button>
           </div>
@@ -76,13 +72,13 @@
         <div class="flex flex-col gap-6">
           <!-- Marca y nombre -->
           <div>
-            <span class="text-neon-green text-xs font-bold tracking-widest uppercase">{{ product.brand }}</span>
+            <span class="dept-text text-xs font-bold tracking-widest uppercase">{{ product.brand }}</span>
             <h1 class="text-3xl font-black text-white mt-1 leading-tight tracking-tight">{{ product.name }}</h1>
           </div>
 
           <!-- Precio -->
           <div class="flex items-baseline gap-3">
-            <span class="text-4xl font-black text-neon-green">{{ formatPrice(product.price) }}</span>
+            <span class="text-4xl font-black dept-text">{{ formatPrice(product.price) }}</span>
           </div>
 
           <!-- Descripción -->
@@ -98,7 +94,7 @@
             <div class="flex justify-between text-sm"><span class="text-gray-500">{{ t('tienda.category') }}</span><span class="text-white font-semibold capitalize">{{ getCategoryLabel(product.category) }}</span></div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-500 font-bold">{{ t('tienda.status') }}</span>
-              <span v-if="product.stock > 3" class="text-neon-green font-black italic uppercase tracking-tighter">✓ {{ t('tienda.available') }}</span>
+              <span v-if="product.stock > 3" class="dept-text font-black italic uppercase tracking-tighter">✓ {{ t('tienda.available') }}</span>
               <span v-else-if="product.stock > 0" class="text-amber-500 font-black animate-pulse italic uppercase tracking-tighter">⚡ {{ t('tienda.lastItems').replace('{n}', String(product.stock)) }}</span>
               <span v-else class="text-red-500 font-black uppercase tracking-widest bg-red-500/10 px-2 rounded">✗ {{ t('tienda.soldOut') }}</span>
             </div>
@@ -119,12 +115,12 @@
           <!-- CTAs -->
           <div class="flex flex-col sm:flex-row gap-3">
             <button @click="handleAddToCart" :disabled="product.stock <= 0 || isStockFull(product)"
-              class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-30 disabled:border-white/10 disabled:text-gray-500 disabled:cursor-not-allowed">
+              class="flex-1 py-4 glass dept-border hover:dept-bg hover:text-black dept-text font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-30 disabled:border-white/10 disabled:text-gray-500 disabled:cursor-not-allowed">
               <fa-icon :icon="['fas', 'shopping-bag']" />
               {{ product.stock <= 0 ? t('tienda.soldOut') : (isStockFull(product) ? t('tienda.limitCart') : t('tienda.addBtn')) }}
             </button>
             <button @click="handleBuyNow" :disabled="product.stock <= 0 || isStockFull(product)"
-              class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed">
+              class="flex-1 py-4 dept-bg hover:opacity-90 text-black font-black rounded-xl transition-all duration-300 shadow-lg shadow-[0_0_15px_var(--dept-glow)] flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed">
               <fa-icon :icon="['fas', 'bolt']" />
               {{ isStockFull(product) ? t('tienda.limitReached') : t('tienda.buyNow') }}
             </button>
@@ -140,7 +136,7 @@
           <!-- Garantías -->
           <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-4">
             <div v-for="badge in badges" :key="badge.label" class="flex flex-col items-center gap-1 text-center p-2 sm:p-3 glass rounded-xl border border-white/5">
-              <fa-icon :icon="badge.icon" class="text-neon-green text-base sm:text-lg" />
+              <fa-icon :icon="badge.icon" class="dept-text text-base sm:text-lg" />
               <span class="text-gray-400 text-[9px] sm:text-[10px] leading-tight">{{ badge.label }}</span>
             </div>
           </div>
@@ -155,18 +151,18 @@
             <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">{{ t('tienda.recommendedSub') }}</p>
           </div>
           <div class="h-px flex-1 bg-white/10 mx-6 hidden sm:block"></div>
-          <NuxtLink to="/tienda" class="text-neon-green text-sm font-bold hover:underline">{{ t('nav.store') }} →</NuxtLink>
+          <NuxtLink to="/tienda" class="dept-text text-sm font-bold hover:underline">{{ t('nav.store') }} →</NuxtLink>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <NuxtLink v-for="item in recommendedProducts" :key="item.id"
             :to="{ name: 'tienda-producto-slug', params: { slug: generateProductSlug(item.id, item.name) } }"
-            class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-neon-green/50 transition-all duration-300">
+            class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:dept-border transition-all duration-300">
             <div class="aspect-square overflow-hidden bg-white/5">
               <img :src="optimizeImage(item.images && item.images.length > 0 ? item.images[0] : item.image, 400)" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
             <div class="p-4">
-              <h4 class="text-xs font-bold text-white group-hover:text-neon-green transition-colors line-clamp-1">{{ item.name }}</h4>
-              <p class="text-neon-green font-bold text-xs mt-1">{{ formatPrice(item.price) }}</p>
+              <h4 class="text-xs font-bold text-white group-hover:dept-text transition-colors line-clamp-1">{{ item.name }}</h4>
+              <p class="dept-text font-bold text-xs mt-1">{{ formatPrice(item.price) }}</p>
             </div>
           </NuxtLink>
         </div>
@@ -177,7 +173,7 @@
         <h2 class="text-xl font-black uppercase tracking-tight text-white mb-6">{{ t('tienda.exploreCategory') }}</h2>
         <div class="flex flex-wrap gap-3">
           <NuxtLink v-for="cat in availableCategories" :key="cat.id" :to="{ path: '/tienda', query: { cat: cat.id } }"
-            class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-neon-green hover:border-neon-green/50 transition-all duration-300">
+            class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:dept-text hover:dept-border transition-all duration-300">
             {{ getCategoryLabel(cat.id) }}
           </NuxtLink>
         </div>
@@ -188,7 +184,7 @@
     <div v-else class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600" />
       <p class="text-gray-500">{{ t('tienda.emptyTitle') }}</p>
-      <NuxtLink to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← {{ t('tienda.back') }}</NuxtLink>
+      <NuxtLink to="/tienda" class="dept-text hover:underline text-sm font-bold">← {{ t('tienda.back') }}</NuxtLink>
     </div>
   </div>
 </template>
@@ -204,15 +200,22 @@ const { products, categories, isLoading, fetchCatalog } = useCatalog()
 const { t, lang } = useLanguage()
 
 
+import { useDepartment } from '~/composables/useDepartment'
+
+const { activeDepartment, setDepartment } = useDepartment()
+
 const slug = computed(() => route.params.slug as string)
 const productId = computed(() => getIdFromSlug(slug.value))
 
 const product = computed(() => products.value.find(p => p.id === productId.value) as Product | undefined)
 
-const activeDepartment = computed(() => {
-  if (!product.value || categories.value.length === 0) return 'men'
-  const cat = categories.value.find(c => c.id === product.value!.category)
-  return cat ? cat.department : 'men'
+watchEffect(() => {
+  if (product.value && categories.value.length > 0) {
+    const cat = categories.value.find(c => c.id === product.value!.category)
+    if (cat && cat.department) {
+      setDepartment(cat.department)
+    }
+  }
 })
 
 // SEO dinámico con datos del producto — renderizado en servidor

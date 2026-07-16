@@ -1,5 +1,14 @@
 <template>
-  <main id="app-container">
+  <main 
+    id="app-container"
+    :style="{
+      '--dept-color': accentColor,
+      '--dept-glow': accentGlow,
+      '--dept-color-10': accentColor + '1a',
+      '--dept-color-30': accentColor + '4d',
+    }"
+    class="min-h-screen text-white relative transition-colors duration-500"
+  >
     <!-- Navbar global persistente en todas las páginas, excepto checkout y admin -->
     <AppNavbar v-if="showNavbar" />
 
@@ -20,7 +29,7 @@
         v-if="showScrollTop && !cartOpen"
         @click="scrollToTop"
         :aria-label="t('common.scrollTop')"
-        class="fixed bottom-10 sm:bottom-6 right-6 z-50 bg-neon-green text-black px-4 py-2 rounded-full shadow-[0_0_15px_rgba(57,255,20,0.4)] hover:bg-neon-green-dark transition-all duration-300 focus:outline-none hover:scale-110"
+        class="fixed bottom-10 sm:bottom-6 right-6 z-50 dept-bg text-black font-black px-4 py-2 rounded-full shadow-[0_0_15px_var(--dept-glow)] transition-all duration-300 focus:outline-none hover:scale-110"
       >
         ↑ Top
       </button>
@@ -30,8 +39,10 @@
 
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
+import { useDepartment } from '~/composables/useDepartment'
 
 const { initLang, t } = useLanguage()
+const { accentColor, accentGlow } = useDepartment()
 const route = useRoute()
 const config = useRuntimeConfig()
 

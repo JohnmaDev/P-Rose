@@ -3,23 +3,12 @@
     <!-- Barra de carga global discreta -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
-        <div
-          class="h-full animate-progress-bar transition-colors duration-500"
-          :class="{
-            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
-            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
-            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
-          }"
-        ></div>
+        <div class="h-full animate-progress-bar dept-bg shadow-[0_0_10px_var(--dept-glow)] transition-colors duration-500"></div>
       </div>
     </Transition>
     <div class="text-center mb-16 px-4">
       <h2 class="text-[3.5rem] leading-tight sm:text-[6rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
-        {{ t('tienda.nuestra') }} <span class="block sm:inline transition-colors duration-500" :class="{
-          'text-neon-green drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]': activeDepartment === 'men',
-          'text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]': activeDepartment === 'merch',
-          'text-pink-500 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]': activeDepartment === 'women'
-        }">{{ t(`tienda.depts.${activeDepartment}`) }}</span>
+        {{ t('tienda.nuestra') }} <span class="block sm:inline dept-text drop-shadow-[0_0_15px_var(--dept-glow)] transition-colors duration-500">{{ t(`tienda.depts.${activeDepartment}`) }}</span>
       </h2>
       <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide transition-colors duration-500">
         {{ t(`tienda.subtitles.${activeDepartment}`) }}
@@ -27,23 +16,23 @@
       <div class="flex justify-center mt-8 mb-16 fade-in">
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <button
-            @click="activeDepartment = 'men'"
+            @click="setDepartment('men')"
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']"
+              activeDepartment === 'men' ? 'bg-[#39FF14] text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
             <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
           <button
-            @click="activeDepartment = 'merch'"
+            @click="setDepartment('merch')"
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']"
+              activeDepartment === 'merch' ? 'bg-[#22d3ee] text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
             <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
           </button>
           <button
-            @click="activeDepartment = 'women'"
+            @click="setDepartment('women')"
             :class="['px-4 sm:px-6 py-3 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']"
+              activeDepartment === 'women' ? 'bg-[#ec4899] text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']"
           >
             <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
           </button>
@@ -180,15 +169,12 @@
     <div class="flex justify-center mt-12 mb-20">
       <NuxtLink
         :to="{ path: '/tienda', query: { dept: activeDepartment } }"
-        :class="['group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2',
-          activeDepartment === 'men' ? 'border-neon-green/40 hover:border-neon-green' :
-          (activeDepartment === 'merch' ? 'border-cyan-400/40 hover:border-cyan-400' : 'border-pink-500/40 hover:border-pink-500')]"
+        class="group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2 dept-border hover:opacity-90"
       >
-        <div :class="['absolute inset-0 w-full h-full translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300',
-          activeDepartment === 'men' ? 'bg-neon-green/10' : (activeDepartment === 'merch' ? 'bg-cyan-400/10' : 'bg-pink-500/10')]"></div>
+        <div class="absolute inset-0 w-full h-full translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300 bg-white/5"></div>
         <div class="relative flex items-center gap-3">
-          <fa-icon :icon="['fas', 'store']" class="transition-transform duration-300 group-hover:scale-125" :class="activeDepartment === 'men' ? 'text-neon-green' : (activeDepartment === 'merch' ? 'text-cyan-400' : 'text-pink-500')" />
-          <span class="text-xl sm:text-2xl transition-colors duration-300" :class="activeDepartment === 'men' ? 'group-hover:text-neon-green' : (activeDepartment === 'merch' ? 'group-hover:text-cyan-400' : 'group-hover:text-pink-500')">
+          <fa-icon :icon="['fas', 'store']" class="transition-transform duration-300 group-hover:scale-125 dept-text" />
+          <span class="text-xl sm:text-2xl transition-colors duration-300 group-hover:dept-text">
             {{ t(`tienda.exploreBtn.${activeDepartment}`) }}
           </span>
         </div>
@@ -199,12 +185,13 @@
 
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
+import { useDepartment } from '~/composables/useDepartment'
 
 const NuxtLinkResolved = resolveComponent('NuxtLink')
 
 const { t, lang } = useLanguage()
 const { products, categories, isLoading } = useCatalog()
-const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
+const { activeDepartment, setDepartment } = useDepartment()
 
 const activeCategories = computed(() => {
   if (activeDepartment.value === 'merch') {

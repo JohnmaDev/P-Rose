@@ -3,12 +3,7 @@
     <!-- Barra de carga -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
-        <div class="h-full animate-progress-bar transition-colors duration-500"
-          :class="{
-            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
-            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
-            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
-          }">
+        <div class="h-full animate-progress-bar dept-bg shadow-[0_0_10px_var(--dept-glow)] transition-colors duration-500">
         </div>
       </div>
     </Transition>
@@ -16,16 +11,12 @@
     <!-- Header fijo -->
     <div class="sticky top-16 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <NuxtLink to="/" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors duration-300">
+        <NuxtLink to="/" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:dept-text transition-colors duration-300">
           <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" />
           <span class="text-xs font-semibold">{{ t('nav.home') }}</span>
         </NuxtLink>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1 transition-colors duration-500">
-          <span :class="{
-            'text-neon-green': activeDepartment === 'men',
-            'text-cyan-400': activeDepartment === 'merch',
-            'text-pink-500': activeDepartment === 'women'
-          }">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
+          <span class="dept-text">Personal</span>{{ t('tienda.title').replace('Personal', '') }}
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -36,19 +27,19 @@
       <!-- Switch de Departamento -->
       <div class="flex justify-center mt-2 mb-8 fade-in">
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
-          <button @click="activeDepartment = 'men'; activeFilter = 'all'"
+          <button @click="setDepartment('men'); activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']">
+              activeDepartment === 'men' ? 'bg-[#39FF14] text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white']">
             <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
           </button>
-          <button @click="activeDepartment = 'merch'; activeFilter = 'all'"
+          <button @click="setDepartment('merch'); activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']">
+              activeDepartment === 'merch' ? 'bg-[#22d3ee] text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white']">
             <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
           </button>
-          <button @click="activeDepartment = 'women'; activeFilter = 'all'"
+          <button @click="setDepartment('women'); activeFilter = 'all'"
             :class="['px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']">
+              activeDepartment === 'women' ? 'bg-[#ec4899] text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white']">
             <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
           </button>
         </div>
@@ -59,8 +50,8 @@
         <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
           :class="['px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300',
             activeFilter === f.id
-              ? (activeDepartment === 'men' ? 'bg-neon-green text-black border-neon-green' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black border-cyan-400' : 'bg-pink-500 text-white border-pink-500'))
-              : (activeDepartment === 'men' ? 'glass border-white/20 text-gray-300 hover:border-neon-green/50 hover:text-white' : (activeDepartment === 'merch' ? 'glass border-white/20 text-gray-300 hover:border-cyan-400/50 hover:text-white' : 'glass border-white/20 text-gray-300 hover:border-pink-500/50 hover:text-white'))]">
+              ? 'dept-active-filter font-black shadow-[0_0_12px_var(--dept-glow)]'
+              : 'glass border-white/20 text-gray-300 hover:dept-border hover:text-white']">
           {{ f.label }}
         </button>
       </div>
@@ -68,14 +59,14 @@
       <!-- Contador -->
       <div class="mb-6 text-center">
         <p class="text-gray-500 text-sm">
-          {{ t('tienda.showing') }} <span class="font-bold transition-colors duration-300" :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
+          {{ t('tienda.showing') }} <span class="font-bold dept-text transition-colors duration-300">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
           <span v-if="activeFilter !== 'all'"> {{ t('tienda.in') }} <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="{'border-neon-green': activeDepartment === 'men','border-cyan-400': activeDepartment === 'merch','border-pink-500': activeDepartment === 'women'}"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 dept-border mb-4 transition-colors duration-300"></div>
         <p class="text-gray-400 font-medium">{{ t('tienda.loading') }}</p>
       </div>
 
@@ -85,8 +76,7 @@
         :class="{'opacity-40 pointer-events-none': isLoading}">
         <div v-for="(product, index) in filteredProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          :class="['group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium',
-            activeDepartment === 'men' ? 'hover:border-neon-green/50' : (activeDepartment === 'merch' ? 'hover:border-cyan-400/50' : 'hover:border-pink-500/50')]">
+          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card">
 
           <!-- Imagen -->
           <div class="aspect-square overflow-hidden bg-white/5 relative cursor-pointer" @click="goToDetail(product)">
@@ -109,15 +99,13 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
-              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5"
-                :class="{'group-hover:text-neon-green': activeDepartment === 'men','group-hover:text-cyan-400': activeDepartment === 'merch','group-hover:text-pink-500': activeDepartment === 'women'}">
+              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5 group-hover:dept-text">
                 {{ product.name }}
               </h3>
               <p class="text-gray-500 text-xs mt-1.5 leading-relaxed line-clamp-2 italic">{{ product.description }}</p>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="font-bold text-sm transition-colors duration-300"
-                :class="{'text-neon-green': activeDepartment === 'men','text-cyan-400': activeDepartment === 'merch','text-pink-500': activeDepartment === 'women'}">
+              <span class="font-bold text-sm transition-colors duration-300 dept-text">
                 {{ formatPrice(product.price) }}
               </span>
               <button v-if="product.stock > 0" @click.stop="quickAddToCart(product)"
@@ -125,8 +113,8 @@
                 :class="['w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
                   isStockFull(product) ? 'opacity-20 cursor-not-allowed border-transparent'
                     : (justAdded === product.id
-                      ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white'))
-                      : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500')))]"
+                      ? 'dept-bg text-black'
+                      : 'dept-hover-btn')]"
                 :aria-label="isStockFull(product) ? t('tienda.maxStock') : t('tienda.addToCart')">
                 <fa-icon :icon="['fas', isStockFull(product) ? 'lock' : (justAdded === product.id ? 'check' : 'plus')]" class="text-[10px]" />
               </button>
@@ -159,12 +147,14 @@
 
 <script setup lang="ts">
 import { useLanguage } from '~/composables/useLanguage'
+import { useDepartment } from '~/composables/useDepartment'
 
 const route = useRoute()
 const router = useRouter()
 const { addToCart, isStockFull } = useCart()
 const { products, categories, isLoading, error: errorMessage, fetchCatalog } = useCatalog()
 const { t, lang } = useLanguage()
+const { activeDepartment, setDepartment } = useDepartment()
 
 useSeoMeta({
   title: t('tienda.seoTitle'),
@@ -173,7 +163,6 @@ useSeoMeta({
   ogDescription: t('tienda.seoDesc'),
 })
 
-const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
 const activeFilter = ref('all')
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
@@ -209,16 +198,16 @@ function syncFilter() {
 
   // Primero aplicar dept si viene en la query
   if (dept && ['men', 'women', 'merch'].includes(dept)) {
-    activeDepartment.value = dept as 'men' | 'merch' | 'women'
+    setDepartment(dept as 'men' | 'merch' | 'women')
   }
 
   // Luego refinar según la categoría (tiene prioridad sobre dept)
   const categoryObj = categories.value.find(c => c.id === cat)
   if (categoryObj) {
     if (categoryObj.department === 'unisex' || categoryObj.style === 'premium') {
-      activeDepartment.value = 'merch'
+      setDepartment('merch')
     } else if (categoryObj.department && ['men', 'women'].includes(categoryObj.department)) {
-      activeDepartment.value = categoryObj.department as 'men' | 'women'
+      setDepartment(categoryObj.department as 'men' | 'women')
     }
   }
 

@@ -19,9 +19,9 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div class="flex items-center gap-3">
-            <fa-icon :icon="['fas', 'shopping-bag']" class="text-neon-green" />
+            <fa-icon :icon="['fas', 'shopping-bag']" class="dept-text" />
             <h2 class="text-lg font-bold text-white tracking-tight">{{ t('cart.title') }}</h2>
-            <span class="text-xs bg-neon-green text-black font-black px-2 py-0.5 rounded-full">{{ cartCount }}</span>
+            <span class="text-xs dept-bg text-black font-black px-2 py-0.5 rounded-full">{{ cartCount }}</span>
           </div>
           <button
             @click="$emit('close')"
@@ -38,7 +38,7 @@
           <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center h-full gap-4 text-center">
             <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
             <p class="text-gray-500 text-sm">{{ t('cart.empty') }}</p>
-            <button @click="$emit('close')" class="text-neon-green text-sm font-bold hover:underline">{{ t('cart.viewProducts') }}</button>
+            <button @click="$emit('close')" class="dept-text text-sm font-bold hover:underline">{{ t('cart.viewProducts') }}</button>
           </div>
 
           <!-- Items -->
@@ -54,7 +54,7 @@
               <!-- Info -->
               <div class="flex-1 min-w-0">
                 <p class="text-white text-xs font-bold leading-tight truncate">{{ item.name }}</p>
-                <p class="text-neon-green text-xs font-bold mt-1">{{ formatPrice(item.price) }}</p>
+                <p class="dept-text text-xs font-bold mt-1">{{ formatPrice(item.price) }}</p>
                 <!-- Selector de cantidad -->
                 <div class="flex items-center gap-2 mt-2">
                   <button
@@ -91,7 +91,7 @@
           <NuxtLink
             to="/checkout"
             @click="$emit('close')"
-            class="block w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black text-center rounded-xl transition-colors duration-300 tracking-wide"
+            class="block w-full py-4 dept-bg hover:opacity-90 text-black font-black text-center rounded-xl transition-all duration-300 tracking-wide shadow-lg shadow-[0_0_15px_var(--dept-glow)]"
           >
             {{ t('cart.checkout') }}
           </NuxtLink>

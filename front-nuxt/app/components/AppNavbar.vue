@@ -24,8 +24,8 @@
           v-for="link in navLinks"
           :key="link.to"
           :to="link.to"
-          class="px-4 py-2 text-xs font-black tracking-[0.15em] uppercase text-gray-400 hover:text-neon-green transition-colors duration-300"
-          active-class="text-neon-green"
+          class="px-4 py-2 text-xs font-black tracking-[0.15em] uppercase text-gray-400 hover:dept-text transition-colors duration-300"
+          active-class="dept-text"
         >
           {{ link.label }}
         </NuxtLink>
@@ -37,11 +37,11 @@
         <ClientOnly>
           <button
             @click="toggleLang"
-            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 text-[10px] font-black tracking-widest uppercase transition-all duration-300 hover:border-neon-green/50 hover:text-neon-green group"
+            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 text-[10px] font-black tracking-widest uppercase transition-all duration-300 hover:dept-border hover:dept-text group"
             :title="lang === 'es' ? 'Switch to English' : 'Cambiar a Español'"
           >
             <span class="text-sm leading-none">{{ lang === 'es' ? '🇨🇴' : '🇺🇸' }}</span>
-            <span class="transition-colors duration-300 text-gray-400 group-hover:text-neon-green">{{ lang === 'es' ? 'ES' : 'EN' }}</span>
+            <span class="transition-colors duration-300 text-gray-400 group-hover:dept-text">{{ lang === 'es' ? 'ES' : 'EN' }}</span>
           </button>
         </ClientOnly>
 
@@ -78,7 +78,7 @@
           @click="mobileOpen = false"
           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black tracking-widest uppercase text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
         >
-          <fa-icon :icon="link.icon" class="text-neon-green text-xs w-4" />
+          <fa-icon :icon="link.icon" class="dept-text text-xs w-4" />
           {{ link.label }}
         </NuxtLink>
 
@@ -87,7 +87,7 @@
           <ClientOnly>
             <button
               @click="toggleLang"
-              class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 text-xs font-black tracking-widest uppercase text-gray-400 hover:border-neon-green/50 hover:text-neon-green transition-all duration-300"
+              class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 text-xs font-black tracking-widest uppercase text-gray-400 hover:dept-border hover:dept-text transition-all duration-300"
             >
               <span>{{ lang === 'es' ? '🇨🇴 ES' : '🇺🇸 EN' }}</span>
             </button>

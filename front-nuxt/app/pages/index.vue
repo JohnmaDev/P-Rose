@@ -1,13 +1,5 @@
 <template>
-  <div
-    class="min-h-screen text-white relative"
-    :style="{
-      '--dept-color': accentColor,
-      '--dept-glow': accentGlow,
-      '--dept-color-10': accentColor + '1a',
-      '--dept-color-30': accentColor + '4d',
-    }"
-  >
+  <div class="min-h-screen text-white relative">
 
     <!-- ─── Fondo fijo global — toda la web navega sobre él ─── -->
     <div class="fixed inset-0 z-0 pointer-events-none">
@@ -299,7 +291,9 @@ useHead({
   }]
 })
 
-const activeDepartment = ref<'men' | 'merch' | 'women'>('men')
+import { useDepartment } from '~/composables/useDepartment'
+
+const { activeDepartment, setDepartment } = useDepartment()
 const activeFilter = ref('all')
 const searchQuery = ref('')
 const selectedBrands = ref<string[]>([])
@@ -307,18 +301,6 @@ const sortBy = ref('default')
 const drawerOpen = ref(false)
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
-
-// ─── Tema de color por departamento ───
-const accentColor = computed(() => {
-  if (activeDepartment.value === 'men')   return '#39FF14'
-  if (activeDepartment.value === 'merch') return '#22d3ee'
-  return '#ec4899'
-})
-const accentGlow = computed(() => {
-  if (activeDepartment.value === 'men')   return 'rgba(57,255,20,0.35)'
-  if (activeDepartment.value === 'merch') return 'rgba(34,211,238,0.35)'
-  return 'rgba(236,72,153,0.35)'
-})
 
 const trustBadges = computed(() => [
   t('tienda.badgeOriginal'),
@@ -480,43 +462,6 @@ if (import.meta.server) {
 </script>
 
 <style scoped>
-/* ─── Tema dinámico por departamento via CSS Custom Properties ─── */
-.dept-text       { color: var(--dept-color); transition: color 0.5s ease; }
-.dept-bg         { background-color: var(--dept-color); transition: background-color 0.5s ease; }
-.dept-border     { border-color: var(--dept-color); transition: border-color 0.5s ease; }
-
-.dept-badge {
-  border: 1px solid color-mix(in srgb, var(--dept-color) 30%, transparent);
-  background: color-mix(in srgb, var(--dept-color) 8%, transparent);
-  transition: border-color 0.5s ease, background-color 0.5s ease;
-}
-
-/* Hover en tarjeta de producto */
-.dept-hover-card { transition: border-color 0.3s ease; }
-.dept-hover-card:hover { border-color: color-mix(in srgb, var(--dept-color) 50%, transparent); }
-
-/* Hover en nombre de producto */
-.dept-hover-text { transition: color 0.3s ease; }
-.group:hover .dept-hover-text { color: var(--dept-color); }
-
-/* Botón + de agregar al carrito */
-.dept-hover-btn { transition: background-color 0.3s ease, color 0.3s ease; }
-.dept-hover-btn:not(:disabled):hover {
-  background-color: var(--dept-color);
-  color: #000;
-}
-
-/* Filtros activos */
-.dept-active-filter {
-  background-color: var(--dept-color) !important;
-  color: #000 !important;
-  border-color: var(--dept-color) !important;
-}
-.dept-hover-filter:hover {
-  border-color: color-mix(in srgb, var(--dept-color) 50%, transparent);
-  color: white;
-}
-
 /* Transiciones del grid */
 .products-grid-move,
 .products-grid-enter-active,
