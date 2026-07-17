@@ -5,8 +5,9 @@ node_modules/
 front/dist/
 
 # Environment variables (secrets)
-.env.local
-.env.*.local
+.env
+.env.*
+!.env.example
 api_slots.gs
 
 # System files
