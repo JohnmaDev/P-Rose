@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -15,6 +16,12 @@ import (
 // VerifyTokenWithRateLimit comprueba el PIN de administrador y bloquea permanentemente IPs con múltiples fallos (Fuerza Bruta)
 func VerifyTokenWithRateLimit(ctx context.Context, request events.APIGatewayProxyRequest, client *mongo.Client) (bool, error) {
 	adminPin := os.Getenv("VUE_APP_ADMIN_PIN")
+	if adminPin == "" {
+		adminPin = os.Getenv("NUXT_ADMIN_PIN")
+	}
+	if adminPin == "" {
+		adminPin = os.Getenv("NUXT_PUBLIC_ADMIN_PIN")
+	}
 	if adminPin == "" {
 		return false, fmt.Errorf("Admin PIN missing")
 	}
@@ -59,6 +66,16 @@ func VerifyTokenWithRateLimit(ctx context.Context, request events.APIGatewayProx
 	}
 	if providedToken == "" {
 		providedToken = request.QueryStringParameters["token"]
+	}
+	if providedToken == "" && len(request.Body) > 0 {
+		var body map[string]interface{}
+		if err := json.Unmarshal([]byte(request.Body), &body); err == nil {
+			if val, ok := body["pin"].(string); ok && val != "" {
+				providedToken = val
+			} else if val, ok := body["token"].(string); ok && val != "" {
+				providedToken = val
+			}
+		}
 	}
 
 	// Éxito. Borrar historial negativo si lo hubiera.

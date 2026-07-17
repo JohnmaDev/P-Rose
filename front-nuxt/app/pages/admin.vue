@@ -93,8 +93,8 @@ async function verificarPin() {
   pinError.value = false
 
   try {
-    // Validación 100% server-side — el PIN nunca se compara en el navegador
-    const res = await $fetch<{ ok: boolean }>('/api-auth/admin-auth', {
+    // Validación 100% server-side en el backend Go — el PIN nunca se compara en el navegador
+    const res = await $fetch<{ ok: boolean }>('/api/verify_pin', {
       method: 'POST',
       body: { pin: entered },
     })
