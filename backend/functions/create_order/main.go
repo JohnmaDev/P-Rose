@@ -31,9 +31,11 @@ type PayloadItem struct {
 }
 
 type Payload struct {
-	Customer      Customer      `json:"customer"`
-	Items         []PayloadItem `json:"items"`
-	PaymentMethod string        `json:"paymentMethod"`
+	Customer       Customer      `json:"customer"`
+	Items          []PayloadItem `json:"items"`
+	PaymentMethod  string        `json:"paymentMethod"`
+	ShippingMethod string        `json:"shippingMethod"`
+	ShippingCost   float64       `json:"shippingCost"`
 }
 
 // Usamos interface{} para precio ya que a veces entra como string o como numero en MongoDB
@@ -45,15 +47,20 @@ type Product struct {
 }
 
 type Order struct {
-	ID            string    `bson:"id" json:"id"`
-	Customer      Customer  `bson:"customer" json:"customer"`
-	Items         []bson.M  `bson:"items" json:"items"`
-	Total         float64   `bson:"total" json:"total"`
-	TotalFormat   string    `bson:"total_format" json:"total_format"`
-	PaymentMethod string    `bson:"paymentMethod" json:"paymentMethod"`
-	Status        string    `bson:"status" json:"status"`
-	ClientIP      string    `bson:"clientIp,omitempty" json:"clientIp,omitempty"`
-	CreatedAt     time.Time `bson:"createdAt" json:"createdAt"`
+	ID             string    `bson:"id" json:"id"`
+	Customer       Customer  `bson:"customer" json:"customer"`
+	Items          []bson.M  `bson:"items" json:"items"`
+	Subtotal       float64   `bson:"subtotal" json:"subtotal"`
+	SubtotalFormat string    `bson:"subtotal_format" json:"subtotal_format"`
+	ShippingCost   float64   `bson:"shippingCost" json:"shippingCost"`
+	ShippingFormat string    `bson:"shipping_format" json:"shipping_format"`
+	ShippingMethod string    `bson:"shippingMethod" json:"shippingMethod"`
+	Total          float64   `bson:"total" json:"total"`
+	TotalFormat    string    `bson:"total_format" json:"total_format"`
+	PaymentMethod  string    `bson:"paymentMethod" json:"paymentMethod"`
+	Status         string    `bson:"status" json:"status"`
+	ClientIP       string    `bson:"clientIp,omitempty" json:"clientIp,omitempty"`
+	CreatedAt      time.Time `bson:"createdAt" json:"createdAt"`
 }
 
 // Configura CORS
@@ -213,20 +220,44 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		return events.APIGatewayProxyResponse{StatusCode: 400, Headers: corsHeaders(), Body: `{"error": "Productos inválidos o agotados"}`}, nil
 	}
 
+	// 4.1 Determinar y validar costo de envío según la zona
+	var shippingCost float64 = 10000
+	switch body.ShippingMethod {
+	case "express_valle", "valle":
+		shippingCost = 10000
+	case "express_alrededores", "alrededores":
+		shippingCost = 15000
+	case "express_nacional", "nacional":
+		shippingCost = 20000
+	default:
+		if body.ShippingCost > 0 {
+			shippingCost = body.ShippingCost
+		} else {
+			shippingCost = 10000
+		}
+	}
+	subtotal := total
+	grandTotal := subtotal + shippingCost
+
 	// 5. Crear Orden
 	rand.Seed(time.Now().UnixNano())
 	orderID := fmt.Sprintf("ORD-%d", rand.Intn(90000)+10000)
 
 	newOrder := Order{
-		ID:            orderID,
-		Customer:      body.Customer,
-		Items:         finalItems,
-		Total:         total,
-		TotalFormat:   formatNumberIntl(total),
-		PaymentMethod: body.PaymentMethod,
-		Status:        "PENDING",
-		ClientIP:      getClientIP(request),
-		CreatedAt:     time.Now(),
+		ID:             orderID,
+		Customer:       body.Customer,
+		Items:          finalItems,
+		Subtotal:       subtotal,
+		SubtotalFormat: formatNumberIntl(subtotal),
+		ShippingCost:   shippingCost,
+		ShippingFormat: formatNumberIntl(shippingCost),
+		ShippingMethod: body.ShippingMethod,
+		Total:          grandTotal,
+		TotalFormat:    formatNumberIntl(grandTotal),
+		PaymentMethod:  body.PaymentMethod,
+		Status:         "PENDING",
+		ClientIP:       getClientIP(request),
+		CreatedAt:      time.Now(),
 	}
 
 	// 6. Guardar en Colección

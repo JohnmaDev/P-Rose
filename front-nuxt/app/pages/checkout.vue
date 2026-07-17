@@ -67,9 +67,30 @@
                       <h3 class="text-sm font-bold text-white mb-3">Dirección de envío</h3>
                       <div class="space-y-3">
                         <div>
-                          <label class="label-xs">Ciudad *</label>
-                          <input v-model="form.city" @blur="touched.city=true" type="text" placeholder="Medellín, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
+                          <label class="label-xs">Ciudad / Municipio *</label>
+                          <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
+                          <datalist id="colombian-cities">
+                            <option value="Medellín">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Bello">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Envigado">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Itagüí">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Sabaneta">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="La Estrella">Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Girardota">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Copacabana">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Guarne">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Rionegro">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Caldas">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Marinilla">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="La Ceja">Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Bogotá">Envío Nacional ($20.000 COP)</option>
+                            <option value="Cali">Envío Nacional ($20.000 COP)</option>
+                            <option value="Barranquilla">Envío Nacional ($20.000 COP)</option>
+                          </datalist>
                           <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
+                          <p class="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
+                            <span class="text-neon-green font-bold">⚡</span> Tarifa de envío autocalculada instantáneamente según tu municipio.
+                          </p>
                         </div>
                         <div>
                           <label class="label-xs">Dirección completa *</label>
@@ -117,14 +138,26 @@
 
                 <!-- Método de envío -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
                     <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
                     Método de envío
                   </h2>
+
+                  <div v-if="form.city" class="mb-5 p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                      <span class="text-lg">📍</span>
+                      <div class="min-w-0">
+                        <p class="text-xs text-gray-400 leading-tight">Ciudad detectada: <strong class="text-white">{{ form.city }}</strong></p>
+                        <p class="text-[11px] dept-text font-bold truncate">Tarifa sugerida: {{ currentShipping?.label }}</p>
+                      </div>
+                    </div>
+                    <span class="text-[10px] text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 flex-shrink-0">Puedes cambiarla abajo</span>
+                  </div>
+
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                      :class="selectedShipping === s.id ? 'dept-border bg-white/10' : 'border-white/10 hover:border-white/20'">
+                      :class="selectedShipping === s.id ? 'dept-border bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.03)]' : 'border-white/10 hover:border-white/20'">
                       <input type="radio" v-model="selectedShipping" :value="s.id" class="hidden" />
                       <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
                         :class="selectedShipping === s.id ? 'dept-border' : 'border-gray-600'">
@@ -346,20 +379,46 @@
 
             <!-- Política de Envíos -->
             <div v-if="activePolicy === 'envios'" class="policy-body">
-              <p class="policy-lead">PersonalBarber realiza envíos a todo el territorio colombiano a través de operadores logísticos aliados.</p>
-              <div class="policy-alert-box" style="--alert-color: #39ff14;">
-                <div>
-                  <p class="policy-alert-title">PersonalBarber Express · $10.000 COP</p>
-                  <p class="policy-alert-sub">Tarifa fija para todo Colombia. Entrega estimada en 24–48 horas hábiles.</p>
+              <p class="policy-lead">En <strong>PersonalBarber</strong> organizamos nuestras entregas en <strong>3 zonas geográficas</strong> para garantizar la máxima rapidez y transparencia, sin lentitud en el cálculo ni costos ocultos.</p>
+              
+              <div class="space-y-3 my-4">
+                <div class="policy-alert-box !bg-neon-green/10 !border-neon-green/30" style="--alert-color: #39ff14;">
+                  <div class="text-xl flex-shrink-0 mt-0.5">⚡</div>
+                  <div>
+                    <p class="policy-alert-title !text-neon-green">Zona 1: Valle de Aburrá · $10.000 COP</p>
+                    <p class="policy-alert-sub">Incluye: Medellín, Bello, Envigado, Itagüí, Sabaneta y La Estrella. Entrega estimada en 24–48 horas hábiles.</p>
+                  </div>
+                </div>
+                
+                <div class="policy-alert-box !bg-cyan-500/10 !border-cyan-500/30" style="--alert-color: #06b6d4;">
+                  <div class="text-xl flex-shrink-0 mt-0.5">🚀</div>
+                  <div>
+                    <p class="policy-alert-title !text-cyan-400">Zona 2: Alrededores & Oriente · $15.000 COP</p>
+                    <p class="policy-alert-sub">Incluye: Girardota, Copacabana, Caldas, Guarne, Rionegro, Marinilla, La Ceja y El Retiro. Entrega en 24–48 horas hábiles.</p>
+                  </div>
+                </div>
+                
+                <div class="policy-alert-box !bg-purple-500/10 !border-purple-500/30" style="--alert-color: #a855f7;">
+                  <div class="text-xl flex-shrink-0 mt-0.5">📦</div>
+                  <div>
+                    <p class="policy-alert-title !text-purple-400">Zona 3: Nacional & Otras Ciudades · $20.000 COP</p>
+                    <p class="policy-alert-sub">Incluye: Bogotá, Cali, Barranquilla, Bucaramanga, Pereira y resto del país vía transportadora certificada (2–5 días hábiles).</p>
+                  </div>
                 </div>
               </div>
-              <h4 class="policy-section-title">Detalles del envío</h4>
+
+              <h4 class="policy-section-title">¿Cómo se calcula el costo?</h4>
+              <p class="text-xs text-gray-400 leading-relaxed mb-3">
+                Para mantener la <strong>máxima eficiencia</strong> sin que percibas lentitud en tu compra, nuestro sistema clasifica instantáneamente tu ciudad o municipio tan pronto lo ingresas en el formulario. Siempre podrás revisar y confirmar la zona asignada en el Paso 2 de tu compra.
+              </p>
+
+              <h4 class="policy-section-title">Detalles del despacho</h4>
               <ul class="policy-list">
                 <li>Los pedidos se despachan dentro de las <strong>24 horas hábiles</strong> siguientes a la confirmación del pago.</li>
-                <li>El tiempo de tránsito varía según la ciudad destino: 1–2 días para ciudades principales, 2–5 días para municipios.</li>
-                <li>Se enviará número de guía por WhatsApp o correo electrónico para seguimiento.</li>
-                <li>PersonalBarber no se responsabiliza por demoras causadas por la transportadora o fuerza mayor.</li>
+                <li>El tiempo de tránsito varía según la ciudad destino: 1–2 días en Valle de Aburrá y Oriente, 2–5 días a nivel nacional.</li>
+                <li>Se enviará número de guía por WhatsApp o correo electrónico para seguimiento continuo.</li>
               </ul>
+
               <h4 class="policy-section-title">Dirección de entrega</h4>
               <p class="policy-note">El cliente es responsable de suministrar una dirección exacta y completa. En caso de paquetes no entregados por dirección incorrecta, el costo de reenvío correrá por cuenta del comprador.</p>
             </div>
@@ -515,7 +574,7 @@ const { cartItems, cartTotal, cartTotalFormatted, formatPrice, parsePrice, clear
 const step = ref(1)
 const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city: '', address: '', notes: '' })
 const touched = reactive({ firstName: false, lastName: false, email: false, phone: false, city: false, address: false })
-const selectedShipping = ref('express')
+const selectedShipping = ref('express_valle')
 const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
 const isProcessing = ref(false)
@@ -525,24 +584,55 @@ const activePolicy = ref<string | null>(null)
 function openPolicy(id: string) { activePolicy.value = id }
 
 const policies: Record<string, { title: string; icon?: string; iconBg?: string }> = {
-  reembolsos: { title: 'Política de Reembolsos' },
-  envios: { title: 'Política de Envíos' },
-  privacidad: { title: 'Aviso de Privacidad' },
-  terminos: { title: 'Términos y Condiciones' },
-  contacto: { title: 'Atención al Cliente' },
+  reembolsos: { title: 'Política de Reembolsos', icon: '💸', iconBg: 'bg-red-500/20 text-red-400' },
+  envios: { title: 'Política de Envíos', icon: '🚚', iconBg: 'bg-neon-green/20 text-neon-green' },
+  privacidad: { title: 'Aviso de Privacidad', icon: '🔒', iconBg: 'bg-blue-500/20 text-blue-400' },
+  terminos: { title: 'Términos y Condiciones', icon: '📜', iconBg: 'bg-purple-500/20 text-purple-400' },
+  contacto: { title: 'Atención al Cliente', icon: '💬', iconBg: 'bg-yellow-500/20 text-yellow-400' },
 }
 
 const shippingMethods = [
   {
-    id: 'express',
+    id: 'express_valle',
     emoji: '⚡',
-    label: 'PersonalBarber Express',
-    desc: 'Entrega en 24–48 horas · Todo Colombia',
+    label: 'PersonalBarber Express — Valle de Aburrá',
+    desc: 'Medellín, Bello, Envigado, Itagüí, Sabaneta, La Estrella',
     price: '$10.000 COP',
     cost: 10000,
-    badge: 'Envío rápido',
+    badge: 'Urbano · 24-48h',
+  },
+  {
+    id: 'express_alrededores',
+    emoji: '🚀',
+    label: 'PersonalBarber Express — Alrededores & Oriente',
+    desc: 'Girardota, Copacabana, Caldas, Guarne, Rionegro, La Ceja, Marinilla',
+    price: '$15.000 COP',
+    cost: 15000,
+    badge: 'Alrededores · 24-48h',
+  },
+  {
+    id: 'express_nacional',
+    emoji: '📦',
+    label: 'PersonalBarber Express — Envío Nacional',
+    desc: 'Bogotá, Cali, Barranquilla, Bucaramanga y resto de Colombia',
+    price: '$20.000 COP',
+    cost: 20000,
+    badge: 'Nacional · 2-5 días',
   },
 ]
+
+function detectShippingZone(cityStr: string): string {
+  if (!cityStr) return 'express_valle'
+  const norm = cityStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()
+  
+  const valleKeywords = ['medellin', 'bello', 'envigado', 'itagui', 'sabaneta', 'la estrella', 'estrella', 'san antonio de prado', 'poblado', 'laureles']
+  if (valleKeywords.some(k => norm.includes(k))) return 'express_valle'
+  
+  const alrededoresKeywords = ['girardota', 'copacabana', 'caldas', 'guarne', 'rionegro', 'marinilla', 'la ceja', 'ceja', 'el retiro', 'retiro', 'barbosa', 'santa elena', 'carmen de viboral', 'santuario']
+  if (alrededoresKeywords.some(k => norm.includes(k))) return 'express_alrededores'
+  
+  return 'express_nacional'
+}
 
 const paymentMethods = [
   { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
@@ -568,10 +658,7 @@ function nextStep() {
   if (step.value === 1) {
     Object.keys(touched).forEach(k => (touched as Record<string, boolean>)[k] = true)
     if (!step1Valid.value) return
-    // Pre-seleccionar primer método de envío disponible
-    if (!selectedShipping.value && shippingMethods.value.length > 0) {
-      selectedShipping.value = shippingMethods.value[0].id
-    }
+    selectedShipping.value = detectShippingZone(form.city)
   }
   step.value++
 }
@@ -588,16 +675,17 @@ async function handleCheckout() {
         customer: { firstName: form.firstName, lastName: form.lastName, email: form.email, phone: form.phone, city: form.city, address: form.address },
         items: cartItems.map(i => ({ id: i.id, qty: i.qty })),
         paymentMethod: 'whatsapp',
+        shippingMethod: selectedShipping.value,
+        shippingCost: shippingCost.value,
       }
-      const data = await $fetch<{ ok: boolean; order: { id: string; total_format: string } }>('/api/create_order', {
+      const data = await $fetch<{ ok: boolean; order: { id: string; total_format: string; subtotal_format?: string } }>('/api/create_order', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
       })
       if (!data.ok) throw new Error('Error')
       const phone = '573045840264'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
-      const shipping = currentShipping.value?.label || 'PersonalBarber Envíos'
-      const shippingLabel = currentShipping.value?.id === 'nacional' ? `${shipping} (costo por confirmar)` : `${shipping} · ${currentShipping.value?.price}`
-      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal:* $${data.order.total_format} COP\n*Envío:* ${shippingLabel}\n*TOTAL:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
+      const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || '$10.000 COP'}`
+      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío:* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/tienda')
