@@ -60,10 +60,12 @@ import AdminCuts from '~/components/admin/AdminCuts.vue'
 
 useSeoMeta({ title: 'Panel de Administración | PersonalBarber' })
 
-// PIN validado server-side vía /api/verify-pin (nunca expuesto al cliente)
+// PIN validado EXCLUSIVAMENTE server-side vía /api-auth/admin-auth
+// El PIN real NUNCA baja al navegador del cliente.
 const autenticado = ref(false)
 const pinIngresado = ref('')
 const pinError = ref(false)
+const isVerifying = ref(false)
 const activeTab = ref('reservas')
 
 const tabs = [
@@ -85,10 +87,13 @@ const activeComponent = computed(() => {
 
 async function verificarPin() {
   const entered = pinIngresado.value.trim()
-  if (!entered) return
+  if (!entered || isVerifying.value) return
+
+  isVerifying.value = true
+  pinError.value = false
 
   try {
-    // 1. Intentar verificación en el servidor (para SSR/desarrollo)
+    // Validación 100% server-side — el PIN nunca se compara en el navegador
     const res = await $fetch<{ ok: boolean }>('/api-auth/admin-auth', {
       method: 'POST',
       body: { pin: entered },
@@ -98,26 +103,19 @@ async function verificarPin() {
       autenticado.value = true
       pinError.value = false
       sessionStorage.setItem('admin_pin', entered)
-      return
+    } else {
+      pinError.value = true
+      pinIngresado.value = ''
+      sessionStorage.removeItem('admin_pin')
     }
-  } catch (err) {
-    // Si falla (por ejemplo, en un despliegue estático de Netlify donde Nitro no tiene endpoints de servidor)
-    console.warn('[Admin] Falló la verificación en servidor, probando fallback local:', err)
-  }
-
-  // 2. Fallback de cliente (para despliegues estáticos SSG en Netlify)
-  const config = useRuntimeConfig()
-  const appConfig = useAppConfig()
-  const clientPin = String(config.public?.adminPin || appConfig?.adminPin || '').trim()
-
-  if (clientPin && entered === clientPin) {
-    autenticado.value = true
-    pinError.value = false
-    sessionStorage.setItem('admin_pin', entered)
-  } else {
+  } catch (err: any) {
+    // Manejar errores del servidor (503 = PIN no configurado, 400 = bad request, etc.)
+    console.error('[Admin] Error de autenticación:', err?.data?.statusMessage || err)
     pinError.value = true
     pinIngresado.value = ''
     sessionStorage.removeItem('admin_pin')
+  } finally {
+    isVerifying.value = false
   }
 }
 
@@ -143,3 +141,4 @@ onMounted(() => {
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>
+

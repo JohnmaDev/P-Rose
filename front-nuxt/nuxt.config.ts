@@ -35,21 +35,13 @@ export default defineNuxtConfig({
 
 
 
-  // Variables de entorno — accesibles en el servidor y cliente
+  // Variables de entorno
   runtimeConfig: {
-    // Solo servidor (privadas)
-    adminPin: process.env.NUXT_ADMIN_PIN || '',
-    // Públicas (cliente + servidor) — Nuxt las reemplaza en runtime con NUXT_PUBLIC_*
+    // Solo servidor (privadas) — NUNCA expuestas al cliente
+    adminPin: process.env.NUXT_ADMIN_PIN || process.env.NUXT_PUBLIC_ADMIN_PIN || '',
+    // Públicas (cliente + servidor)
     public: {
-      adminPin: process.env.NUXT_PUBLIC_ADMIN_PIN || '',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://personalbarber.vip',
-    }
-  },
-
-  // Vite define — inyecta el PIN en build-time para compatibilidad con <ClientOnly>
-  vite: {
-    define: {
-      __ADMIN_PIN__: JSON.stringify(process.env.NUXT_PUBLIC_ADMIN_PIN || ''),
     }
   },
 
