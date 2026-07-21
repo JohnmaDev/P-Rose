@@ -135,8 +135,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		Headers: map[string]string{
 			"Content-Type":                 "application/json",
 			"Access-Control-Allow-Origin":  "*",
-			// Cache 30s on CDN edge — categories rarely change
-			"Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+			"Cache-Control":                "no-cache, no-store, must-revalidate",
 		},
 		Body: string(body),
 	}, nil
