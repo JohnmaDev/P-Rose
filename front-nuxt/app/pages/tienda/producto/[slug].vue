@@ -154,7 +154,7 @@
               <fa-icon :icon="['fas', expandedAccordion === 'desc' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
             <div v-show="expandedAccordion === 'desc'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
-              <p v-if="product.description" class="text-[#A1A1AA] text-sm leading-[1.8]">{{ product.description }}</p>
+              <p v-if="product.description" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line">{{ product.description }}</p>
               <ul v-if="product.benefits && product.benefits.length > 0" class="mt-5 space-y-3">
                 <li v-for="(benefit, bIdx) in product.benefits" :key="bIdx" class="flex items-start gap-3">
                   <span class="text-[#00FF00] text-xs mt-0.5 shrink-0">✓</span>
@@ -171,8 +171,8 @@
               <fa-icon :icon="['fas', expandedAccordion === 'specs' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
             <div v-show="expandedAccordion === 'specs'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
-              <p v-if="product.usage" class="text-[#A1A1AA] text-sm leading-[1.8]">{{ product.usage }}</p>
-              <p v-if="product.specs" class="text-[#A1A1AA] text-sm leading-[1.8]" :class="product.usage ? 'mt-4 pt-4 border-t border-[#262626]/30' : ''">{{ product.specs }}</p>
+              <p v-if="product.usage" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line">{{ product.usage }}</p>
+              <p v-if="product.specs" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line" :class="product.usage ? 'mt-4 pt-4 border-t border-[#262626]/30' : ''">{{ product.specs }}</p>
             </div>
           </div>
         </div>

@@ -189,6 +189,11 @@
             </div>
 
             <div class="space-y-1">
+              <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Modo de Uso</label>
+              <textarea v-model="prodForm.usage" rows="3" class="input-modern resize-none" placeholder="Instrucciones sobre cómo usar el producto..."></textarea>
+            </div>
+
+            <div class="space-y-1">
               <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Stock disponible</label>
               <input v-model.number="prodForm.stock" type="number" min="0" class="input-modern" placeholder="10">
             </div>
@@ -235,6 +240,7 @@ export default {
         brand: '',
         category: '',
         description: '',
+        usage: '',
         price: '',
         images: [''],
         stock: 0
@@ -318,7 +324,7 @@ export default {
       } else {
         this.editando = false;
         const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) : 1;
-        this.prodForm = { id: nextId + 1, name: '', brand: '', category: this.categorias.length ? this.categorias[0].id : '', description: '', price: '', stock: 0, images: [''] };
+        this.prodForm = { id: nextId + 1, name: '', brand: '', category: this.categorias.length ? this.categorias[0].id : '', description: '', usage: '', price: '', stock: 0, images: [''] };
       }
       this.showModal = true;
     },
