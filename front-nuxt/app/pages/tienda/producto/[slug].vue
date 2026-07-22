@@ -14,22 +14,14 @@
 
     <div v-else-if="product" class="max-w-[1400px] mx-auto px-4 md:px-8 py-6 pb-40 lg:pb-20 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
       
-      <!-- 1. HEADER Y BREADCRUMBS -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div class="flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-[#A1A1AA] uppercase tracking-widest font-bold">
-          <NuxtLink to="/" class="hover:text-[#00FF00] transition-colors">{{ t('nav.home') }}</NuxtLink>
-          <span class="text-[#262626]">•</span>
-          <NuxtLink to="/tienda" class="hover:text-[#00FF00] transition-colors">{{ t('nav.store') }}</NuxtLink>
-          <span class="text-[#262626]">•</span>
-          <NuxtLink :to="`/tienda?cat=${product.category}`" class="hover:text-[#00FF00] transition-colors">{{ getCategoryLabel(product.category) }}</NuxtLink>
-          <span class="text-[#262626]">•</span>
-          <span class="text-white truncate max-w-[150px] sm:max-w-[300px]">{{ product.name }}</span>
-        </div>
-        <div class="inline-flex items-center gap-2 bg-[#161616] border border-[#262626] rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(0,255,0,0.05)] w-max">
-          <fa-icon :icon="['fas', 'check-circle']" class="text-[#00FF00] text-xs" />
-          <span class="text-[9px] font-black text-[#00FF00] uppercase tracking-widest">100% Original</span>
-        </div>
-      </div>
+      <!-- 1. BREADCRUMB (minimalista) -->
+      <nav class="flex items-center gap-2 text-[10px] md:text-[11px] text-[#555] uppercase tracking-[0.18em] font-bold mb-10">
+        <NuxtLink to="/tienda" class="hover:text-[#00FF00] transition-colors duration-200">Tienda</NuxtLink>
+        <span class="text-[#333]">›</span>
+        <NuxtLink :to="`/tienda?cat=${product.category}`" class="hover:text-[#00FF00] transition-colors duration-200">{{ getCategoryLabel(product.category) }}</NuxtLink>
+        <span class="text-[#333]">›</span>
+        <span class="text-[#A1A1AA] truncate max-w-[200px] sm:max-w-[400px]">{{ product.name }}</span>
+      </nav>
 
       <!-- Main Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
