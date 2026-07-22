@@ -32,38 +32,37 @@
       </div>
 
       <!-- Main Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
         
-        <!-- 2. ÁREA DE MEDIOS (Izquierda en PC) -->
-        <div class="lg:col-span-7 flex flex-col gap-4 lg:sticky lg:top-24">
-          <div class="relative w-full aspect-[4/5] lg:aspect-square bg-[#161616] rounded-3xl border border-[#262626] overflow-hidden flex items-center justify-center group shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
+        <!-- 2. ÁREA DE MEDIOS (Izquierda) -->
+        <div class="flex flex-col gap-3 md:sticky md:top-24">
+          <div class="relative w-full aspect-square bg-[#161616] rounded-3xl border border-[#262626] overflow-hidden group shadow-[0_4px_40px_rgba(0,0,0,0.5)]">
             <!-- Badge flotante de valoración -->
-            <div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl px-3 py-1.5 flex items-center gap-1.5 shadow-xl">
+            <div class="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur-md border border-white/10 rounded-2xl px-3 py-1.5 flex items-center gap-1.5 shadow-xl">
               <span class="text-[#00FF00] text-xs">⭐</span>
               <span class="text-white font-bold text-xs tracking-wide">4.9</span>
               <span class="text-[#A1A1AA] text-[10px] ml-1">(128)</span>
             </div>
             
-            <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex items-center relative z-0">
-              <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center flex items-center justify-center p-8 lg:p-12">
-                <img :src="optimizeImage(img, 1200)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,255,0,0.15)] transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+            <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex">
+              <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center bg-white">
+                <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               </div>
             </div>
           </div>
 
-          <!-- Carrusel de Miniaturas interactivo -->
-          <div v-if="product.images && product.images.length > 1" class="flex gap-3 overflow-x-auto hide-scrollbar py-1">
+          <!-- Carrusel de Miniaturas -->
+          <div v-if="product.images && product.images.length > 1" class="flex gap-2 overflow-x-auto hide-scrollbar py-1">
             <button v-for="(img, idx) in product.images" :key="idx" @click="scrollToImage(idx)"
-              class="relative w-20 h-20 rounded-2xl overflow-hidden bg-[#161616] border-2 transition-all duration-300 shrink-0"
-              :class="activeIdx === idx ? 'border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.2)]' : 'border-[#262626] opacity-50 hover:opacity-100 hover:border-gray-500'">
-              <div v-if="activeIdx === idx" class="absolute inset-0 bg-[#00FF00]/10 z-10 pointer-events-none"></div>
-              <img :src="optimizeImage(img, 200)" :alt="`Thumb ${idx + 1}`" class="w-full h-full object-cover p-2" />
+              class="relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 bg-white"
+              :class="activeIdx === idx ? 'border-[#00FF00] shadow-[0_0_12px_rgba(0,255,0,0.25)]' : 'border-[#262626] opacity-50 hover:opacity-100 hover:border-gray-500'">
+              <img :src="optimizeImage(img, 150)" :alt="`Thumb ${idx + 1}`" class="w-full h-full object-contain p-1" />
             </button>
           </div>
         </div>
 
-        <!-- 3. ÁREA DE COMPRA Y DETALLES (Derecha en PC) -->
-        <div class="lg:col-span-5 flex flex-col gap-8">
+        <!-- 3. ÁREA DE COMPRA Y DETALLES (Derecha) -->
+        <div class="flex flex-col gap-7">
           <!-- Títulos y Precio -->
           <div>
             <div class="flex items-center gap-3 mb-3">
@@ -158,15 +157,16 @@
         </div>
       </div>
 
-      <!-- 4. SECCIÓN INFERIOR (INFORMACIÓN EXTENDIDA) -->
-      <div v-if="hasDescriptionContent || hasSpecsContent || recommendedProducts.length > 0" class="mt-16 lg:mt-24 grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <!-- Acordeones dinámicos -->
-        <div class="space-y-4" :class="recommendedProducts.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'">
-          <!-- Descripción & Beneficios (solo si description o benefits existen) -->
+      <!-- 4. SECCIÓN INFERIOR: Acordeones + Recomendados -->
+      <div v-if="hasDescriptionContent || hasSpecsContent || recommendedProducts.length > 0" class="mt-16 lg:mt-24 space-y-10">
+
+        <!-- Acordeones dinámicos (ancho completo) -->
+        <div v-if="hasDescriptionContent || hasSpecsContent" class="space-y-4">
+          <!-- Descripción & Beneficios -->
           <div v-if="hasDescriptionContent" class="bg-[#161616] border border-[#262626] rounded-3xl overflow-hidden">
             <button @click="expandedAccordion = expandedAccordion === 'desc' ? '' : 'desc'" class="w-full px-6 py-5 flex items-center justify-between hover:bg-white/5 transition-colors duration-300">
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Descripción & Beneficios</span>
-              <fa-icon :icon="['fas', expandedAccordion === 'desc' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm transition-transform duration-300" :class="expandedAccordion === 'desc' ? 'rotate-0' : 'rotate-90'" />
+              <fa-icon :icon="['fas', expandedAccordion === 'desc' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
             <div v-show="expandedAccordion === 'desc'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
               <p v-if="product.description" class="text-[#A1A1AA] text-sm leading-[1.8]">{{ product.description }}</p>
@@ -179,11 +179,11 @@
             </div>
           </div>
 
-          <!-- Modo de Uso / Especificaciones (solo si usage o specs existen) -->
+          <!-- Modo de Uso / Especificaciones -->
           <div v-if="hasSpecsContent" class="bg-[#161616] border border-[#262626] rounded-3xl overflow-hidden">
             <button @click="expandedAccordion = expandedAccordion === 'specs' ? '' : 'specs'" class="w-full px-6 py-5 flex items-center justify-between hover:bg-white/5 transition-colors duration-300">
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Modo de Uso / Especificaciones</span>
-              <fa-icon :icon="['fas', expandedAccordion === 'specs' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm transition-transform duration-300" :class="expandedAccordion === 'specs' ? 'rotate-0' : 'rotate-90'" />
+              <fa-icon :icon="['fas', expandedAccordion === 'specs' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
             <div v-show="expandedAccordion === 'specs'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
               <p v-if="product.usage" class="text-[#A1A1AA] text-sm leading-[1.8]">{{ product.usage }}</p>
@@ -192,26 +192,38 @@
           </div>
         </div>
 
-        <!-- Completa tu Kit (Cross-sell) -->
-        <div class="lg:col-span-4 bg-[#161616] border border-[#262626] rounded-3xl p-6">
-          <h3 class="font-oswald text-xl font-bold uppercase tracking-wide text-white mb-6">Completa tu Kit</h3>
-          <div class="space-y-4">
-            <NuxtLink v-for="item in recommendedProducts.slice(0,3)" :key="item.id" 
+        <!-- Recomendados (grid horizontal bonito) -->
+        <div v-if="recommendedProducts.length > 0">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="h-px flex-1 bg-[#262626]"></div>
+            <h3 class="font-oswald text-xl font-bold uppercase tracking-[0.1em] text-white shrink-0">Completa tu Kit</h3>
+            <div class="h-px flex-1 bg-[#262626]"></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <NuxtLink v-for="item in recommendedProducts" :key="item.id"
               :to="{ name: 'tienda-producto-slug', params: { slug: generateProductSlug(item.id, item.name) } }"
-              class="flex items-center gap-4 group p-2 -mx-2 rounded-2xl hover:bg-[#262626]/50 transition-colors">
-              <div class="w-16 h-16 rounded-xl bg-[#0D0D0D] border border-[#262626] overflow-hidden shrink-0">
-                <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              class="group bg-[#161616] border border-[#262626] hover:border-[#00FF00]/40 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,0,0.08)]">
+              <!-- Imagen -->
+              <div class="aspect-square bg-white overflow-hidden">
+                <img :src="optimizeImage(item.images?.[0] || item.image, 400)" :alt="item.name"
+                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" loading="lazy" />
               </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-xs font-bold text-white truncate group-hover:text-[#00FF00] transition-colors">{{ item.name }}</h4>
-                <p class="text-[#A1A1AA] text-[10px] font-bold mt-0.5">{{ formatPrice(item.price) }}</p>
+              <!-- Info -->
+              <div class="p-4">
+                <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-widest mb-1 truncate">{{ item.brand }}</p>
+                <h4 class="text-xs font-bold text-white group-hover:text-[#00FF00] transition-colors line-clamp-2 leading-snug mb-2">{{ item.name }}</h4>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-black text-[#00FF00]">{{ formatPrice(item.price) }}</span>
+                  <button @click.prevent="addToCart(item, 1); showConfirm = true; setTimeout(() => { showConfirm = false }, 2500)"
+                    class="w-7 h-7 rounded-full bg-[#0D0D0D] border border-[#262626] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all">
+                    <fa-icon :icon="['fas', 'plus']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-[10px]" />
+                  </button>
+                </div>
               </div>
-              <button @click.prevent="addToCart(item, 1); showConfirm = true; setTimeout(() => { showConfirm = false }, 3000)" class="w-8 h-8 rounded-full bg-[#0D0D0D] border border-[#262626] text-[#A1A1AA] hover:text-[#00FF00] hover:border-[#00FF00] flex items-center justify-center transition-all">
-                <fa-icon :icon="['fas', 'plus']" class="text-xs" />
-              </button>
             </NuxtLink>
           </div>
         </div>
+
       </div>
     </div>
 

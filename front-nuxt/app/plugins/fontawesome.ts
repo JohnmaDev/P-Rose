@@ -18,7 +18,8 @@ import {
   faBrush, faSprayCan, faScissors, faUser, faKissWinkHeart, faEye,
   faPalette, faMagic, faPumpSoap, faPaintBrush, faPenNib, faTags,
   faImages, faCog, faUpload, faBox, faLink, faWallet, faLayerGroup,
-  faStar, faGem, faCrown, faGlasses, faGift
+  faStar, faGem, faCrown, faGlasses, faGift, faTruckFast, faCreditCard,
+  faTachometerAlt, faBatteryFull, faUnlink
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faInstagram, faTiktok, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
@@ -34,7 +35,8 @@ library.add(
   faBrush, faSprayCan, faScissors, faUser, faKissWinkHeart, faEye,
   faPalette, faMagic, faPumpSoap, faPaintBrush, faPenNib, faTags,
   faImages, faCog, faUpload, faBox, faLink, faWallet, faLayerGroup,
-  faStar, faGem, faCrown, faGlasses, faGift,
+  faStar, faGem, faCrown, faGlasses, faGift, faTruckFast, faCreditCard,
+  faTachometerAlt, faBatteryFull, faUnlink,
   faInstagram, faTiktok, faWhatsapp
 )
 
