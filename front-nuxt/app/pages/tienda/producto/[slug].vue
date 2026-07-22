@@ -12,7 +12,7 @@
       <p class="text-[#A1A1AA] font-medium tracking-widest text-xs uppercase">{{ t('tienda.loading') }}</p>
     </div>
 
-    <div v-else-if="product" class="max-w-[1400px] mx-auto px-4 md:px-8 py-6 pb-40 lg:pb-20 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
+    <div v-else-if="product" class="max-w-6xl mx-auto px-4 md:px-8 py-8 pb-36 lg:pb-16 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
       
       <!-- 1. BREADCRUMB (minimalista) -->
       <nav class="flex items-center gap-2 text-[10px] md:text-[11px] text-[#555] uppercase tracking-[0.18em] font-bold mb-10">
@@ -23,10 +23,10 @@
         <span class="text-[#A1A1AA] truncate max-w-[200px] sm:max-w-[400px]">{{ product.name }}</span>
       </nav>
 
-      <!-- Main Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
-        
-        <!-- 2. ÁREA DE MEDIOS (Izquierda) -->
+      <!-- Main Grid: imagen izquierda + info derecha -->
+      <div class="grid grid-cols-1 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 lg:gap-14 items-start">
+
+        <!-- Columna IZQUIERDA: Imagen + Miniaturas -->
         <div class="flex flex-col gap-3 md:sticky md:top-24">
           <div class="relative w-full aspect-square bg-[#161616] rounded-3xl border border-[#262626] overflow-hidden group shadow-[0_4px_40px_rgba(0,0,0,0.5)]">
             <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex">
@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <!-- 3. ÁREA DE COMPRA Y DETALLES (Derecha) -->
+        <!-- Columna DERECHA: Información y compra -->
         <div class="flex flex-col gap-7">
           <!-- Títulos y Precio -->
           <div>
