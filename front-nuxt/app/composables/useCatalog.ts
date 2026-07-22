@@ -8,12 +8,17 @@ export interface Product {
   name: string
   brand: string
   price: string | number
+  comparePrice?: number
   description: string
   category: string
   images?: string[]
   image?: string
   stock: number
   slug?: string
+  benefits?: string[]
+  usage?: string
+  specs?: string
+  variants?: string[]
   [key: string]: unknown
 }
 
