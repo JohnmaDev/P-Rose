@@ -88,7 +88,10 @@
                             <option value="Barranquilla">Envío Nacional ($20.000 COP)</option>
                           </datalist>
                           <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
-                          <p class="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
+                          <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
+                            <span>⚡ Tarifa detectada: <strong>{{ currentShipping.label }}</strong> ({{ currentShipping.price }})</span>
+                          </p>
+                          <p v-else class="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
                             <span class="text-neon-green font-bold">⚡</span> Tarifa de envío autocalculada instantáneamente según tu municipio.
                           </p>
                         </div>
@@ -138,21 +141,10 @@
 
                 <!-- Método de envío -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
                     <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
                     Método de envío
                   </h2>
-
-                  <div v-if="form.city" class="mb-5 p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                      <span class="text-lg">📍</span>
-                      <div class="min-w-0">
-                        <p class="text-xs text-gray-400 leading-tight">Ciudad detectada: <strong class="text-white">{{ form.city }}</strong></p>
-                        <p class="text-[11px] dept-text font-bold truncate">Tarifa sugerida: {{ currentShipping?.label }}</p>
-                      </div>
-                    </div>
-                    <span class="text-[10px] text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 flex-shrink-0">Puedes cambiarla abajo</span>
-                  </div>
 
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
@@ -654,11 +646,16 @@ const step1Valid = computed(() =>
   form.city.trim() && form.address.trim()
 )
 
+watch(() => form.city, (newCity) => {
+  if (newCity.trim()) {
+    selectedShipping.value = detectShippingZone(newCity)
+  }
+}, { immediate: true })
+
 function nextStep() {
   if (step.value === 1) {
     Object.keys(touched).forEach(k => (touched as Record<string, boolean>)[k] = true)
     if (!step1Valid.value) return
-    selectedShipping.value = detectShippingZone(form.city)
   }
   step.value++
 }
