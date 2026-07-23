@@ -16,9 +16,9 @@
       
       <!-- 1. BREADCRUMB (minimalista) -->
       <nav class="flex items-center gap-2 text-[10px] md:text-[11px] text-[#555] uppercase tracking-[0.18em] font-bold mb-10">
-        <NuxtLink to="/tienda" class="hover:text-[#00FF00] transition-colors duration-200">Tienda</NuxtLink>
+        <NuxtLink to="/" class="hover:text-[#00FF00] transition-colors duration-200">Tienda</NuxtLink>
         <span class="text-[#333]">›</span>
-        <NuxtLink :to="`/tienda?cat=${product.category}`" class="hover:text-[#00FF00] transition-colors duration-200">{{ getCategoryLabel(product.category) }}</NuxtLink>
+        <NuxtLink :to="{ path: '/', query: { cat: product.category } }" class="hover:text-[#00FF00] transition-colors duration-200">{{ getCategoryLabel(product.category) }}</NuxtLink>
         <span class="text-[#333]">›</span>
         <span class="text-[#A1A1AA] truncate max-w-[200px] sm:max-w-[400px]">{{ product.name }}</span>
       </nav>
@@ -186,7 +186,7 @@
               <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight text-white">Explora Más Productos</h3>
             </div>
             <div class="flex items-center gap-3">
-              <NuxtLink to="/tienda" class="text-xs text-[#00FF00] hover:text-white font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5 bg-[#161616] border border-[#262626] hover:border-[#00FF00] px-3.5 py-2 rounded-xl">
+              <NuxtLink to="/" class="text-xs text-[#00FF00] hover:text-white font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5 bg-[#161616] border border-[#262626] hover:border-[#00FF00] px-3.5 py-2 rounded-xl">
                 <span>Ver Tienda Completa</span>
                 <fa-icon :icon="['fas', 'arrow-right']" class="text-[10px]" />
               </NuxtLink>
@@ -228,7 +228,7 @@
             </NuxtLink>
 
             <!-- Card final: Volver al inicio de la Tienda -->
-            <NuxtLink to="/tienda"
+            <NuxtLink to="/"
               class="group flex-shrink-0 w-[180px] sm:w-[200px] bg-[#161616] border border-[#262626] hover:border-[#00FF00] rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,255,0,0.12)] min-h-full">
               <div class="w-12 h-12 rounded-full bg-[#0D0D0D] border border-[#262626] group-hover:border-[#00FF00] flex items-center justify-center text-[#00FF00] transition-colors">
                 <fa-icon :icon="['fas', 'store']" class="text-lg" />
@@ -295,7 +295,7 @@
     <div v-else class="flex flex-col items-center justify-center min-h-[70vh] gap-4">
       <fa-icon :icon="['fas', 'unlink']" class="text-5xl text-[#262626]" />
       <p class="text-[#A1A1AA] font-bold tracking-widest uppercase text-xs">{{ t('tienda.emptyTitle') }}</p>
-      <NuxtLink to="/tienda" class="text-[#00FF00] hover:text-white border border-[#00FF00] hover:bg-[#00FF00]/10 rounded-xl px-6 py-2 transition-all text-xs font-black uppercase tracking-widest mt-2">← Volver al Catálogo</NuxtLink>
+      <NuxtLink to="/" class="text-[#00FF00] hover:text-white border border-[#00FF00] hover:bg-[#00FF00]/10 rounded-xl px-6 py-2 transition-all text-xs font-black uppercase tracking-widest mt-2">← Volver al Catálogo</NuxtLink>
     </div>
 
     <!-- 5. COMPONENTE MÓVIL EXCLUSIVO (Sticky Bottom Bar) -->

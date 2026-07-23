@@ -24,7 +24,7 @@
         <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
           <fa-icon :icon="['fas', 'shopping-bag']" class="text-5xl text-white/10" />
           <p class="text-gray-500">Tu carrito está vacío</p>
-          <NuxtLink to="/tienda" class="dept-text hover:underline text-sm font-bold">← Explorar productos</NuxtLink>
+          <NuxtLink to="/" class="dept-text hover:underline text-sm font-bold">← Explorar productos</NuxtLink>
         </div>
 
         <div v-else class="max-w-5xl mx-auto px-4 py-10">
@@ -105,7 +105,7 @@
                     </div>
                   </div>
                   <div class="mt-6 flex items-center justify-between">
-                    <NuxtLink to="/tienda" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
+                    <NuxtLink to="/" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver a la tienda
                     </NuxtLink>
                     <button @click="nextStep" :disabled="!step1Valid"
@@ -311,7 +311,7 @@
     <!-- Footer de políticas -->
     <footer class="w-full border-t border-white/8 mt-auto">
       <div class="max-w-5xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-        <NuxtLink to="/tienda" class="checkout-footer-link">Tienda</NuxtLink>
+        <NuxtLink to="/" class="checkout-footer-link">Tienda</NuxtLink>
         <button @click="openPolicy('envios')" class="checkout-footer-link">Política de Envíos</button>
         <button @click="openPolicy('reembolsos')" class="checkout-footer-link">Reembolsos</button>
         <button @click="openPolicy('privacidad')" class="checkout-footer-link">Privacidad</button>
@@ -688,7 +688,7 @@ async function handleCheckout() {
       const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío:* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
-      router.push('/tienda')
+      router.push('/')
     } catch (e) {
       console.error(e)
       alert('Error procesando tu orden. Intenta de nuevo.')

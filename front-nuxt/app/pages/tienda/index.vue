@@ -149,6 +149,15 @@
 import { useLanguage } from '~/composables/useLanguage'
 import { useDepartment } from '~/composables/useDepartment'
 
+// Redirección permanente 301 para unificar la tienda en '/'
+definePageMeta({
+  middleware: [
+    function (to) {
+      return navigateTo({ path: '/', query: to.query }, { redirectCode: 301, external: false })
+    }
+  ]
+})
+
 const route = useRoute()
 const router = useRouter()
 const { addToCart, isStockFull } = useCart()

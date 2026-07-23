@@ -46,7 +46,7 @@
         <!-- Tarjeta de Categoría Disponible -->
         <NuxtLink
           v-if="!cat.comingSoon"
-          :to="{ path: '/tienda', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
+          :to="{ path: '/', query: { cat: cat.id, dept: cat.department === 'unisex' ? 'merch' : cat.department } }"
           class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border border-white/10 transition-premium flex flex-col items-center justify-center p-6 text-center bg-zinc-900 hover:scale-[1.02]"
           :style="{ borderColor: `${cat.accent}30` }"
         >
@@ -168,7 +168,7 @@
     <!-- CTA ver toda la tienda -->
     <div class="flex justify-center mt-12 mb-20">
       <NuxtLink
-        :to="{ path: '/tienda', query: { dept: activeDepartment } }"
+        :to="{ path: '/', query: { dept: activeDepartment } }"
         class="group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2 dept-border hover:opacity-90"
       >
         <div class="absolute inset-0 w-full h-full translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300 bg-white/5"></div>
