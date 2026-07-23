@@ -21,9 +21,9 @@
         <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
       </template>
 
-      <!-- Botón Scroll Top -->
+      <!-- Botón Scroll Top (oculto en checkout y admin para UI totalmente limpia) -->
       <button
-        v-if="showScrollTop && !cartOpen"
+        v-if="showScrollTop && !cartOpen && route.name !== 'checkout' && route.name !== 'admin'"
         @click="scrollToTop"
         :aria-label="t('common.scrollTop')"
         class="fixed z-50 dept-bg text-black font-black px-3.5 py-1.5 rounded-full shadow-[0_0_15px_var(--dept-glow)] transition-all duration-300 focus:outline-none hover:scale-110 text-xs"
