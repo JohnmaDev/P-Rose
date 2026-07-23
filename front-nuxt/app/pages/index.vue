@@ -275,6 +275,9 @@ const route = useRoute()
 const router = useRouter()
 const { t } = useLanguage()
 
+const { addToCart, isStockFull } = useCart()
+const { products, categories, isLoading, error: errorMessage, fetchCatalog } = useCatalog()
+
 const catFilterContainer = ref<HTMLElement | null>(null)
 
 function scrollCategoryFilter(direction: 'left' | 'right') {
