@@ -21,15 +21,13 @@
         <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
       </template>
 
-      <!-- Botón flotante de WhatsApp — oculto en checkout -->
-      <WhatsAppFab v-if="!cartOpen && route.name !== 'checkout'" />
-
       <!-- Botón Scroll Top -->
       <button
         v-if="showScrollTop && !cartOpen"
         @click="scrollToTop"
         :aria-label="t('common.scrollTop')"
-        class="fixed bottom-10 sm:bottom-6 right-6 z-50 dept-bg text-black font-black px-4 py-2 rounded-full shadow-[0_0_15px_var(--dept-glow)] transition-all duration-300 focus:outline-none hover:scale-110"
+        class="fixed z-50 dept-bg text-black font-black px-3.5 py-1.5 rounded-full shadow-[0_0_15px_var(--dept-glow)] transition-all duration-300 focus:outline-none hover:scale-110 text-xs"
+        :class="route.name === 'tienda-producto-slug' ? 'bottom-[4.5rem] left-4 sm:bottom-6 sm:left-auto sm:right-24' : 'bottom-6 right-20 sm:right-24'"
       >
         ↑ Top
       </button>

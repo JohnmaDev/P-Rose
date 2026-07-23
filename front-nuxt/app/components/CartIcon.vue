@@ -5,10 +5,12 @@
       <button
         @click="$emit('open')"
         :aria-label="t('cart.openCart')"
-        :class="['fixed right-5 z-50 w-14 h-14 rounded-full dept-bg text-black flex items-center justify-center shadow-lg shadow-[0_0_15px_var(--dept-glow)] transition-all duration-500 ease-out hover:scale-110 active:scale-95',
-          y > 50 ? 'bottom-24' : 'bottom-6 right-6']"
+        :class="[
+          'fixed z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full dept-bg text-black flex items-center justify-center shadow-lg shadow-[0_0_15px_var(--dept-glow)] transition-all duration-500 ease-out hover:scale-110 active:scale-95',
+          route.name === 'tienda-producto-slug' ? 'bottom-[4.5rem] right-4 sm:bottom-6 sm:right-6' : (y > 50 ? 'bottom-20 right-4 sm:bottom-6 sm:right-6' : 'bottom-6 right-4 sm:right-6')
+        ]"
       >
-        <fa-icon :icon="['fas', 'shopping-bag']" class="text-lg" />
+        <fa-icon :icon="['fas', 'shopping-bag']" class="text-base sm:text-lg" />
         <!-- Badge de cantidad -->
         <Transition name="badge-pop">
           <span
@@ -29,6 +31,7 @@ import { useLanguage } from '~/composables/useLanguage'
 const { t } = useLanguage()
 defineEmits<{ open: [] }>()
 const { cartCount } = useCart()
+const route = useRoute()
 
 const y = ref(0)
 

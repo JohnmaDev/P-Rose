@@ -31,8 +31,20 @@
         </NuxtLink>
       </div>
 
-      <!-- Right side: Language toggle + Book CTA -->
-      <div class="flex-1 flex items-center justify-end gap-3 flex-shrink-0">
+      <!-- Right side: WhatsApp + Language toggle + Mobile toggle -->
+      <div class="flex-1 flex items-center justify-end gap-2.5 flex-shrink-0">
+        <!-- WhatsApp Header Link -->
+        <a
+          href="https://api.whatsapp.com/send?phone=573045840264"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 text-[#25D366] text-[10px] font-black tracking-widest uppercase transition-all duration-300 hover:bg-[#25D366]/20 hover:border-[#25D366] group"
+          title="Contacto WhatsApp"
+        >
+          <fa-icon :icon="['fab', 'whatsapp']" class="text-xs text-[#25D366]" />
+          <span class="hidden sm:inline">WhatsApp</span>
+        </a>
+
         <!-- Language Toggle -->
         <ClientOnly>
           <button
@@ -81,6 +93,18 @@
           <fa-icon :icon="link.icon" class="dept-text text-xs w-4" />
           {{ link.label }}
         </NuxtLink>
+
+        <!-- WhatsApp Link en Menú Móvil -->
+        <a
+          href="https://api.whatsapp.com/send?phone=573045840264"
+          target="_blank"
+          rel="noopener noreferrer"
+          @click="mobileOpen = false"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black tracking-widest uppercase text-[#25D366] bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all duration-200"
+        >
+          <fa-icon :icon="['fab', 'whatsapp']" class="text-base" />
+          WhatsApp Soporte
+        </a>
 
         <!-- Mobile Language + Book -->
         <div class="flex items-center gap-3 mt-2 pt-4 border-t border-white/10">
