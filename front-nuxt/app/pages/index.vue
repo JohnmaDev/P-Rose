@@ -77,7 +77,7 @@
 
     <!-- ─── CONTENIDO TIENDA ─── -->
     <!-- Panel que sube sobre el fondo fijo -->
-    <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pb-20 pt-8">
+    <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pt-8 pb-8">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
       <!-- Switch de Departamento -->
@@ -241,6 +241,9 @@
         <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600 mb-4" />
         <p class="text-gray-500">{{ t('tienda.emptySub') }}</p>
       </div>
+
+      <!-- Footer (integrado dentro del panel homogéneo de la tienda) -->
+      <AppFooter class="mt-14 pt-8 border-t border-white/5" />
       </div><!-- /max-w-7xl -->
     </div><!-- /store panel -->
 
@@ -258,13 +261,6 @@
         @update:filters="handleFilterUpdate"
       />
     </ClientOnly>
-
-    <!-- Footer -->
-    <div class="relative z-10 bg-barber-black w-full px-4 sm:px-6">
-      <div class="max-w-7xl mx-auto">
-        <AppFooter class="mt-10" />
-      </div>
-    </div>
   </div>
 </template>
 
