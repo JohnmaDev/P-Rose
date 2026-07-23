@@ -275,7 +275,7 @@ const filteredProducts = computed(() => {
     })
     .map(c => c.id)
 
-  let list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
+  let list = products.value.filter(p => p.is_active !== false && p.category && activeDeptCats.includes(p.category))
   if (activeFilter.value !== 'all') {
     list = list.filter(p => p.category === activeFilter.value)
   }

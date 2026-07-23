@@ -263,6 +263,7 @@
 <script>
 import { formatPrice } from '~/utils/format.js'
 import { optimizeImage } from '~/utils/image.js'
+import { useCatalog } from '~/composables/useCatalog'
 
 export default {
   name: 'AdminProducts',
@@ -421,7 +422,9 @@ export default {
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (!data.ok) {
+        if (data.ok) {
+          useCatalog().invalidateCatalog();
+        } else {
           p.is_active = originalState;
           alert('Error cambiando visibilidad: ' + (data.error || 'Desconocido'));
         }
@@ -449,6 +452,7 @@ export default {
         if (data.ok) {
           this.showModal = false;
           this.cargarProductos();
+          useCatalog().invalidateCatalog();
         } else {
           alert('Error: ' + data.error);
         }
@@ -464,7 +468,10 @@ export default {
         const url = `/api/manage_products?id=${id}&token=${this.adminPin}`;
         const res = await fetch(url, { method: 'DELETE' });
         const data = await res.json();
-        if (data.ok) this.cargarProductos();
+        if (data.ok) {
+          this.cargarProductos();
+          useCatalog().invalidateCatalog();
+        }
       } catch (e) {
         alert('Error al eliminar');
       }

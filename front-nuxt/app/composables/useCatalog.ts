@@ -64,7 +64,7 @@ export function useCatalog() {
       }>('/api/get_catalog').catch(() => null)
 
       if (res?.ok) {
-        products.value   = res.products
+        products.value   = (res.products || []).filter(p => p.is_active !== false)
         categories.value = res.categories
         isLoaded.value   = true
         return { success: true }
@@ -77,7 +77,7 @@ export function useCatalog() {
       ])
 
       if (resProd.ok && resCat.ok) {
-        products.value   = resProd.products
+        products.value   = (resProd.products || []).filter(p => p.is_active !== false)
         categories.value = resCat.categories
         isLoaded.value   = true
         return { success: true }
@@ -97,6 +97,11 @@ export function useCatalog() {
     }
   }
 
+  const invalidateCatalog = () => {
+    isLoaded.value = false
+    return fetchCatalog(true)
+  }
+
   return {
     products,
     categories,
@@ -104,5 +109,6 @@ export function useCatalog() {
     isLoaded,
     error,
     fetchCatalog,
+    invalidateCatalog,
   }
 }
