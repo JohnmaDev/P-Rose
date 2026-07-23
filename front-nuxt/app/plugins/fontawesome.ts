@@ -9,7 +9,7 @@ config.autoAddCss = false
 
 import {
   faArrowLeft, faArrowRight, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
-  faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp,
+  faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp, faChevronLeft, faChevronRight,
   faCloudUploadAlt, faComments, faCut, faEdit, faExclamationCircle,
   faExclamationTriangle, faImage, faInfoCircle, faLock, faMapMarkerAlt,
   faMinusCircle, faPlus, faPlusCircle, faSave, faSearch, faShieldAlt,
@@ -26,7 +26,7 @@ import { faInstagram, faTiktok, faWhatsapp } from '@fortawesome/free-brands-svg-
 
 library.add(
   faArrowLeft, faArrowRight, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
-  faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp,
+  faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp, faChevronLeft, faChevronRight,
   faCloudUploadAlt, faComments, faCut, faEdit, faExclamationCircle,
   faExclamationTriangle, faImage, faInfoCircle, faLock, faMapMarkerAlt,
   faMinusCircle, faPlus, faPlusCircle, faSave, faSearch, faShieldAlt,

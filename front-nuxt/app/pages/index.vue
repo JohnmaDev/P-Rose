@@ -127,12 +127,36 @@
         </button>
       </div>
 
-      <!-- Filtros de categoría (Carrusel horizontal deslizable no-scrollbar) -->
-      <div class="flex overflow-x-auto no-scrollbar gap-2.5 mb-8 py-1 px-1 justify-start sm:justify-center max-w-full">
-        <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
-          class="px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wide border transition-all duration-300 whitespace-nowrap shrink-0"
-          :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter shadow-md font-black scale-105' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
-          {{ f.label }}
+      <!-- Filtros de categoría (Carrusel horizontal deslizable con flechas de navegación) -->
+      <div class="relative max-w-4xl mx-auto mb-8 px-8 sm:px-10 group">
+        <!-- Flecha Izquierda -->
+        <button
+          @click="scrollCategoryFilter('left')"
+          class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-900 border border-zinc-700 text-gray-300 hover:border-white hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95"
+          aria-label="Anterior categoría"
+        >
+          <fa-icon :icon="['fas', 'chevron-left']" class="text-xs" />
+        </button>
+
+        <!-- Contenedor Deslizable con touch drag y scroll suave -->
+        <div 
+          ref="catFilterContainer" 
+          class="flex overflow-x-auto no-scrollbar gap-2.5 py-1 px-1 scroll-smooth select-none items-center"
+        >
+          <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
+            class="px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wide border transition-all duration-300 whitespace-nowrap shrink-0"
+            :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter shadow-md font-black scale-105' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
+            {{ f.label }}
+          </button>
+        </div>
+
+        <!-- Flecha Derecha -->
+        <button
+          @click="scrollCategoryFilter('right')"
+          class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-900 border border-zinc-700 text-gray-300 hover:border-white hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95"
+          aria-label="Siguiente categoría"
+        >
+          <fa-icon :icon="['fas', 'chevron-right']" class="text-xs" />
         </button>
       </div>
 
@@ -249,9 +273,18 @@ import { useLanguage } from '~/composables/useLanguage'
 
 const route = useRoute()
 const router = useRouter()
-const { addToCart, isStockFull } = useCart()
-const { products, categories, isLoading, error: errorMessage, fetchCatalog } = useCatalog()
 const { t } = useLanguage()
+
+const catFilterContainer = ref<HTMLElement | null>(null)
+
+function scrollCategoryFilter(direction: 'left' | 'right') {
+  if (!catFilterContainer.value) return
+  const amount = 220
+  catFilterContainer.value.scrollBy({
+    left: direction === 'left' ? -amount : amount,
+    behavior: 'smooth'
+  })
+}
 
 // SEO — tienda como home
 useSeoMeta({
