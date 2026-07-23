@@ -89,7 +89,7 @@
                           </datalist>
                           <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
                           <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
-                            <span>⚡ Tarifa detectada: <strong>{{ currentShipping.label }}</strong> ({{ currentShipping.price }})</span>
+                            <span>⚡ Destino: <strong class="text-white underline">{{ form.city }}</strong> → {{ currentShipping.label }} ({{ currentShipping.price }})</span>
                           </p>
                           <p v-else class="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
                             <span class="text-neon-green font-bold">⚡</span> Tarifa de envío autocalculada instantáneamente según tu municipio.
@@ -156,10 +156,13 @@
                         <div v-if="selectedShipping === s.id" class="w-2.5 h-2.5 rounded-full dept-bg"></div>
                       </div>
                       <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-0.5">
+                        <div class="flex items-center gap-2 mb-0.5 flex-wrap">
                           <span class="text-xl">{{ s.emoji }}</span>
                           <p class="text-white font-bold text-sm">{{ s.label }}</p>
-                          <span v-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
+                          <span v-if="selectedShipping === s.id && form.city.trim()" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/40 px-2 py-0.5 rounded-full font-bold">
+                            📍 {{ form.city }}
+                          </span>
+                          <span v-else-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
                         </div>
                         <p class="text-gray-500 text-xs">{{ s.desc }}</p>
                       </div>
@@ -201,7 +204,9 @@
                   <div class="flex items-center justify-between text-sm pt-3">
                     <div class="flex gap-4">
                       <span class="text-gray-500 w-16">Envío</span>
-                      <span class="text-white">{{ currentShipping?.label }} · {{ currentShipping?.price }}</span>
+                      <span class="text-white">
+                        <strong class="dept-text">{{ form.city || 'Destino' }}</strong> <span class="text-gray-400">({{ currentShipping?.label }})</span> · {{ currentShipping?.price }}
+                      </span>
                     </div>
                     <button @click="step = 2" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
@@ -273,9 +278,9 @@
                 <div class="border-t border-white/10 pt-4 space-y-2">
                   <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-gray-400">Envío</span>
-                    <span class="font-semibold" :class="shippingCost === 0 && step >= 2 && currentShipping ? 'dept-text' : 'text-gray-400'">
-                      {{ step >= 2 && currentShipping ? (shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)) : 'Calculando...' }}
+                    <span class="text-gray-400">Envío <span v-if="form.city" class="text-xs text-white font-semibold">({{ form.city }})</span></span>
+                    <span class="font-semibold" :class="currentShipping ? 'dept-text' : 'text-gray-400'">
+                      {{ currentShipping ? formatPrice(shippingCost) : 'Calculando...' }}
                     </span>
                   </div>
                   <div v-if="step >= 2 && currentShipping?.id === 'nacional'" class="flex justify-between text-sm">
@@ -682,7 +687,7 @@ async function handleCheckout() {
       const phone = '573045840264'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
       const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || '$10.000 COP'}`
-      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío:* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad: ${form.city}\nDirección: ${form.address}`
+      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío (${form.city}):* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad / Municipio: ${form.city}\nDirección: ${form.address}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/')
