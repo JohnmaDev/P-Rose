@@ -4,5 +4,5 @@
 # Redirección WhatsApp (para correos de Resend — evita filtros de spam)
 /wa https://wa.me/573012144773 302
 
-# SPA catch-all — Nuxt router maneja el resto
-/* /index.html 200
+# SPA catch-all — Nitro 200.html maneja páginas dinámicas
+/* /200.html 200
