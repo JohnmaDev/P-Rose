@@ -475,9 +475,9 @@
             <div v-if="activePolicy === 'terminos'" class="policy-body">
               <p class="policy-lead">Al utilizar nuestro sitio web y realizar compras en <strong>PersonalBarber</strong>, usted acepta los siguientes términos y condiciones de servicio.</p>
 
-              <h4 class="policy-section-title">1. Política de Ventas Finales</h4>
+              <h4 class="policy-section-title">1. Titularidad y Filosofía del Emprendimiento</h4>
               <p class="text-xs text-gray-400 leading-relaxed mb-3">
-                Todas las ventas son definitivas. No aceptamos devoluciones, cancelaciones ni cambios. No emitiremos reembolsos por artículos pedidos por error o si el cliente ingresó los datos incorrectamente. Si cometió un error en su pedido, contáctenos inmediatamente, pero no garantizamos poder modificarlo si ya pasó a proceso de despacho.
+                <strong>PersonalBarber</strong> es una iniciativa independiente y un emprendimiento local colombiano en Medellín, operado directamente por sus propios fundadores y barberos apasionados. No somos una gran corporación masiva; somos emprendedores locales que trabajamos día a día con honestidad, esfuerzo y vocación para ofrecer productos de barbería y cuidado personal de alta calidad a nuestra comunidad. Cada compra realizada respalda el trabajo directo y el crecimiento de nuestro equipo.
               </p>
 
               <h4 class="policy-section-title">2. Tiempos y Detalles de Envío</h4>

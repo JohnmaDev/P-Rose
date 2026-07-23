@@ -12,27 +12,38 @@
       />
     </NuxtLink>
 
-    <!-- Footer con NAP (Name + Address + Phone) — señal de SEO local critical -->
-    <footer class="text-center text-[10px] sm:text-xs text-gray-500 py-10 tracking-widest uppercase">
-      <!-- Datos barbero — Schema NAP para SEO local de Google -->
-      <address class="not-italic flex flex-col items-center gap-1 mb-4 text-gray-600 text-[10px]">
+    <!-- Footer con NAP (Name + Address + Phone) + Email + Links Legales Wompi -->
+    <footer class="text-center text-[10px] sm:text-xs text-gray-500 py-8 tracking-widest uppercase w-full">
+      
+      <!-- Datos contacto barbero — Schema NAP para SEO local de Google -->
+      <address class="not-italic flex flex-col items-center gap-1.5 mb-4 text-gray-400 text-[11px] sm:text-xs">
         <span>📍 La 4 Sur · Medellín, Antioquia, Colombia</span>
-        <a
-          href="tel:+573045840264"
-          class="hover:text-neon-green transition duration-300 cursor-pointer"
-          aria-label="Llamar a PersonalBarber"
-        >
-          📞 +57 304 584 0264
-        </a>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="tel:+573045840264"
+            class="hover:text-neon-green transition duration-300 cursor-pointer"
+            aria-label="Llamar a PersonalBarber"
+          >
+            📞 +57 304 584 0264
+          </a>
+          <span class="opacity-30">·</span>
+          <a
+            href="mailto:pb@personalbarber.vip"
+            class="hover:text-neon-green transition duration-300 cursor-pointer text-gray-300 font-semibold"
+            aria-label="Enviar correo a PersonalBarber"
+          >
+            ✉️ pb@personalbarber.vip
+          </a>
+        </div>
       </address>
 
       <!-- Redes sociales del barbero -->
-      <nav class="flex items-center justify-center gap-4 mb-4" :aria-label="t('footer.socialLabel')">
+      <nav class="flex items-center justify-center gap-4 mb-5" :aria-label="t('footer.socialLabel')">
         <a
           href="https://www.instagram.com/pipehp_/"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-600 hover:text-pink-500 transition duration-300"
+          class="text-gray-500 hover:text-pink-500 transition duration-300 text-sm"
           aria-label="Instagram de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'instagram']" />
@@ -41,7 +52,7 @@
           href="https://www.tiktok.com/@pipehpbarber"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-600 hover:text-white transition duration-300"
+          class="text-gray-500 hover:text-white transition duration-300 text-sm"
           aria-label="TikTok de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'tiktok']" />
@@ -50,15 +61,30 @@
           href="https://wa.me/573045840264"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-600 hover:text-neon-green transition duration-300"
+          class="text-gray-500 hover:text-neon-green transition duration-300 text-sm"
           aria-label="WhatsApp de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'whatsapp']" />
         </a>
       </nav>
 
+      <!-- Enlaces Legales (Cumplimiento Wompi / Estatuto del Consumidor Colombia) -->
+      <nav class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-6 text-[10px] sm:text-[11px] font-bold text-gray-400 normal-case tracking-normal">
+        <button @click="openModal('terminos')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
+          📜 Términos y Condiciones
+        </button>
+        <span class="opacity-30">·</span>
+        <button @click="openModal('privacidad')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
+          🔒 Política de Privacidad
+        </button>
+        <span class="opacity-30">·</span>
+        <button @click="openModal('envios')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
+          🚚 Garantías & Envíos
+        </button>
+      </nav>
+
       <!-- Créditos del desarrollador -->
-      <p class="flex flex-col sm:flex-row items-center justify-center gap-2">
+      <p class="flex flex-col sm:flex-row items-center justify-center gap-2 text-[10px] text-gray-500">
         <span class="opacity-50">
           &lt;/&gt; 2026 — Built with ❤️ by
         </span>
@@ -75,12 +101,103 @@
         <span class="opacity-50">{{ t('footer.rights') }}</span>
       </p>
     </footer>
+
+    <!-- Modal de Políticas Legales -->
+    <ClientOnly>
+      <Teleport to="body">
+        <Transition name="fade">
+          <div v-if="activePolicy" class="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" @click.self="activePolicy = null">
+            <div class="relative w-full max-w-2xl bg-[#121212] border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh] text-left">
+              <!-- Header modal -->
+              <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">{{ policyTitle.icon }}</span>
+                  <h3 class="text-white font-bold text-base sm:text-lg tracking-wide">{{ policyTitle.title }}</h3>
+                </div>
+                <button @click="activePolicy = null" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+                  ✕
+                </button>
+              </div>
+
+              <!-- Cuerpo del modal -->
+              <div class="p-6 overflow-y-auto space-y-4 text-xs text-gray-300 leading-relaxed font-sans">
+                <!-- Términos -->
+                <template v-if="activePolicy === 'terminos'">
+                  <p class="text-gray-400">Al utilizar nuestro sitio web y comprar en <strong>PersonalBarber</strong>, aceptas las siguientes condiciones de servicio:</p>
+                  
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">1. Titularidad y Emprendimiento Independiente</h4>
+                  <p><strong>PersonalBarber</strong> es una iniciativa independiente y un emprendimiento local colombiano en Medellín, operado directamente por sus propios fundadores y barberos apasionados. No somos una gran corporación masiva; somos emprendedores locales que trabajamos día a día con honestidad, esfuerzo y vocación para ofrecer productos de barbería y cuidado personal de alta calidad a nuestra comunidad. Cada compra realizada respalda el trabajo directo y el crecimiento de nuestro equipo.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">2. Envíos y Tiempos de Entrega</h4>
+                  <p>Operamos envíos en todo el territorio colombiano. En Medellín y Valle de Aburrá, las entregas con PersonalBarber Express toman entre 24 y 48 horas hábiles.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">3. Garantía y Respaldo</h4>
+                  <p>Nos hacemos 100% responsables por la entrega de tu pedido. Si tu paquete sufre daños o pérdida durante el transporte, gestionaremos el reenvío de tus productos para que tu dinero siempre esté protegido.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">4. Atención al Cliente</h4>
+                  <p>Para cualquier solicitud, estamos disponibles en WhatsApp (+57 304 584 0264) y correo electrónico (pb@personalbarber.vip).</p>
+                </template>
+
+                <!-- Privacidad -->
+                <template v-if="activePolicy === 'privacidad'">
+                  <p class="text-gray-400">En <strong>PersonalBarber</strong> respetamos y protegemos tus datos personales conforme a la <strong>Ley 1581 de 2012 (Habeas Data)</strong> de Colombia.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">1. Uso de la Información</h4>
+                  <p>Los datos solicitados (nombre, teléfono, dirección y correo) se utilizan exclusivamente para procesar tu pedido, coordinar la entrega y enviarte el recibo de tu compra.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">2. Confidencialidad</h4>
+                  <p>No vendemos, alquilamos ni compartimos tus datos personales con terceros para fines publicitarios.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">3. Tus Derechos</h4>
+                  <p>Puedes solicitar en cualquier momento la actualización o eliminación de tus datos escribiéndonos a <strong>pb@personalbarber.vip</strong>.</p>
+                </template>
+
+                <!-- Envíos -->
+                <template v-if="activePolicy === 'envios'">
+                  <h4 class="font-bold text-white text-sm mb-1 text-neon-green">Cobertura y Tarifas</h4>
+                  <p>Envíos a Medellín y Valle de Aburrá tarifa plana de <strong>$10.000 COP</strong> mediante PersonalBarber Express.</p>
+
+                  <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">Nuestra Garantía</h4>
+                  <p>Si el empaque o producto llega defectuoso o dañado de fábrica, contáctanos dentro de los primeros 3 días hábiles tras recibirlo para coordinar el cambio sin costo adicional.</p>
+                </template>
+              </div>
+
+              <!-- Footer modal -->
+              <div class="px-6 py-3 border-t border-white/10 bg-white/5 flex justify-end">
+                <button @click="activePolicy = null" class="px-5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-xs transition-all">
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </Teleport>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useLanguage } from '~/composables/useLanguage'
+
 const { t } = useLanguage()
-// Componente footer con logo, datos de contacto, redes sociales y créditos del desarrollador
-// NAP (Name + Address + Phone) incluido para SEO local de Google
+
+const activePolicy = ref<string | null>(null)
+
+function openModal(type: string) {
+  activePolicy.value = type
+}
+
+const policyTitle = computed(() => {
+  switch (activePolicy.value) {
+    case 'terminos':
+      return { title: 'Términos y Condiciones', icon: '📜' }
+    case 'privacidad':
+      return { title: 'Política de Privacidad', icon: '🔒' }
+    case 'envios':
+      return { title: 'Garantías & Envíos', icon: '🚚' }
+    default:
+      return { title: 'Información Legal', icon: '📄' }
+  }
+})
 </script>
