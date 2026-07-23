@@ -177,31 +177,91 @@
           </div>
         </div>
 
-        <!-- Recomendados (grid horizontal bonito) -->
-        <div v-if="recommendedProducts.length > 0">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="h-px flex-1 bg-[#262626]"></div>
-            <h3 class="font-oswald text-xl font-bold uppercase tracking-[0.1em] text-white shrink-0">Completa tu Kit</h3>
-            <div class="h-px flex-1 bg-[#262626]"></div>
+        <!-- CARRUSEL: Productos Relacionados (misma categoría) -->
+        <div v-if="sameCategoryProducts.length > 0" class="mt-2">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-[0.2em] mb-0.5">Explora más</p>
+              <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight text-white">Productos Relacionados</h3>
+            </div>
+            <!-- Flechas desktop -->
+            <div class="hidden sm:flex gap-2">
+              <button @click="scrollCarousel('related', -1)"
+                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                <fa-icon :icon="['fas', 'arrow-left']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+              </button>
+              <button @click="scrollCarousel('related', 1)"
+                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                <fa-icon :icon="['fas', 'arrow-right']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+              </button>
+            </div>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <NuxtLink v-for="item in recommendedProducts" :key="item.id"
+          <!-- Scroll track -->
+          <div ref="relatedRef" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 scroll-smooth">
+            <NuxtLink v-for="item in sameCategoryProducts" :key="item.id"
               :to="{ name: 'tienda-producto-slug', params: { slug: generateProductSlug(item.id, item.name) } }"
-              class="group bg-[#161616] border border-[#262626] hover:border-[#00FF00]/40 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,0,0.08)]">
+              class="group flex-shrink-0 w-[200px] sm:w-[220px] bg-[#111] border border-[#1E1E1E] hover:border-[#00FF00]/30 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,255,0,0.08)]">
               <!-- Imagen -->
-              <div class="aspect-square bg-white overflow-hidden">
-                <img :src="optimizeImage(item.images?.[0] || item.image, 400)" :alt="item.name"
+              <div class="w-full aspect-square bg-white overflow-hidden">
+                <img :src="optimizeImage(item.images?.[0] || item.image, 300)" :alt="item.name"
                   class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" loading="lazy" />
               </div>
               <!-- Info -->
-              <div class="p-4">
-                <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-widest mb-1 truncate">{{ item.brand }}</p>
-                <h4 class="text-xs font-bold text-white group-hover:text-[#00FF00] transition-colors line-clamp-2 leading-snug mb-2">{{ item.name }}</h4>
+              <div class="p-3">
+                <p class="text-[9px] text-[#555] font-bold uppercase tracking-widest mb-1 truncate">{{ item.brand }}</p>
+                <h4 class="text-xs font-semibold text-[#D4D4D8] group-hover:text-white transition-colors line-clamp-2 leading-snug mb-3" style="font-family: 'Source Serif 4', serif;">{{ item.name }}</h4>
                 <div class="flex items-center justify-between">
                   <span class="text-sm font-black text-[#00FF00]">{{ formatPrice(item.price) }}</span>
-                  <button @click.prevent="addToCart(item, 1); showConfirm = true; setTimeout(() => { showConfirm = false }, 2500)"
+                  <button @click.prevent="addToCart(item, 1)"
                     class="w-7 h-7 rounded-full bg-[#0D0D0D] border border-[#262626] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all">
-                    <fa-icon :icon="['fas', 'plus']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-[10px]" />
+                    <fa-icon :icon="['fas', 'plus']" class="text-[#555] group-hover:text-[#00FF00] text-[9px]" />
+                  </button>
+                </div>
+              </div>
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- CARRUSEL: De la misma marca -->
+        <div v-if="sameBrandProducts.length > 0" class="mt-2">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-[0.2em] mb-0.5">{{ product.brand }}</p>
+              <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight text-white">De la Misma Marca</h3>
+            </div>
+            <!-- Flechas desktop -->
+            <div class="hidden sm:flex gap-2">
+              <button @click="scrollCarousel('brand', -1)"
+                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                <fa-icon :icon="['fas', 'arrow-left']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+              </button>
+              <button @click="scrollCarousel('brand', 1)"
+                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                <fa-icon :icon="['fas', 'arrow-right']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+              </button>
+            </div>
+          </div>
+          <!-- Scroll track -->
+          <div ref="brandRef" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 scroll-smooth">
+            <NuxtLink v-for="item in sameBrandProducts" :key="item.id"
+              :to="{ name: 'tienda-producto-slug', params: { slug: generateProductSlug(item.id, item.name) } }"
+              class="group flex-shrink-0 w-[200px] sm:w-[220px] bg-[#111] border border-[#1E1E1E] hover:border-[#00FF00]/30 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,255,0,0.08)]">
+              <!-- Imagen -->
+              <div class="w-full aspect-square bg-white overflow-hidden">
+                <img :src="optimizeImage(item.images?.[0] || item.image, 300)" :alt="item.name"
+                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+              </div>
+              <!-- Info -->
+              <div class="p-3">
+                <p class="text-[9px] text-[#555] font-bold uppercase tracking-widest mb-1 truncate">{{ item.brand }}</p>
+                <h4 class="text-xs font-semibold text-[#D4D4D8] group-hover:text-white transition-colors line-clamp-2 leading-snug mb-3" style="font-family: 'Source Serif 4', serif;">{{ item.name }}</h4>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-black text-[#00FF00]">{{ formatPrice(item.price) }}</span>
+                  <button @click.prevent="addToCart(item, 1)"
+                    class="w-7 h-7 rounded-full bg-[#0D0D0D] border border-[#262626] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all">
+                    <fa-icon :icon="['fas', 'plus']" class="text-[#555] group-hover:text-[#00FF00] text-[9px]" />
                   </button>
                 </div>
               </div>
@@ -358,16 +418,34 @@ watch(() => route.params.slug, () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 
-const recommendedProducts = computed(() => {
+// Refs para los carruseles
+const relatedRef = ref<HTMLElement | null>(null)
+const brandRef = ref<HTMLElement | null>(null)
+
+function scrollCarousel(type: 'related' | 'brand', dir: 1 | -1) {
+  const el = type === 'related' ? relatedRef.value : brandRef.value
+  if (!el) return
+  el.scrollBy({ left: dir * 240, behavior: 'smooth' })
+}
+
+// Productos de la misma categoría (sin el actual)
+const sameCategoryProducts = computed(() => {
   if (!product.value || products.value.length === 0) return []
-  const sameCategory = products.value
+  return products.value
     .filter(p => p.category === product.value!.category && p.id !== product.value!.id)
-    .sort(() => 0.5 - Math.random()).slice(0, 3)
-  const otherCategories = products.value
-    .filter(p => p.category !== product.value!.category)
-    .sort(() => 0.5 - Math.random()).slice(0, 3)
-  return [...sameCategory, ...otherCategories].slice(0, 3) // Mostrar máximo 3 en el cross-sell
+    .slice(0, 12)
 })
+
+// Productos de la misma marca (sin el actual)
+const sameBrandProducts = computed(() => {
+  if (!product.value || !product.value.brand || products.value.length === 0) return []
+  return products.value
+    .filter(p => p.brand && p.brand.toLowerCase() === product.value!.brand!.toLowerCase() && p.id !== product.value!.id)
+    .slice(0, 12)
+})
+
+// Mantener backward-compat (usado por sección de kit)
+const recommendedProducts = computed(() => sameCategoryProducts.value.slice(0, 3))
 
 function getCategoryLabel(catId: string) {
   const cat = categories.value.find(c => c.id === catId)
