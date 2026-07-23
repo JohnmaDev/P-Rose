@@ -18,30 +18,40 @@ import (
 )
 
 type Product struct {
-	ID          int64    `json:"id" bson:"id"`
-	Name        string   `json:"name" bson:"name"`
-	Brand       string   `json:"brand" bson:"brand"`
-	Category    string   `json:"category" bson:"category"`
-	Description string   `json:"description" bson:"description"`
-	Price       int64    `json:"price" bson:"price"`
-	Images      []string `json:"images" bson:"images"`
-	Image       string   `json:"image,omitempty" bson:"image,omitempty"`
-	Stock       int      `json:"stock" bson:"stock"`
-	IsActive    bool     `json:"is_active" bson:"is_active"`
+	ID           int64    `json:"id" bson:"id"`
+	Name         string   `json:"name" bson:"name"`
+	Brand        string   `json:"brand" bson:"brand"`
+	Category     string   `json:"category" bson:"category"`
+	Description  string   `json:"description" bson:"description"`
+	Price        int64    `json:"price" bson:"price"`
+	ComparePrice int64    `json:"comparePrice,omitempty" bson:"comparePrice,omitempty"`
+	Images       []string `json:"images" bson:"images"`
+	Image        string   `json:"image,omitempty" bson:"image,omitempty"`
+	Stock        int      `json:"stock" bson:"stock"`
+	Benefits     []string `json:"benefits,omitempty" bson:"benefits,omitempty"`
+	Usage        string   `json:"usage,omitempty" bson:"usage,omitempty"`
+	Specs        string   `json:"specs,omitempty" bson:"specs,omitempty"`
+	Variants     []string `json:"variants,omitempty" bson:"variants,omitempty"`
+	IsActive     bool     `json:"is_active" bson:"is_active"`
 }
 
 // Para manejar la migración de datos viejos (strings) a nuevos (ints)
 type flexibleProduct struct {
-	ID          int64       `bson:"id"`
-	Name        string      `bson:"name"`
-	Brand       string      `bson:"brand"`
-	Category    string      `bson:"category"`
-	Description string      `bson:"description"`
-	Price       interface{} `bson:"price"`
-	Images      []string    `bson:"images"`
-	Image       string      `bson:"image,omitempty"`
-	Stock       int         `bson:"stock"`
-	IsActive    *bool       `bson:"is_active,omitempty"`
+	ID           int64       `bson:"id"`
+	Name         string      `bson:"name"`
+	Brand        string      `bson:"brand"`
+	Category     string      `bson:"category"`
+	Description  string      `bson:"description"`
+	Price        interface{} `bson:"price"`
+	ComparePrice interface{} `bson:"comparePrice,omitempty"`
+	Images       []string    `bson:"images"`
+	Image        string      `bson:"image,omitempty"`
+	Stock        int         `bson:"stock"`
+	Benefits     []string    `bson:"benefits,omitempty"`
+	Usage        string      `bson:"usage,omitempty"`
+	Specs        string      `bson:"specs,omitempty"`
+	Variants     []string    `bson:"variants,omitempty"`
+	IsActive     *bool       `bson:"is_active,omitempty"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -99,6 +109,10 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Images:      rp.Images,
 			Image:       rp.Image,
 			Stock:       rp.Stock,
+			Benefits:    rp.Benefits,
+			Usage:       rp.Usage,
+			Specs:       rp.Specs,
+			Variants:    rp.Variants,
 			IsActive:    isActive,
 		}
 

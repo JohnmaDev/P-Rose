@@ -396,6 +396,9 @@ export default {
         this.editando = true;
         this.prodForm = { 
           ...p, 
+          usage: p.usage || '',
+          specs: p.specs || '',
+          benefits: p.benefits ? [...p.benefits] : [],
           is_active: p.is_active !== false,
           images: p.images && p.images.length > 0 ? [...p.images] : [''] 
         };
@@ -410,6 +413,8 @@ export default {
           category: defaultCat, 
           description: '', 
           usage: '', 
+          specs: '',
+          benefits: [],
           price: '', 
           stock: 0, 
           is_active: true,
