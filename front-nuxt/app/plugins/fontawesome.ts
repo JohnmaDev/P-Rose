@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 config.autoAddCss = false
 
 import {
-  faArrowLeft, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
+  faArrowLeft, faArrowRight, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
   faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp,
   faCloudUploadAlt, faComments, faCut, faEdit, faExclamationCircle,
   faExclamationTriangle, faImage, faInfoCircle, faLock, faMapMarkerAlt,
@@ -25,7 +25,7 @@ import {
 import { faInstagram, faTiktok, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
-  faArrowLeft, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
+  faArrowLeft, faArrowRight, faBolt, faBoxOpen, faCalendarCheck, faCalendarTimes,
   faCameraRetro, faCheck, faCheckCircle, faChevronDown, faChevronUp,
   faCloudUploadAlt, faComments, faCut, faEdit, faExclamationCircle,
   faExclamationTriangle, faImage, faInfoCircle, faLock, faMapMarkerAlt,

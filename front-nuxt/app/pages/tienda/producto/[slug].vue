@@ -177,29 +177,35 @@
           </div>
         </div>
 
-        <!-- CARRUSEL: Productos Relacionados (misma categoría) -->
-        <div v-if="sameCategoryProducts.length > 0" class="mt-2">
+        <!-- CARRUSEL: Explora el Catálogo (todos los productos de la tienda) -->
+        <div v-if="exploreStoreProducts.length > 0" class="mt-2">
           <!-- Header -->
           <div class="flex items-center justify-between mb-5">
             <div>
-              <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-[0.2em] mb-0.5">Explora más</p>
-              <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight text-white">Productos Relacionados</h3>
+              <p class="text-[10px] text-[#00FF00] font-bold uppercase tracking-[0.2em] mb-0.5">Catálogo PersonalBarber</p>
+              <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight text-white">Explora Más Productos</h3>
             </div>
-            <!-- Flechas desktop -->
-            <div class="hidden sm:flex gap-2">
-              <button @click="scrollCarousel('related', -1)"
-                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
-                <fa-icon :icon="['fas', 'arrow-left']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
-              </button>
-              <button @click="scrollCarousel('related', 1)"
-                class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
-                <fa-icon :icon="['fas', 'arrow-right']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
-              </button>
+            <div class="flex items-center gap-3">
+              <NuxtLink to="/tienda" class="text-xs text-[#00FF00] hover:text-white font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5 bg-[#161616] border border-[#262626] hover:border-[#00FF00] px-3.5 py-2 rounded-xl">
+                <span>Ver Tienda Completa</span>
+                <fa-icon :icon="['fas', 'arrow-right']" class="text-[10px]" />
+              </NuxtLink>
+              <!-- Flechas desktop -->
+              <div class="hidden sm:flex gap-2">
+                <button @click="scrollCarousel('related', -1)"
+                  class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                  <fa-icon :icon="['fas', 'arrow-left']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+                </button>
+                <button @click="scrollCarousel('related', 1)"
+                  class="w-10 h-10 rounded-full border border-[#262626] bg-[#161616] hover:border-[#00FF00] hover:bg-[#00FF00]/10 flex items-center justify-center transition-all duration-200 group">
+                  <fa-icon :icon="['fas', 'arrow-right']" class="text-[#A1A1AA] group-hover:text-[#00FF00] text-xs" />
+                </button>
+              </div>
             </div>
           </div>
           <!-- Scroll track -->
-          <div ref="relatedRef" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 scroll-smooth">
-            <NuxtLink v-for="item in sameCategoryProducts" :key="item.id"
+          <div ref="relatedRef" class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 scroll-smooth items-stretch">
+            <NuxtLink v-for="item in exploreStoreProducts" :key="item.id"
               :to="{ name: 'tienda-producto-slug', params: { slug: generateProductSlug(item.id, item.name) } }"
               class="group flex-shrink-0 w-[200px] sm:w-[220px] bg-[#111] border border-[#1E1E1E] hover:border-[#00FF00]/30 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,255,0,0.08)]">
               <!-- Imagen -->
@@ -219,6 +225,19 @@
                   </button>
                 </div>
               </div>
+            </NuxtLink>
+
+            <!-- Card final: Volver al inicio de la Tienda -->
+            <NuxtLink to="/tienda"
+              class="group flex-shrink-0 w-[180px] sm:w-[200px] bg-[#161616] border border-[#262626] hover:border-[#00FF00] rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,255,0,0.12)] min-h-full">
+              <div class="w-12 h-12 rounded-full bg-[#0D0D0D] border border-[#262626] group-hover:border-[#00FF00] flex items-center justify-center text-[#00FF00] transition-colors">
+                <fa-icon :icon="['fas', 'store']" class="text-lg" />
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white group-hover:text-[#00FF00] transition-colors uppercase font-oswald tracking-wider">Ver Todo el Catálogo</p>
+                <p class="text-[10px] text-[#A1A1AA] mt-1">Ir a la página principal de la tienda</p>
+              </div>
+              <span class="text-[10px] font-black text-[#00FF00] uppercase tracking-widest mt-1 group-hover:underline">Ver Todo →</span>
             </NuxtLink>
           </div>
         </div>
@@ -428,12 +447,12 @@ function scrollCarousel(type: 'related' | 'brand', dir: 1 | -1) {
   el.scrollBy({ left: dir * 240, behavior: 'smooth' })
 }
 
-// Productos de la misma categoría (sin el actual)
-const sameCategoryProducts = computed(() => {
+// Todos los productos de la tienda (misma categoría primero, luego el resto)
+const exploreStoreProducts = computed(() => {
   if (!product.value || products.value.length === 0) return []
-  return products.value
-    .filter(p => p.category === product.value!.category && p.id !== product.value!.id)
-    .slice(0, 12)
+  const sameCat = products.value.filter(p => p.category === product.value!.category && p.id !== product.value!.id)
+  const otherCat = products.value.filter(p => p.category !== product.value!.category && p.id !== product.value!.id)
+  return [...sameCat, ...otherCat]
 })
 
 // Productos de la misma marca (sin el actual)
@@ -444,8 +463,8 @@ const sameBrandProducts = computed(() => {
     .slice(0, 12)
 })
 
-// Mantener backward-compat (usado por sección de kit)
-const recommendedProducts = computed(() => sameCategoryProducts.value.slice(0, 3))
+// Mantener backward-compat
+const recommendedProducts = computed(() => exploreStoreProducts.value.slice(0, 3))
 
 function getCategoryLabel(catId: string) {
   const cat = categories.value.find(c => c.id === catId)
