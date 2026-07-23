@@ -153,12 +153,12 @@
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Descripción & Beneficios</span>
               <fa-icon :icon="['fas', expandedAccordion === 'desc' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
-            <div v-show="expandedAccordion === 'desc'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
-              <p v-if="product.description" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line">{{ product.description }}</p>
+            <div v-show="expandedAccordion === 'desc'" class="px-6 pb-7 pt-3 border-t border-[#262626]/50">
+              <p v-if="product.description" class="text-[#D4D4D8] text-[15px] leading-[1.9] whitespace-pre-line tracking-[0.01em]" style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 300;">{{ product.description }}</p>
               <ul v-if="product.benefits && product.benefits.length > 0" class="mt-5 space-y-3">
                 <li v-for="(benefit, bIdx) in product.benefits" :key="bIdx" class="flex items-start gap-3">
-                  <span class="text-[#00FF00] text-xs mt-0.5 shrink-0">✓</span>
-                  <span class="text-[#A1A1AA] text-sm leading-relaxed">{{ benefit }}</span>
+                  <span class="text-[#00FF00] text-xs mt-1 shrink-0">✓</span>
+                  <span class="text-[#D4D4D8] text-[15px] leading-[1.8]" style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 300;">{{ benefit }}</span>
                 </li>
               </ul>
             </div>
@@ -170,9 +170,9 @@
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Modo de Uso / Especificaciones</span>
               <fa-icon :icon="['fas', expandedAccordion === 'specs' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
             </button>
-            <div v-show="expandedAccordion === 'specs'" class="px-6 pb-6 pt-2 border-t border-[#262626]/50">
-              <p v-if="product.usage" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line">{{ product.usage }}</p>
-              <p v-if="product.specs" class="text-[#A1A1AA] text-sm leading-[1.8] whitespace-pre-line" :class="product.usage ? 'mt-4 pt-4 border-t border-[#262626]/30' : ''">{{ product.specs }}</p>
+            <div v-show="expandedAccordion === 'specs'" class="px-6 pb-7 pt-3 border-t border-[#262626]/50">
+              <p v-if="product.usage" class="text-[#D4D4D8] text-[15px] leading-[1.9] whitespace-pre-line tracking-[0.01em]" style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 300;">{{ product.usage }}</p>
+              <p v-if="product.specs" class="text-[#D4D4D8] text-[15px] leading-[1.9] whitespace-pre-line tracking-[0.01em]" style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 300;" :class="product.usage ? 'mt-5 pt-5 border-t border-[#262626]/30' : ''">{{ product.specs }}</p>
             </div>
           </div>
         </div>
