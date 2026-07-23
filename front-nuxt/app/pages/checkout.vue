@@ -70,22 +70,25 @@
                           <label class="label-xs">Ciudad / Municipio *</label>
                           <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
                           <datalist id="colombian-cities">
-                            <option value="Medellín">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Bello">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Envigado">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Itagüí">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Sabaneta">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="La Estrella">Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Girardota">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Copacabana">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Guarne">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Rionegro">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Caldas">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Marinilla">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="La Ceja">Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Bogotá">Envío Nacional ($20.000 COP)</option>
-                            <option value="Cali">Envío Nacional ($20.000 COP)</option>
-                            <option value="Barranquilla">Envío Nacional ($20.000 COP)</option>
+                            <option value="Medellín">Medellín — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Bello">Bello — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Envigado">Envigado — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Itagüí">Itagüí — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Sabaneta">Sabaneta — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="La Estrella">La Estrella — Valle de Aburrá ($10.000 COP)</option>
+                            <option value="Girardota">Girardota — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Copacabana">Copacabana — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Guarne">Guarne — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Rionegro">Rionegro — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Caldas">Caldas — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Marinilla">Marinilla — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="La Ceja">La Ceja — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="El Retiro">El Retiro — Oriente / Alrededores ($15.000 COP)</option>
+                            <option value="Bogotá">Bogotá — Envío Nacional ($20.000 COP)</option>
+                            <option value="Cali">Cali — Envío Nacional ($20.000 COP)</option>
+                            <option value="Barranquilla">Barranquilla — Envío Nacional ($20.000 COP)</option>
+                            <option value="Bucaramanga">Bucaramanga — Envío Nacional ($20.000 COP)</option>
+                            <option value="Pereira">Pereira — Envío Nacional ($20.000 COP)</option>
                           </datalist>
                           <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
                           <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
