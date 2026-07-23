@@ -442,6 +442,9 @@ export default {
         if (this.prodForm.brand) {
           this.prodForm.brand = this.prodForm.brand.trim();
         }
+        this.prodForm.price = Number(this.prodForm.price) || 0;
+        this.prodForm.stock = Number(this.prodForm.stock) || 0;
+
         const url = `/api/manage_products?token=${this.adminPin}`;
         const res = await fetch(url, {
           method: 'POST',
@@ -455,7 +458,7 @@ export default {
         if (data.ok) {
           this.showModal = false;
           this.cargarProductos();
-          useCatalog().invalidateCatalog();
+          await useCatalog().invalidateCatalog();
         } else {
           alert('Error: ' + data.error);
         }

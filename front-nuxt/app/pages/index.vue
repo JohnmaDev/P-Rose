@@ -398,12 +398,11 @@ async function fetchData() {
   setTimeout(() => { isFirstVisit.value = false }, 1000)
 }
 
-onMounted(() => {
-  fetchCatalog(true)
-  shuffleProducts()
-  syncFilter()
-  setTimeout(() => { isFirstVisit.value = false }, 1000)
+onMounted(async () => {
+  await fetchData()
 })
+
+watch(categories, syncFilter)
 
 watch(() => route.query.cat, syncFilter)
 watch(() => route.query.dept, syncFilter)
