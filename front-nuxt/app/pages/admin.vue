@@ -28,11 +28,12 @@
           <p class="text-zinc-500 font-bold tracking-[0.3em] text-sm lg:text-base uppercase mt-4">Gestión Central de Barbería (v2)</p>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+        <!-- Sticky Subnav Header -->
+        <div class="sticky top-0 z-50 bg-black/95 backdrop-blur-md py-4 -mx-4 px-4 border-b border-zinc-800/80 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
           <div class="flex flex-wrap lg:flex-nowrap bg-zinc-900 p-1 rounded-2xl border border-zinc-800">
             <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id"
               :class="['px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300',
-                activeTab === tab.id ? 'bg-neon-green text-black' : 'text-zinc-400 hover:text-white']">
+                activeTab === tab.id ? 'bg-neon-green text-black shadow-[0_0_12px_rgba(57,255,20,0.4)]' : 'text-zinc-400 hover:text-white']">
               {{ tab.label }}
             </button>
           </div>

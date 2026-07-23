@@ -1,95 +1,98 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h2 class="text-lg font-bold">Inventario de Productos</h2>
-        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
-      </div>
-      <div class="flex gap-2">
-        <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group">
-          <span :class="{'animate-spin text-neon-green': cargando, 'text-zinc-500 group-hover:text-white transition-colors duration-300': !cargando}" class="flex items-center justify-center w-4 h-4">
-            <fa-icon :icon="['fas', 'sync-alt']"  />
-          </span>
-        </button>
-        <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all">
-          <fa-icon :icon="['fas', 'plus']"  />
-          Nuevo Producto
-        </button>
-      </div>
-    </div>
-
-    <!-- Buscador y Filtros (5 columnas) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-      <div class="relative group">
-        <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
-        <input 
-          v-model="searchQuery" 
-          type="text" 
-          placeholder="Buscar por nombre o marca..." 
-          class="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 transition-all placeholder:text-zinc-600"
-        >
-      </div>
-      
-      <!-- Selector de Categorías -->
-      <div class="relative group">
-        <fa-icon :icon="['fas', 'layer-group']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
-        <select 
-          v-model="filterCategory" 
-          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
-        >
-          <option value="all">Todas las Categorías</option>
-          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
-        </select>
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+    <!-- Header de Filtros y Acciones Fijo (Sticky) -->
+    <div class="sticky top-[72px] z-40 bg-black/95 backdrop-blur-md pt-2 pb-4 -mx-2 px-2 border-b border-zinc-800/80 mb-6 shadow-2xl transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold">Inventario de Productos</h2>
+          <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
+        </div>
+        <div class="flex gap-2">
+          <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group">
+            <span :class="{'animate-spin text-neon-green': cargando, 'text-zinc-500 group-hover:text-white transition-colors duration-300': !cargando}" class="flex items-center justify-center w-4 h-4">
+              <fa-icon :icon="['fas', 'sync-alt']"  />
+            </span>
+          </button>
+          <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all shadow-[0_0_15px_rgba(57,255,20,0.2)]">
+            <fa-icon :icon="['fas', 'plus']"  />
+            Nuevo Producto
+          </button>
         </div>
       </div>
 
-      <!-- Selector de Marcas -->
-      <div class="relative group">
-        <fa-icon :icon="['fas', 'tag']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
-        <select 
-          v-model="filterBrand" 
-          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
-        >
-          <option value="all">Todas las Marcas</option>
-          <option v-for="b in availableBrands" :key="b" :value="b">{{ b }}</option>
-        </select>
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+      <!-- Buscador y Filtros (5 columnas) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div class="relative group">
+          <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Buscar por nombre o marca..." 
+            class="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 transition-all placeholder:text-zinc-600"
+          >
         </div>
-      </div>
-
-      <!-- Selector de Estado / Stock -->
-      <div class="relative group">
-        <fa-icon :icon="['fas', 'boxes']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
-        <select 
-          v-model="filterStock" 
-          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
-        >
-          <option value="all">Cualquier Stock</option>
-          <option value="in_stock">En Stock (> 0)</option>
-          <option value="low_stock">Pocas Unidades (≤ 3)</option>
-          <option value="out_of_stock">Agotados (0)</option>
-        </select>
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+        
+        <!-- Selector de Categorías -->
+        <div class="relative group">
+          <fa-icon :icon="['fas', 'layer-group']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+          <select 
+            v-model="filterCategory" 
+            class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+          >
+            <option value="all">Todas las Categorías</option>
+            <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+          </div>
         </div>
-      </div>
 
-      <!-- Selector de Visibilidad (Publicado / Oculto) -->
-      <div class="relative group">
-        <fa-icon :icon="['fas', 'eye']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
-        <select 
-          v-model="filterVisibility" 
-          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
-        >
-          <option value="all">Todas las Visibilidades</option>
-          <option value="visible">Solo Visibles</option>
-          <option value="hidden">Solo Ocultos (Borrador)</option>
-        </select>
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+        <!-- Selector de Marcas -->
+        <div class="relative group">
+          <fa-icon :icon="['fas', 'tag']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+          <select 
+            v-model="filterBrand" 
+            class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+          >
+            <option value="all">Todas las Marcas</option>
+            <option v-for="b in availableBrands" :key="b" :value="b">{{ b }}</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+          </div>
+        </div>
+
+        <!-- Selector de Estado / Stock -->
+        <div class="relative group">
+          <fa-icon :icon="['fas', 'boxes']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+          <select 
+            v-model="filterStock" 
+            class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+          >
+            <option value="all">Cualquier Stock</option>
+            <option value="in_stock">En Stock (> 0)</option>
+            <option value="low_stock">Pocas Unidades (≤ 3)</option>
+            <option value="out_of_stock">Agotados (0)</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+          </div>
+        </div>
+
+        <!-- Selector de Visibilidad (Publicado / Oculto) -->
+        <div class="relative group">
+          <fa-icon :icon="['fas', 'eye']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+          <select 
+            v-model="filterVisibility" 
+            class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+          >
+            <option value="all">Todas las Visibilidades</option>
+            <option value="visible">Solo Visibles</option>
+            <option value="hidden">Solo Ocultos (Borrador)</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+          </div>
         </div>
       </div>
     </div>
