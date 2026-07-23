@@ -27,6 +27,7 @@ type Product struct {
 	Images      []string `json:"images" bson:"images"`
 	Image       string   `json:"image,omitempty" bson:"image,omitempty"`
 	Stock       int      `json:"stock" bson:"stock"`
+	IsActive    bool     `json:"is_active" bson:"is_active"`
 }
 
 // Para manejar la migración de datos viejos (strings) a nuevos (ints)
@@ -40,6 +41,7 @@ type flexibleProduct struct {
 	Images      []string    `bson:"images"`
 	Image       string      `bson:"image,omitempty"`
 	Stock       int         `bson:"stock"`
+	IsActive    *bool       `bson:"is_active,omitempty"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -83,6 +85,11 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	products := make([]Product, 0, len(rawProducts))
 
 	for _, rp := range rawProducts {
+		isActive := true
+		if rp.IsActive != nil {
+			isActive = *rp.IsActive
+		}
+
 		p := Product{
 			ID:          rp.ID,
 			Name:        rp.Name,
@@ -92,6 +99,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Images:      rp.Images,
 			Image:       rp.Image,
 			Stock:       rp.Stock,
+			IsActive:    isActive,
 		}
 
 		// Parse de precio flexible

@@ -30,6 +30,7 @@ type Product struct {
 	Usage        string   `json:"usage,omitempty" bson:"usage,omitempty"`
 	Specs        string   `json:"specs,omitempty" bson:"specs,omitempty"`
 	Variants     []string `json:"variants,omitempty" bson:"variants,omitempty"`
+	IsActive     bool     `json:"is_active" bson:"is_active"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

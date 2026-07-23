@@ -19,6 +19,7 @@ export interface Product {
   usage?: string
   specs?: string
   variants?: string[]
+  is_active?: boolean
   [key: string]: unknown
 }
 

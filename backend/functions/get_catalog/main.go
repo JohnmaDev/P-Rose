@@ -37,6 +37,7 @@ type Product struct {
 	Usage        string   `json:"usage,omitempty" bson:"usage,omitempty"`
 	Specs        string   `json:"specs,omitempty" bson:"specs,omitempty"`
 	Variants     []string `json:"variants,omitempty" bson:"variants,omitempty"`
+	IsActive     bool     `json:"is_active" bson:"is_active"`
 }
 
 // flexibleProduct handles legacy price formats (string vs int)
@@ -55,6 +56,7 @@ type flexibleProduct struct {
 	Usage        string      `bson:"usage,omitempty"`
 	Specs        string      `bson:"specs,omitempty"`
 	Variants     []string    `bson:"variants,omitempty"`
+	IsActive     *bool       `bson:"is_active,omitempty"`
 }
 
 // ──────────────────────────────────────────
@@ -171,6 +173,14 @@ func fetchProducts(ctx context.Context, db *mongo.Database) ([]Product, error) {
 	products := make([]Product, 0, len(raw))
 
 	for _, rp := range raw {
+		isActive := true
+		if rp.IsActive != nil {
+			isActive = *rp.IsActive
+		}
+		if !isActive {
+			continue
+		}
+
 		p := Product{
 			ID:          rp.ID,
 			Name:        rp.Name,
@@ -184,6 +194,7 @@ func fetchProducts(ctx context.Context, db *mongo.Database) ([]Product, error) {
 			Usage:       rp.Usage,
 			Specs:       rp.Specs,
 			Variants:    rp.Variants,
+			IsActive:    isActive,
 		}
 
 		// Parse comparePrice flexible

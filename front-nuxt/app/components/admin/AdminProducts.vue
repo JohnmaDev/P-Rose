@@ -18,8 +18,8 @@
       </div>
     </div>
 
-    <!-- Buscador y Filtros (4 columnas) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <!-- Buscador y Filtros (5 columnas) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
       <div class="relative group">
         <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
         <input 
@@ -76,6 +76,22 @@
           <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
         </div>
       </div>
+
+      <!-- Selector de Visibilidad (Publicado / Oculto) -->
+      <div class="relative group">
+        <fa-icon :icon="['fas', 'eye']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none" />
+        <select 
+          v-model="filterVisibility" 
+          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
+        >
+          <option value="all">Todas las Visibilidades</option>
+          <option value="visible">Solo Visibles</option>
+          <option value="hidden">Solo Ocultos (Borrador)</option>
+        </select>
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
+        </div>
+      </div>
     </div>
 
     <div :class="{'opacity-40 pointer-events-none transition-opacity duration-500': cargando}">
@@ -90,7 +106,7 @@
       <div v-else-if="filteredProducts.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
         <fa-icon :icon="['fas', 'search']" class="text-4xl text-zinc-700 mb-4" />
         <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan con los filtros.</p>
-        <button v-if="searchQuery || filterCategory !== 'all' || filterBrand !== 'all' || filterStock !== 'all'" @click="searchQuery = ''; filterCategory = 'all'; filterBrand = 'all'; filterStock = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar todos los filtros</button>
+        <button v-if="searchQuery || filterCategory !== 'all' || filterBrand !== 'all' || filterStock !== 'all' || filterVisibility !== 'all'" @click="searchQuery = ''; filterCategory = 'all'; filterBrand = 'all'; filterStock = 'all'; filterVisibility = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar todos los filtros</button>
       </div>
 
       <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
@@ -100,7 +116,15 @@
           <span v-else>Sin foto</span>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="font-bold text-sm truncate">{{ p.name }}</p>
+          <div class="flex items-center gap-2">
+            <p class="font-bold text-sm truncate">{{ p.name }}</p>
+            <span 
+              v-if="p.is_active === false" 
+              class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700 shrink-0 flex items-center gap-1"
+            >
+              <fa-icon :icon="['fas', 'eye-slash']" class="text-[8px]" /> Oculto
+            </span>
+          </div>
           <div class="flex items-center gap-2 mt-0.5">
             <span class="text-[9px] font-black text-neon-green uppercase px-1.5 py-0.5 bg-neon-green/10 rounded border border-neon-green/20">{{ p.category }}</span>
             <span class="text-zinc-500 text-[10px] font-bold">{{ formatPrice(p.price) }}</span>
@@ -110,11 +134,21 @@
             >{{ p.stock > 0 ? `Stock: ${p.stock}` : 'Agotado' }}</span>
           </div>
         </div>
-        <div class="flex gap-2">
-          <button @click="abrirModalProducto(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all">
+        <div class="flex items-center gap-2">
+          <!-- Botón Rápido de Visibilidad (Interruptor instantáneo) -->
+          <button 
+            @click="toggleVisibilidad(p)" 
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border shrink-0"
+            :class="p.is_active !== false ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:bg-zinc-700 hover:text-white'"
+            :title="p.is_active !== false ? 'Producto Visible. Haz clic para ocultar de la tienda.' : 'Producto Oculto. Haz clic para publicar en la tienda.'"
+          >
+            <fa-icon :icon="['fas', p.is_active !== false ? 'eye' : 'eye-slash']" class="text-xs" />
+            <span class="hidden sm:inline text-[10px] uppercase font-black">{{ p.is_active !== false ? 'Visible' : 'Oculto' }}</span>
+          </button>
+          <button @click="abrirModalProducto(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all" title="Editar">
             <fa-icon :icon="['fas', 'edit']" class="text-xs" />
           </button>
-          <button @click="borrarProducto(p.id)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all">
+          <button @click="borrarProducto(p.id)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all" title="Eliminar">
             <fa-icon :icon="['fas', 'trash-alt']" class="text-xs" />
           </button>
         </div>
@@ -197,6 +231,23 @@
               <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Stock disponible</label>
               <input v-model.number="prodForm.stock" type="number" min="0" class="input-modern" placeholder="10">
             </div>
+
+            <!-- Visibilidad en la Tienda (Switch) -->
+            <div class="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-2xl mt-4">
+              <div>
+                <p class="text-xs font-bold text-white flex items-center gap-2">
+                  <fa-icon :icon="['fas', prodForm.is_active ? 'eye' : 'eye-slash']" :class="prodForm.is_active ? 'text-neon-green' : 'text-zinc-500'" />
+                  Visibilidad en la Tienda
+                </p>
+                <p class="text-[10px] text-zinc-500 font-medium mt-0.5">
+                  {{ prodForm.is_active ? 'El producto aparecerá visible en el catálogo de clientes.' : 'El producto estará OCULTO del catálogo (Modo borrador).' }}
+                </p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
+                <input type="checkbox" v-model="prodForm.is_active" class="sr-only peer">
+                <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-green"></div>
+              </label>
+            </div>
           </div>
 
           <button @click="guardarProducto" :disabled="guardando" class="w-full mt-8 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark transition-all flex items-center justify-center gap-2">
@@ -231,6 +282,7 @@ export default {
       filterCategory: 'all',
       filterBrand: 'all',
       filterStock: 'all',
+      filterVisibility: 'all',
       errorMessage: null,
       showModal: false,
       editando: false,
@@ -243,7 +295,8 @@ export default {
         usage: '',
         price: '',
         images: [''],
-        stock: 0
+        stock: 0,
+        is_active: true
       }
     }
   },
@@ -268,7 +321,12 @@ export default {
         else if (this.filterStock === 'low_stock') matchesStock = (p.stock || 0) > 0 && (p.stock || 0) <= 3;
         else if (this.filterStock === 'out_of_stock') matchesStock = (p.stock || 0) <= 0;
 
-        return matchesSearch && matchesCategory && matchesBrand && matchesStock;
+        let matchesVisibility = true;
+        const isActive = p.is_active !== false;
+        if (this.filterVisibility === 'visible') matchesVisibility = isActive;
+        else if (this.filterVisibility === 'hidden') matchesVisibility = !isActive;
+
+        return matchesSearch && matchesCategory && matchesBrand && matchesStock && matchesVisibility;
       });
     }
   },
@@ -320,13 +378,57 @@ export default {
     abrirModalProducto(p = null) {
       if (p) {
         this.editando = true;
-        this.prodForm = { ...p, images: p.images && p.images.length > 0 ? [...p.images] : [''] };
+        this.prodForm = { 
+          ...p, 
+          is_active: p.is_active !== false,
+          images: p.images && p.images.length > 0 ? [...p.images] : [''] 
+        };
       } else {
         this.editando = false;
         const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) : 1;
-        this.prodForm = { id: nextId + 1, name: '', brand: '', category: this.categorias.length ? this.categorias[0].id : '', description: '', usage: '', price: '', stock: 0, images: [''] };
+        this.prodForm = { 
+          id: nextId + 1, 
+          name: '', 
+          brand: '', 
+          category: this.categorias.length ? this.categorias[0].id : '', 
+          description: '', 
+          usage: '', 
+          price: '', 
+          stock: 0, 
+          is_active: true,
+          images: [''] 
+        };
       }
       this.showModal = true;
+    },
+    async toggleVisibilidad(p) {
+      const nuevoEstado = p.is_active === false ? true : false;
+      const originalState = p.is_active;
+      p.is_active = nuevoEstado;
+      try {
+        const url = `/api/manage_products?token=${this.adminPin}`;
+        const payload = {
+          ...p,
+          brand: p.brand ? p.brand.trim() : '',
+          is_active: nuevoEstado
+        };
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': this.adminPin 
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          p.is_active = originalState;
+          alert('Error cambiando visibilidad: ' + (data.error || 'Desconocido'));
+        }
+      } catch (e) {
+        p.is_active = originalState;
+        alert('Error de conexión');
+      }
     },
     async guardarProducto() {
       this.guardando = true;
