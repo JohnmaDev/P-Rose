@@ -193,7 +193,9 @@
               <div class="space-y-1">
                 <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Categoría</label>
                 <select v-model="prodForm.category" class="input-modern appearance-none">
-                  <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+                  <option v-for="cat in sortedCategorias" :key="cat.id" :value="cat.id">
+                    {{ cat.department === 'women' ? '👩 [Para Ella]' : cat.department === 'unisex' ? '⚡ [Unisex]' : '🧔 [Para Él]' }} — {{ cat.label }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -309,6 +311,16 @@ export default {
     this.cargarProductos()
   },
   computed: {
+    sortedCategorias() {
+      if (!this.categorias || !this.categorias.length) return [];
+      const deptOrder = { men: 1, unisex: 2, women: 3 };
+      return [...this.categorias].sort((a, b) => {
+        const orderA = deptOrder[a.department] || 99;
+        const orderB = deptOrder[b.department] || 99;
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.label || '').localeCompare(b.label || '');
+      });
+    },
     availableBrands() {
       const brands = this.productos.map(p => p.brand ? p.brand.trim() : '').filter(Boolean);
       return [...new Set(brands)].sort();
@@ -390,11 +402,12 @@ export default {
       } else {
         this.editando = false;
         const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) : 1;
+        const defaultCat = this.sortedCategorias.length ? this.sortedCategorias[0].id : (this.categorias.length ? this.categorias[0].id : '');
         this.prodForm = { 
           id: nextId + 1, 
           name: '', 
           brand: '', 
-          category: this.categorias.length ? this.categorias[0].id : '', 
+          category: defaultCat, 
           description: '', 
           usage: '', 
           price: '', 

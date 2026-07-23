@@ -446,10 +446,17 @@ const filteredProducts = computed(() => {
   const activeDeptCats = categories.value
     .filter(c => {
       if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
-      return c.department === activeDepartment.value
+      if (activeDepartment.value === 'women') return c.department === 'women'
+      return !c.department || c.department === 'men' || c.department === 'unisex'
     })
     .map(c => c.id)
-  let list = products.value.filter(p => p.is_active !== false && p.category && activeDeptCats.includes(p.category))
+
+  let list = products.value.filter(p => {
+    if (p.is_active === false) return false
+    if (!p.category) return true
+    if (categories.value.length === 0) return true
+    return activeDeptCats.includes(p.category)
+  })
   
   if (activeFilter.value !== 'all') {
     list = list.filter(p => p.category === activeFilter.value)
