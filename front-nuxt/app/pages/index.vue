@@ -399,6 +399,7 @@ async function fetchData() {
 }
 
 onMounted(() => {
+  fetchCatalog(true)
   shuffleProducts()
   syncFilter()
   setTimeout(() => { isFirstVisit.value = false }, 1000)

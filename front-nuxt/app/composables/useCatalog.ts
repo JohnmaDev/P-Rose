@@ -56,12 +56,13 @@ export function useCatalog() {
     error.value     = null
 
     try {
-      // ── Intento 1: endpoint unificado (producción) ──
+      // ── Intento 1: endpoint unificado (producción con cache busting si es forzado) ──
+      const catalogUrl = force ? `/api/get_catalog?_t=${Date.now()}` : '/api/get_catalog'
       const res = await $fetch<{
         ok: boolean
         products: Product[]
         categories: Category[]
-      }>('/api/get_catalog').catch(() => null)
+      }>(catalogUrl).catch(() => null)
 
       if (res?.ok) {
         products.value   = (res.products || []).filter(p => p.is_active !== false)
@@ -71,9 +72,10 @@ export function useCatalog() {
       }
 
       // ── Fallback: endpoints individuales (local / pre-deploy) ──
+      const tParam = force ? `?_t=${Date.now()}` : ''
       const [resProd, resCat] = await Promise.all([
-        $fetch<{ ok: boolean; products: Product[] }>('/api/get_products'),
-        $fetch<{ ok: boolean; categories: Category[] }>('/api/get_categories'),
+        $fetch<{ ok: boolean; products: Product[] }>(`/api/get_products${tParam}`),
+        $fetch<{ ok: boolean; categories: Category[] }>(`/api/get_categories${tParam}`),
       ])
 
       if (resProd.ok && resCat.ok) {
