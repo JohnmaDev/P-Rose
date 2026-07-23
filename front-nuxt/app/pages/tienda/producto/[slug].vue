@@ -24,13 +24,13 @@
       </nav>
 
       <!-- Main Grid: imagen izquierda + info derecha -->
-      <div class="grid grid-cols-1 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 lg:gap-14 items-start">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
 
         <!-- Columna IZQUIERDA: Imagen + Miniaturas -->
-        <div class="flex flex-col gap-3 md:sticky md:top-24">
-          <div class="relative w-full aspect-square bg-[#161616] rounded-3xl border border-[#262626] overflow-hidden group shadow-[0_4px_40px_rgba(0,0,0,0.5)]">
+        <div class="flex flex-col gap-4 md:col-span-6 lg:col-span-6 md:sticky md:top-24">
+          <div class="relative w-full aspect-square sm:aspect-[4/4.5] bg-white rounded-3xl border border-white/10 overflow-hidden group shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
             <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex">
-              <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center bg-white">
+              <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center bg-white p-3 sm:p-5 flex items-center justify-center">
                 <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               </div>
             </div>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Columna DERECHA: Información y compra -->
-        <div class="flex flex-col gap-7">
+        <div class="flex flex-col gap-7 md:col-span-6 lg:col-span-6">
           <!-- Títulos y Precio -->
           <div>
             <div class="flex items-center gap-3 mb-3">
