@@ -178,7 +178,7 @@
       <TransitionGroup v-else name="products-grid" tag="div"
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5"
         :class="{'opacity-40 pointer-events-none': isLoading}">
-        <div v-for="(product, index) in filteredProducts" :key="product.id"
+        <div v-for="(product, index) in displayedProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
           class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card">
 
@@ -225,6 +225,22 @@
           </div>
         </div>
       </TransitionGroup>
+
+      <!-- Botón Cargar Más Productos (Carga Progresiva) -->
+      <div v-if="hasMoreProducts" class="mt-12 flex flex-col items-center justify-center gap-3">
+        <div class="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">
+          Viendo <span class="text-[#00FF00] font-black">{{ displayedProducts.length }}</span> de <span class="text-white font-black">{{ filteredProducts.length }}</span> productos
+        </div>
+        <div class="w-48 h-1 bg-white/10 rounded-full overflow-hidden mb-2">
+          <div class="h-full bg-gradient-to-r from-[#00FF00] to-emerald-400 transition-all duration-500 rounded-full"
+            :style="{ width: `${(displayedProducts.length / filteredProducts.length) * 100}%` }"></div>
+        </div>
+        <button @click="loadMoreProducts"
+          class="px-8 py-3 bg-white/5 border border-white/15 hover:border-[#00FF00] hover:bg-[#00FF00]/10 text-white hover:text-[#00FF00] font-black uppercase text-xs tracking-[0.2em] rounded-2xl transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(0,255,0,0.15)] flex items-center gap-2.5 group">
+          <span>Cargar Más Productos</span>
+          <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] group-hover:translate-y-0.5 transition-transform" />
+        </button>
+      </div>
 
       <!-- Error State -->
       <div v-if="errorMessage && !isLoading" class="flex flex-col items-center justify-center py-20 text-center px-4">
@@ -478,9 +494,30 @@ const filteredProducts = computed(() => {
   return list
 })
 
+const displayLimit = ref(12)
+
+const displayedProducts = computed(() => {
+  return filteredProducts.value.slice(0, displayLimit.value)
+})
+
+const hasMoreProducts = computed(() => {
+  return displayedProducts.value.length < filteredProducts.value.length
+})
+
+function loadMoreProducts() {
+  displayLimit.value += 12
+}
+
+watch([activeFilter, activeDepartment, searchQuery, selectedBrands, sortBy], () => {
+  displayLimit.value = 12
+})
+
 const activeFilterLabel = computed(() => filters.value.find(f => f.id === activeFilter.value)?.label ?? '')
 
 function goToDetail(product: { id: number; name: string }) {
+  if (import.meta.client) {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
   router.push({ name: 'tienda-producto-slug', params: { slug: generateProductSlug(product.id, product.name) } })
 }
 

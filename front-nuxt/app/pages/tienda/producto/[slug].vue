@@ -428,13 +428,19 @@ function scrollToImage(idx: number) {
   activeIdx.value = idx
 }
 
+onMounted(() => {
+  if (import.meta.client) {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+})
+
 watch(() => route.params.slug, () => {
   qty.value = 1
   activeIdx.value = 0
   selectedVariant.value = 0
   expandedAccordion.value = 'desc'
   if (carouselRef.value) carouselRef.value.scrollLeft = 0
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  if (import.meta.client) window.scrollTo({ top: 0, behavior: 'instant' })
 })
 
 // Refs para los carruseles
