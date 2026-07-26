@@ -77,8 +77,9 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-        // Preload hero image — mejora LCP crítico
-        { rel: 'preload', as: 'image', href: '/bg_vertical.webp', fetchpriority: 'high' },
+        // Preload hero image — mejora LCP crítico (mobile vs desktop)
+        { rel: 'preload', as: 'image', href: '/bg_vertical_mobile.webp', media: '(max-width: 640px)', fetchpriority: 'high' },
+        { rel: 'preload', as: 'image', href: '/bg_vertical.webp', media: '(min-width: 641px)', fetchpriority: 'high' },
         // Google Fonts: preconnect primero, luego preload para no bloquear render
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },

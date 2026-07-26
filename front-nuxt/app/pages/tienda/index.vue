@@ -82,6 +82,8 @@
           <div class="aspect-square overflow-hidden bg-white relative cursor-pointer flex items-center justify-center p-3" @click="goToDetail(product)">
             <img
               :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
+              :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
+              sizes="(max-width: 640px) 200px, 400px"
               :alt="product.name"
               class="w-full h-full object-contain transition-premium group-hover:scale-105"
               :class="{'grayscale opacity-50': product.stock <= 0}"
@@ -92,7 +94,7 @@
               decoding="async"
             />
             <div v-if="product.stock <= 0" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-              <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">{{ t('tienda.soldOut') }}</span>
+              <span class="bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">{{ t('tienda.soldOut') }}</span>
             </div>
             <div v-else-if="product.stock <= 3" class="absolute top-2 right-2 z-10">
               <span class="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-lg animate-pulse">{{ t('tienda.lastItems').replace('{n}', String(product.stock)) }}</span>

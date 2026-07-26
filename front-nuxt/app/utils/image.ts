@@ -38,3 +38,8 @@ export function optimizeImage(url: string | undefined, width = 0): string {
 
   return `${base}/upload/${params.join(',')}/${path}`
 }
+
+export function optimizeSrcSet(url: string | undefined, widths: number[] = [200, 400]): string {
+  if (!url || !url.includes('cloudinary.com')) return ''
+  return widths.map(w => `${optimizeImage(url, w)} ${w}w`).join(', ')
+}

@@ -4,6 +4,7 @@
     <!-- Background Image with Multi-layer Overlay -->
     <div class="absolute inset-0 z-0">
       <picture>
+        <source media="(max-width: 640px) and (orientation: portrait)" srcset="/bg_vertical_mobile.webp">
         <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
         <img
           src="/bg_vertical.webp"

@@ -23,6 +23,8 @@
         <div class="aspect-[3/4] w-full overflow-hidden">
           <img
             :src="optimizeImage(cut.image, 400)"
+            :srcset="optimizeSrcSet(cut.image, [250, 400])"
+            sizes="(max-width: 640px) 250px, 400px"
             :alt="cut.alt || cut.style"
             class="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-110"
             width="400"

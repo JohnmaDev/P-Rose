@@ -4,6 +4,7 @@
     <!-- ═══ HERO HEADER ═══ -->
     <div class="relative w-full min-h-[38vh] flex items-end justify-center overflow-hidden pt-16">
       <picture class="absolute inset-0 z-0">
+        <source media="(max-width: 640px) and (orientation: portrait)" srcset="/bg_vertical_mobile.webp">
         <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
         <img src="/bg_vertical.webp" alt="Barbería PersonalBarber" class="w-full h-full object-cover object-top brightness-[0.3]" fetchpriority="high" width="1920" height="1080" decoding="async" />
       </picture>

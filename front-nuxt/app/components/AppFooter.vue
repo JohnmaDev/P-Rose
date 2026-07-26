@@ -14,7 +14,7 @@
     </NuxtLink>
 
     <!-- Footer con NAP (Name + Address + Phone) + Email + Links Legales Wompi -->
-    <footer class="text-center text-[10px] sm:text-xs text-gray-500 py-8 tracking-widest uppercase w-full">
+    <footer class="text-center text-[10px] sm:text-xs text-gray-400 py-8 tracking-widest uppercase w-full">
       
       <!-- Datos contacto barbero — Schema NAP para SEO local de Google -->
       <address class="not-italic flex flex-col items-center gap-1.5 mb-4 text-gray-400 text-[11px] sm:text-xs">
@@ -27,7 +27,7 @@
           >
             📞 +57 304 584 0264
           </a>
-          <span class="opacity-30">·</span>
+          <span class="opacity-50">·</span>
           <a
             href="mailto:pb@personalbarber.vip"
             class="hover:text-neon-green transition duration-300 cursor-pointer text-gray-300 font-semibold"
@@ -44,7 +44,7 @@
           href="https://www.instagram.com/pipehp_/"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-500 hover:text-pink-500 transition duration-300 text-sm"
+          class="text-gray-400 hover:text-pink-500 transition duration-300 text-sm"
           aria-label="Instagram de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'instagram']" />
@@ -53,7 +53,7 @@
           href="https://www.tiktok.com/@pipehpbarber"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-500 hover:text-white transition duration-300 text-sm"
+          class="text-gray-400 hover:text-white transition duration-300 text-sm"
           aria-label="TikTok de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'tiktok']" />
@@ -62,7 +62,7 @@
           href="https://wa.me/573045840264"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-500 hover:text-neon-green transition duration-300 text-sm"
+          class="text-gray-400 hover:text-neon-green transition duration-300 text-sm"
           aria-label="WhatsApp de PersonalBarber"
         >
           <fa-icon :icon="['fab', 'whatsapp']" />
@@ -74,19 +74,19 @@
         <button @click="openModal('terminos')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
           📜 Términos y Condiciones
         </button>
-        <span class="opacity-30">·</span>
+        <span class="opacity-50">·</span>
         <button @click="openModal('privacidad')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
           🔒 Política de Privacidad
         </button>
-        <span class="opacity-30">·</span>
+        <span class="opacity-50">·</span>
         <button @click="openModal('envios')" class="hover:text-neon-green transition-colors duration-200 cursor-pointer">
           🚚 Garantías & Envíos
         </button>
       </nav>
 
       <!-- Créditos del desarrollador -->
-      <p class="flex flex-col sm:flex-row items-center justify-center gap-2 text-[10px] text-gray-500">
-        <span class="opacity-50">
+      <p class="flex flex-col sm:flex-row items-center justify-center gap-2 text-[10px] text-gray-400">
+        <span class="opacity-80">
           &lt;/&gt; 2026 — Built with ❤️ by
         </span>
         <a
@@ -98,8 +98,8 @@
         >
           JohnmaDev
         </a>
-        <span class="hidden sm:inline opacity-30">·</span>
-        <span class="opacity-50">{{ t('footer.rights') }}</span>
+        <span class="hidden sm:inline opacity-50">·</span>
+        <span class="opacity-80">{{ t('footer.rights') }}</span>
       </p>
     </footer>
 
