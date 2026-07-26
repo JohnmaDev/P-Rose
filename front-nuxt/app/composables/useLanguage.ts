@@ -20,13 +20,12 @@ export function useLanguage() {
     if (initialized || !import.meta.client) return
     initialized = true
     const stored = localStorage.getItem('pb-lang') as Lang | null
-    if (stored === 'es' || stored === 'en') {
-      lang.value = stored
-      return
+    // Evitar descalce de hidratación en SSR: solo actualizar si el usuario guardó 'en' explícitamente
+    if (stored === 'en') {
+      nextTick(() => {
+        lang.value = 'en'
+      })
     }
-    // Auto-detect: si el browser está en inglés, mostrar inglés
-    const browserLang = navigator.language.toLowerCase()
-    if (browserLang.startsWith('en')) lang.value = 'en'
   }
 
   // Función de traducción con soporte a dot notation: t('hero.line1')

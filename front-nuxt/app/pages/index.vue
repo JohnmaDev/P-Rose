@@ -4,6 +4,7 @@
     <!-- ─── Fondo fijo global — toda la web navega sobre él ─── -->
     <div class="fixed inset-0 z-0 pointer-events-none">
       <picture>
+        <source media="(max-width: 640px) and (orientation: portrait)" srcset="/bg_vertical_mobile.webp">
         <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
         <img
           src="/bg_vertical.webp"

@@ -77,6 +77,8 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        // Preconnect a Cloudinary — elimina ~300ms de latencia DNS/TLS en imágenes
+        { rel: 'preconnect', href: 'https://res.cloudinary.com' },
         // Preload hero image — mejora LCP crítico (mobile vs desktop)
         { rel: 'preload', as: 'image', href: '/bg_vertical_mobile.webp', media: '(max-width: 640px)', fetchpriority: 'high' },
         { rel: 'preload', as: 'image', href: '/bg_vertical.webp', media: '(min-width: 641px)', fetchpriority: 'high' },
