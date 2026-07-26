@@ -189,7 +189,11 @@
               :alt="product.name"
               class="w-full h-full object-contain transition-premium group-hover:scale-105"
               :class="{'grayscale opacity-50': product.stock <= 0}"
-              loading="lazy"
+              width="400"
+              height="400"
+              :loading="index < 2 ? 'eager' : 'lazy'"
+              :fetchpriority="index < 2 ? 'high' : 'auto'"
+              decoding="async"
             />
             <div v-if="product.stock <= 0" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
               <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">{{ t('tienda.soldOut') }}</span>

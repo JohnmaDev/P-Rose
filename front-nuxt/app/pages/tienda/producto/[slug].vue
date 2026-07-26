@@ -31,7 +31,7 @@
           <div class="relative w-full aspect-square sm:aspect-[4/4.5] bg-white rounded-3xl border border-white/10 overflow-hidden group shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
             <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex">
               <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center bg-white p-3 sm:p-5 flex items-center justify-center">
-                <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" width="800" height="900" :loading="idx === 0 ? 'eager' : 'lazy'" :fetchpriority="idx === 0 ? 'high' : 'auto'" decoding="async" />
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
             <button v-for="(img, idx) in product.images" :key="idx" @click="scrollToImage(idx)"
               class="relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 bg-white"
               :class="activeIdx === idx ? 'border-[#00FF00] shadow-[0_0_12px_rgba(0,255,0,0.25)]' : 'border-[#262626] opacity-50 hover:opacity-100 hover:border-gray-500'">
-              <img :src="optimizeImage(img, 150)" :alt="`Thumb ${idx + 1}`" class="w-full h-full object-contain p-1" />
+              <img :src="optimizeImage(img, 150)" :alt="`Thumb ${idx + 1}`" class="w-full h-full object-contain p-1" width="64" height="64" loading="lazy" decoding="async" />
             </button>
           </div>
         </div>
@@ -211,7 +211,7 @@
               <!-- Imagen -->
               <div class="w-full aspect-square bg-white overflow-hidden">
                 <img :src="optimizeImage(item.images?.[0] || item.image, 300)" :alt="item.name"
-                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" width="300" height="300" loading="lazy" decoding="async" />
               </div>
               <!-- Info -->
               <div class="p-3">
@@ -270,7 +270,7 @@
               <!-- Imagen -->
               <div class="w-full aspect-square bg-white overflow-hidden">
                 <img :src="optimizeImage(item.images?.[0] || item.image, 300)" :alt="item.name"
-                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                  class="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" width="300" height="300" loading="lazy" decoding="async" />
               </div>
               <!-- Info -->
               <div class="p-3">
@@ -303,7 +303,7 @@
       <div v-if="product && !isLoading" class="lg:hidden fixed bottom-0 left-0 w-full z-50 bg-[#161616]/95 backdrop-blur-xl border-t border-[#262626] p-4 pb-safe flex items-center justify-between gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
         <div class="flex items-center gap-3 flex-1 min-w-0">
           <div class="w-10 h-10 rounded-lg overflow-hidden bg-[#0D0D0D] border border-[#262626] shrink-0 hidden sm:block">
-            <img :src="optimizeImage(product.images?.[0] || product.image, 100)" class="w-full h-full object-cover" />
+            <img :src="optimizeImage(product.images?.[0] || product.image, 100)" :alt="product.name" class="w-full h-full object-cover" width="40" height="40" loading="lazy" decoding="async" />
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-[10px] text-[#A1A1AA] font-bold uppercase tracking-widest truncate">{{ product.name }}</p>

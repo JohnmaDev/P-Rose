@@ -13,24 +13,28 @@
 export function optimizeImage(url: string | undefined, width = 0): string {
   if (!url) return '/hero_barber.webp'
 
-  // Si no es Cloudinary, lo devolvemos tal cual
+  // Si no es URL de Cloudinary, retornar tal cual
   if (!url.includes('cloudinary.com')) {
     return url
   }
 
-  // Si ya tiene transformaciones, no duplicamos
-  if (url.includes('/f_auto') || url.includes('/q_auto')) {
-    return url
-  }
-
-  const transform = width > 0
-    ? `f_auto,q_auto,w_${width},c_limit`
-    : 'f_auto,q_auto'
-
   const parts = url.split('/upload/')
-  if (parts.length === 2) {
-    return `${parts[0]}/upload/${transform}/${parts[1]}`
+  if (parts.length !== 2) return url
+
+  const [base, rest] = parts
+
+  // Detectar si el primer segmento de rest contiene transformaciones existentes
+  let path = rest
+  const firstSegment = rest.split('/')[0]
+
+  if (firstSegment.includes(',') || firstSegment.includes('_') || (!firstSegment.startsWith('v') && !firstSegment.includes('.'))) {
+    path = rest.substring(firstSegment.length + 1)
   }
 
-  return url
+  const params = ['f_auto', 'q_auto']
+  if (width > 0) {
+    params.push(`w_${width}`, 'c_limit')
+  }
+
+  return `${base}/upload/${params.join(',')}/${path}`
 }

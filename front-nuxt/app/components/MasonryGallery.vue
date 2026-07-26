@@ -25,7 +25,10 @@
             :src="optimizeImage(cut.image, 400)"
             :alt="cut.alt || cut.style"
             class="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-110"
+            width="400"
+            height="533"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3 sm:p-4">

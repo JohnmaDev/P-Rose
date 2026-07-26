@@ -5,7 +5,7 @@
     <header class="w-full border-b border-white/8 bg-barber-black">
       <div class="max-w-5xl mx-auto px-6 py-5 flex flex-col items-center gap-3">
         <NuxtLink to="/">
-          <img src="/favicon.svg" alt="PersonalBarber" class="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
+          <img src="/favicon.svg" alt="PersonalBarber" class="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" width="56" height="56" decoding="async" />
         </NuxtLink>
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-xs font-semibold tracking-wide">
@@ -269,7 +269,7 @@
                 <div class="space-y-3 mb-5">
                   <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                      <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" />
+                      <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" width="40" height="40" loading="lazy" decoding="async" />
                     </div>
                     <div class="flex-1 min-w-0">
                       <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
@@ -527,7 +527,7 @@
             <!-- Modal de Contacto Global -->
             <div v-if="activePolicy === 'contacto'" class="policy-body flex flex-col items-center justify-center py-4 text-center">
               <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
-                <img src="/favicon.svg" alt="PersonalBarber" class="w-8 h-8 opacity-80" />
+                <img src="/favicon.svg" alt="PersonalBarber" class="w-8 h-8 opacity-80" width="32" height="32" loading="lazy" decoding="async" />
               </div>
               <h3 class="text-white font-black text-lg mb-2">¿Necesitas ayuda?</h3>
               <p class="text-gray-400 text-xs leading-relaxed max-w-sm mb-6">

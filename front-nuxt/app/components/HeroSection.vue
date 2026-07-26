@@ -10,6 +10,9 @@
           alt="Fondo de la barbería PersonalBarber"
           class="w-full h-full object-cover object-top filter brightness-40"
           fetchpriority="high"
+          width="1920"
+          height="1080"
+          decoding="async"
         />
       </picture>
       <!-- Deep vignette bottom fade into the rest of the page -->

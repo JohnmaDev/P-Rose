@@ -5,7 +5,7 @@
     <div class="relative w-full min-h-[38vh] flex items-end justify-center overflow-hidden pt-16">
       <picture class="absolute inset-0 z-0">
         <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
-        <img src="/bg_vertical.webp" alt="Barbería PersonalBarber" class="w-full h-full object-cover object-top brightness-[0.3]" fetchpriority="high" />
+        <img src="/bg_vertical.webp" alt="Barbería PersonalBarber" class="w-full h-full object-cover object-top brightness-[0.3]" fetchpriority="high" width="1920" height="1080" decoding="async" />
       </picture>
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-barber-black z-10"></div>
       <div class="relative z-20 text-center pb-10 px-4">

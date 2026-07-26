@@ -58,7 +58,7 @@
               <!-- Top badge -->
               <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-2">
-                  <img src="/PersonalBarber.svg" alt="PersonalBarber" class="w-8 h-8" />
+                  <img src="/PersonalBarber.svg" alt="PersonalBarber" class="w-8 h-8" width="32" height="32" loading="lazy" decoding="async" />
                   <span class="text-white text-sm font-black tracking-widest uppercase">PersonalBarber</span>
                 </div>
                 <span class="text-[10px] font-black tracking-widest text-neon-green uppercase bg-neon-green/10 border border-neon-green/20 px-3 py-1 rounded-full">Premium</span>

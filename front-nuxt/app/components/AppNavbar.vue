@@ -13,6 +13,9 @@
             src="/PersonalBarber.svg"
             alt="PersonalBarber"
             fetchpriority="high"
+            width="36"
+            height="36"
+            decoding="async"
             class="h-9 w-9 transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(57,255,20,0.6)]"
           />
         </NuxtLink>

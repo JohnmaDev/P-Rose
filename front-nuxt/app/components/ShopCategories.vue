@@ -56,6 +56,10 @@
               :src="optimizeImage(cat.cover, 400)"
               :alt="getCategoryLabel(cat)"
               class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-premium"
+              width="400"
+              height="288"
+              loading="lazy"
+              decoding="async"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
           </div>
