@@ -1,5 +1,22 @@
 <template>
-  <div class="bg-[#0D0D0D] min-h-screen text-white relative pt-16 font-sans">
+  <div class="min-h-screen text-white relative pt-16 font-sans">
+    <!-- Fondo fijo de piedra — consistencia con homepage -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+      <picture>
+        <source media="(max-width: 640px) and (orientation: portrait)" srcset="/bg_vertical_mobile.webp">
+        <source media="(orientation: landscape)" srcset="/bg_horizontal.webp">
+        <img
+          src="/bg_vertical.webp"
+          alt=""
+          aria-hidden="true"
+          class="w-full h-full object-cover object-top"
+          style="filter: brightness(0.2) saturate(0.7)"
+          loading="eager"
+        />
+      </picture>
+      <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
+    </div>
     <!-- Barra de carga dinámica -->
     <Transition name="fade">
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
@@ -7,12 +24,12 @@
       </div>
     </Transition>
 
-    <div v-if="isLoading && !product" class="flex flex-col items-center justify-center min-h-[70vh]">
+    <div v-if="isLoading && !product" class="relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00FF00] mb-4"></div>
       <p class="text-[#A1A1AA] font-medium tracking-widest text-xs uppercase">{{ t('tienda.loading') }}</p>
     </div>
 
-    <div v-else-if="product" class="max-w-6xl mx-auto px-4 md:px-8 py-8 pb-36 lg:pb-16 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
+    <div v-else-if="product" class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 py-8 pb-36 lg:pb-16 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': isLoading}">
       
       <!-- 1. BREADCRUMB (minimalista) -->
       <nav class="flex items-center gap-2 text-[10px] md:text-[11px] text-[#555] uppercase tracking-[0.18em] font-bold mb-10">
@@ -120,19 +137,19 @@
 
           <!-- WIDGET DE CONFIANZA Y LOGÍSTICA -->
           <div class="grid grid-cols-3 gap-3">
-            <div class="bg-[#161616] border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
+            <div class="bg-[#161616]/90 border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
               <div class="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center border border-[#262626] group-hover:border-[#00FF00] transition-colors">
                 <fa-icon :icon="['fas', 'shield-alt']" class="text-[#00FF00] text-xs" />
               </div>
               <span class="text-[9px] text-[#A1A1AA] uppercase tracking-wider font-bold leading-tight">Garantía<br>Real</span>
             </div>
-            <div class="bg-[#161616] border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
+            <div class="bg-[#161616]/90 border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
               <div class="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center border border-[#262626] group-hover:border-[#00FF00] transition-colors">
                 <fa-icon :icon="['fas', 'truck-fast']" class="text-[#00FF00] text-xs" />
               </div>
               <span class="text-[9px] text-[#A1A1AA] uppercase tracking-wider font-bold leading-tight">Despacho<br>Inmediato</span>
             </div>
-            <div class="bg-[#161616] border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
+            <div class="bg-[#161616]/90 border border-[#262626] rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-2 group hover:border-[#00FF00]/50 transition-colors">
               <div class="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center border border-[#262626] group-hover:border-[#00FF00] transition-colors">
                 <fa-icon :icon="['fas', 'credit-card']" class="text-[#00FF00] text-xs" />
               </div>
@@ -148,7 +165,7 @@
         <!-- Acordeones dinámicos (ancho completo) -->
         <div v-if="hasDescriptionContent || hasSpecsContent" class="space-y-4">
           <!-- Descripción & Beneficios -->
-          <div v-if="hasDescriptionContent" class="bg-[#161616] border border-[#262626] rounded-3xl overflow-hidden">
+          <div v-if="hasDescriptionContent" class="bg-[#161616]/90 border border-[#262626] rounded-3xl overflow-hidden">
             <button @click="expandedAccordion = expandedAccordion === 'desc' ? '' : 'desc'" class="w-full px-6 py-5 flex items-center justify-between hover:bg-white/5 transition-colors duration-300">
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Descripción & Beneficios</span>
               <fa-icon :icon="['fas', expandedAccordion === 'desc' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
@@ -165,7 +182,7 @@
           </div>
 
           <!-- Modo de Uso / Especificaciones -->
-          <div v-if="hasSpecsContent" class="bg-[#161616] border border-[#262626] rounded-3xl overflow-hidden">
+          <div v-if="hasSpecsContent" class="bg-[#161616]/90 border border-[#262626] rounded-3xl overflow-hidden">
             <button @click="expandedAccordion = expandedAccordion === 'specs' ? '' : 'specs'" class="w-full px-6 py-5 flex items-center justify-between hover:bg-white/5 transition-colors duration-300">
               <span class="font-oswald text-lg font-bold uppercase tracking-[0.08em] text-white">Modo de Uso / Especificaciones</span>
               <fa-icon :icon="['fas', expandedAccordion === 'specs' ? 'minus' : 'plus']" class="text-[#00FF00] text-sm" />
@@ -292,7 +309,7 @@
     </div>
 
     <!-- Producto no encontrado -->
-    <div v-else class="flex flex-col items-center justify-center min-h-[70vh] gap-4">
+    <div v-else class="relative z-10 flex flex-col items-center justify-center min-h-[70vh] gap-4">
       <fa-icon :icon="['fas', 'unlink']" class="text-5xl text-[#262626]" />
       <p class="text-[#A1A1AA] font-bold tracking-widest uppercase text-xs">{{ t('tienda.emptyTitle') }}</p>
       <NuxtLink to="/" class="text-[#00FF00] hover:text-white border border-[#00FF00] hover:bg-[#00FF00]/10 rounded-xl px-6 py-2 transition-all text-xs font-black uppercase tracking-widest mt-2">← Volver al Catálogo</NuxtLink>

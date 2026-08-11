@@ -81,25 +81,55 @@
     <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pt-8 pb-8">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
-      <!-- Switch de Departamento -->
-      <div class="flex justify-center mt-2 mb-8">
-        <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
-          <button @click="activeDepartment = 'men'; activeFilter = 'all'"
-            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
-            :class="activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-400 hover:text-white'">
-            <fa-icon :icon="['fas', 'cut']" /> <span class="hidden xs:inline">{{ t('tienda.men') }}</span><span class="xs:hidden">{{ t('tienda.menMobile') }}</span>
+      <!-- Selector de Universo -->
+      <div class="flex flex-col items-center gap-3 mt-2 mb-8">
+
+        <!-- Nivel 1: Tabs principales -->
+        <div class="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-800 gap-1">
+          <button 
+            @click="storeUniverse = 'grooming'; activeDepartment = 'all'; activeFilter = 'all'"
+            class="px-5 sm:px-6 py-2 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-widest transition-colors duration-200 flex items-center gap-2 shrink-0"
+            :class="storeUniverse === 'grooming' 
+              ? 'bg-neon-green text-black' 
+              : 'text-zinc-500 hover:text-white'"
+          >
+            <fa-icon :icon="['fas', 'cut']" />
+            <span class="hidden sm:inline">Barbería & Cuidado</span>
+            <span class="sm:hidden">Barbería</span>
           </button>
-          <button @click="activeDepartment = 'merch'; activeFilter = 'all'"
-            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
-            :class="activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-400 hover:text-white'">
-            <fa-icon :icon="['fas', 'tshirt']" /> <span class="hidden xs:inline">{{ t('tienda.merch') }}</span><span class="xs:hidden">{{ t('tienda.merchMobile') }}</span>
-          </button>
-          <button @click="activeDepartment = 'women'; activeFilter = 'all'"
-            class="px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2"
-            :class="activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-400 hover:text-white'">
-            <fa-icon :icon="['fas', 'spa']" /> <span class="hidden xs:inline">{{ t('tienda.women') }}</span><span class="xs:hidden">{{ t('tienda.womenMobile') }}</span>
+          <button 
+            @click="storeUniverse = 'boutique'; activeDepartment = 'merch'; activeFilter = 'all'"
+            class="px-5 sm:px-6 py-2 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-widest transition-colors duration-200 flex items-center gap-2 shrink-0"
+            :class="storeUniverse === 'boutique' 
+              ? 'bg-cyan-400 text-black' 
+              : 'text-zinc-500 hover:text-white'"
+          >
+            <fa-icon :icon="['fas', 'tshirt']" />
+            <span>Ropa & Merch</span>
           </button>
         </div>
+
+        <!-- Nivel 2: Sub-filtros -->
+        <div v-if="storeUniverse === 'grooming'" class="inline-flex bg-zinc-900/80 rounded-full p-1 border border-zinc-800">
+          <button @click="activeDepartment = 'all'; activeFilter = 'all'"
+            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
+            :class="activeDepartment === 'all' ? 'bg-neon-green text-black' : 'text-zinc-500 hover:text-white'">
+            Todos
+          </button>
+          <button @click="activeDepartment = 'men'; activeFilter = 'all'"
+            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
+            :class="activeDepartment === 'men' ? 'bg-neon-green text-black' : 'text-zinc-500 hover:text-white'">
+            Él
+          </button>
+          <button @click="activeDepartment = 'women'; activeFilter = 'all'"
+            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
+            :class="activeDepartment === 'women' ? 'bg-pink-500 text-white' : 'text-zinc-500 hover:text-white'">
+            Ella
+          </button>
+        </div>
+        <p v-else class="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-widest font-bold">
+          Prendas y accesorios exclusivos · Hombre & Mujer
+        </p>
       </div>
 
       <!-- Buscador Rápido y Botón de Filtros Avanzados -->
@@ -349,6 +379,7 @@ useHead({
 import { useDepartment } from '~/composables/useDepartment'
 
 const { activeDepartment, setDepartment } = useDepartment()
+const storeUniverse = ref<'grooming' | 'boutique'>('grooming')
 const activeFilter = ref('all')
 const searchQuery = ref('')
 const selectedBrands = ref<string[]>([])
@@ -371,12 +402,24 @@ function getCategoryLabel(catId: string) {
   return translated === key ? label : translated
 }
 
+// Helper: identifica categorías de ropa/merch/boutique (excluye servicios como micropigmentación)
+function isMerchCategory(c: { department: string; style?: string; id: string }) {
+  if (c.style === 'premium') return true
+  if (c.id === 'boutique') return true
+  // Solo prendas de vestir con department 'unisex' o 'merch'
+  const clothingIds = ['camisetas', 'gorras', 'shorts', 'accesorios-merch', 'hoodies', 'pantalones']
+  if (c.department === 'merch') return true
+  if (c.department === 'unisex' && clothingIds.includes(c.id)) return true
+  return false
+}
+
 const filters = computed(() => [
   { id: 'all', label: t('tienda.all') },
   ...categories.value
     .filter(c => {
       if (c.comingSoon) return false
-      if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+      if (activeDepartment.value === 'all') return true
+      if (activeDepartment.value === 'merch') return isMerchCategory(c)
       return c.department === activeDepartment.value
     })
     .map(c => ({ id: c.id, label: getCategoryLabel(c.id) }))
@@ -388,17 +431,18 @@ function syncFilter() {
   const cat = route.query.cat as string
   const dept = route.query.dept as string
   syncingFromRoute = true
-  if (dept && ['men', 'women', 'merch'].includes(dept)) {
-    activeDepartment.value = dept as 'men' | 'merch' | 'women'
+  if (dept && ['all', 'men', 'women', 'merch'].includes(dept)) {
+    activeDepartment.value = dept as 'all' | 'men' | 'merch' | 'women'
   }
   const categoryObj = categories.value.find(c => c.id === cat)
   if (categoryObj) {
-    if (categoryObj.department === 'unisex' || categoryObj.style === 'premium') {
+    if (categoryObj.department === 'unisex' || categoryObj.style === 'premium' || categoryObj.department === 'merch' || categoryObj.id === 'boutique') {
       activeDepartment.value = 'merch'
     } else if (categoryObj.department && ['men', 'women'].includes(categoryObj.department)) {
       activeDepartment.value = categoryObj.department as 'men' | 'women'
     }
   }
+  storeUniverse.value = activeDepartment.value === 'merch' ? 'boutique' : 'grooming'
   activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
   nextTick(() => { syncingFromRoute = false })
 }
@@ -429,7 +473,8 @@ watch(categories, syncFilter)
 
 watch(() => route.query.cat, syncFilter)
 watch(() => route.query.dept, syncFilter)
-watch(activeDepartment, () => {
+watch(activeDepartment, (newDept) => {
+  storeUniverse.value = newDept === 'merch' ? 'boutique' : 'grooming'
   if (!syncingFromRoute) activeFilter.value = 'all'
 })
 watch(activeFilter, (newFilter) => {
@@ -440,11 +485,12 @@ watch(activeFilter, (newFilter) => {
 const availableBrands = computed(() => {
   const activeDeptCats = categories.value
     .filter(c => {
-      if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+      if (activeDepartment.value === 'all') return true
+      if (activeDepartment.value === 'merch') return isMerchCategory(c)
       return c.department === activeDepartment.value
     })
     .map(c => c.id)
-  const list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
+  const list = products.value.filter(p => activeDepartment.value === 'all' || (p.category && activeDeptCats.includes(p.category)))
   const brands = list.map(p => p.brand ? p.brand.trim() : '').filter(Boolean)
   return [...new Set(brands)].sort()
 })
@@ -468,7 +514,8 @@ function handleFilterUpdate(payload: { searchQuery: string; selectedBrands: stri
 const filteredProducts = computed(() => {
   const activeDeptCats = categories.value
     .filter(c => {
-      if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+      if (activeDepartment.value === 'all') return true
+      if (activeDepartment.value === 'merch') return isMerchCategory(c)
       if (activeDepartment.value === 'women') return c.department === 'women'
       return !c.department || c.department === 'men' || c.department === 'unisex'
     })
@@ -476,6 +523,7 @@ const filteredProducts = computed(() => {
 
   let list = products.value.filter(p => {
     if (p.is_active === false) return false
+    if (activeDepartment.value === 'all') return true
     if (!p.category) return true
     if (categories.value.length === 0) return true
     return activeDeptCats.includes(p.category)
