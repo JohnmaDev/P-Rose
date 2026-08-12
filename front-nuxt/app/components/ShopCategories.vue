@@ -83,7 +83,7 @@
           ✨ Tu mundo de belleza · Maquillaje, skincare & más
         </p>
         <p v-else-if="activeDepartment === 'merch'" class="text-[10px] sm:text-xs text-cyan-600/80 uppercase tracking-widest font-bold">
-          Prendas y accesorios · Hombre & Mujer
+          🔥 Viste con actitud · Colección exclusiva hombre & mujer
         </p>
         <p v-else-if="activeDepartment === 'all'" class="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-widest font-bold">
           Catálogo completo · Sin filtros · Todo en un solo lugar
