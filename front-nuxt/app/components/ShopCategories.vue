@@ -70,7 +70,7 @@
             @click="setDepartment('all')"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="activeDepartment === 'all'
-              ? 'bg-white/10 text-white border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.08)]'
+              ? 'bg-neon-green/15 text-neon-green border border-neon-green/40 shadow-[0_0_10px_rgba(57,255,20,0.12)]'
               : 'text-zinc-600 hover:text-zinc-300'"
           >
             <fa-icon :icon="['fas', 'border-all']" class="text-[8px]" />
