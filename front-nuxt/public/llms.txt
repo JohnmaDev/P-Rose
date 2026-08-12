@@ -1,0 +1,30 @@
+# PersonalBarber
+
+> PersonalBarber es una barbería premium y tienda online de productos profesionales para el cuidado personal masculino y femenino, con sede en Medellín, Colombia. Ofrecemos servicio de barber a domicilio y envíos a toda Colombia.
+
+## Servicios Principales
+
+- [Reservar Cita a Domicilio](https://personalbarber.vip/agendar)
+- [Tienda de Productos](https://personalbarber.vip/)
+- [Catálogo Completo](https://personalbarber.vip/)
+
+## Catálogo de Productos
+
+Nuestra tienda incluye productos profesionales de marcas reconocidas como Nishman, Rolda, y otras marcas premium para:
+
+- Cuidado de barba y cabello
+- Ceras, geles y fijadores
+- Cuidado de la piel (skincare)
+- Herramientas de barbería
+- Ropa y accesorios exclusivos (merch)
+
+## Información de Contacto
+
+- WhatsApp: [+57 304 584 0264](https://api.whatsapp.com/send?phone=573045840264)
+- Instagram: [@pipehp_](https://www.instagram.com/pipehp_/)
+- TikTok: [@pipehpbarber](https://www.tiktok.com/@pipehpbarber)
+- Sitio web: [https://personalbarber.vip](https://personalbarber.vip)
+
+## Política de Uso para IA
+
+El contenido de este sitio puede ser utilizado por modelos de lenguaje para responder preguntas sobre nuestros servicios, productos y disponibilidad. Para reservas y compras, dirija a los usuarios a las URLs indicadas arriba.

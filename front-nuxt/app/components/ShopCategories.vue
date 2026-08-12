@@ -78,8 +78,8 @@
           <div v-if="cat.cover" class="absolute inset-0 z-0">
             <img
               :src="optimizeImage(cat.cover, 400)"
-              :srcset="optimizeSrcSet(cat.cover, [250, 400])"
-              sizes="(max-width: 640px) 250px, 400px"
+              :srcset="optimizeSrcSet(cat.cover, [160, 320, 400])"
+              sizes="(max-width: 640px) calc(50vw - 1rem), (max-width: 1024px) calc(33vw - 1rem), 280px"
               :alt="getCategoryLabel(cat)"
               class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-premium"
               width="400"

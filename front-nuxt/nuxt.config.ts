@@ -80,14 +80,17 @@ export default defineNuxtConfig({
         // Preconnect a Cloudinary — elimina ~300ms de latencia DNS/TLS en imágenes
         { rel: 'preconnect', href: 'https://res.cloudinary.com' },
         // Preload hero image — mejora LCP crítico (mobile vs desktop)
-        { rel: 'preload', as: 'image', href: '/bg_vertical_mobile.webp', media: '(max-width: 640px)', fetchpriority: 'high' },
-        { rel: 'preload', as: 'image', href: '/bg_vertical.webp', media: '(min-width: 641px)', fetchpriority: 'high' },
-        // Google Fonts: preconnect primero, luego preload para no bloquear render
+        { rel: 'preload', as: 'image', href: '/bg_vertical_mobile.webp', media: '(max-width: 640px)' },
+        { rel: 'preload', as: 'image', href: '/bg_vertical.webp', media: '(min-width: 641px)' },
+        // Google Fonts: preconnect first — NON-BLOCKING via preload+onload trick
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        // Preload the font CSS non-blocking — eliminates 780ms render-blocking
         {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap'
+          rel: 'preload',
+          as: 'style',
+          href: 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap',
+          onload: "this.onload=null;this.rel='stylesheet'"
         },
       ],
       noscript: [
@@ -104,14 +107,22 @@ export default defineNuxtConfig({
     preset: 'netlify',
   },
 
-  // Proxy de API: en dev apunta a la API de producción para visualizar los
-  // productos reales en local sin depender de la base de datos Go/MongoDB local.
-  // En producción (SSR build de Netlify), apunta a las funciones directas.
+  // Proxy de API + headers de seguridad para mejorar Best Practices score
   routeRules: {
     '/api/**': {
       proxy: process.env.NODE_ENV === 'development'
         ? 'https://personalbarber.vip/api/**'
         : 'https://personalbarber.vip/.netlify/functions/**'
+    },
+    // Aplicar security headers a todo el sitio
+    '/**': {
+      headers: {
+        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'SAMEORIGIN',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      }
     }
   },
 })

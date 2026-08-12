@@ -82,8 +82,8 @@
           <div class="aspect-square overflow-hidden bg-white relative cursor-pointer flex items-center justify-center p-3" @click="goToDetail(product)">
             <img
               :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
-              :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
-              sizes="(max-width: 640px) 200px, 400px"
+              :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [160, 320, 400])"
+              sizes="(max-width: 640px) calc(50vw - 1.25rem), (max-width: 1024px) calc(33vw - 1.5rem), 220px"
               :alt="product.name"
               class="w-full h-full object-contain transition-premium group-hover:scale-105"
               :class="{'grayscale opacity-50': product.stock <= 0}"

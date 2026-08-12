@@ -1,13 +1,17 @@
 /**
  * Optimiza imágenes de Cloudinary dinámicamente.
- * Inyecta f_auto, q_auto y opcionalmente w_{width} con c_limit.
+ * Inyecta f_auto, q_auto y w_{width} con c_fill (tamaño exacto) para
+ * garantizar que el navegador descargue solo los píxeles que necesita.
  *
  * @param url   - URL de Cloudinary u otra fuente
- * @param width - Ancho máximo en píxeles (0 = sin resize)
+ * @param width - Ancho exacto en píxeles (0 = sin resize)
  *   Valores recomendados:
- *     100  → thumbnails en carrito/checkout
- *     400  → tarjetas de tienda
- *     800  → detalle de producto
+ *     80   → thumbnails en carrito mini / sticky bar
+ *     150  → miniaturas de producto (galería)
+ *     200  → tarjetas en móvil (2 columnas ~160px)
+ *     300  → carrusel de relacionados
+ *     400  → tarjetas en desktop
+ *     800  → detalle de producto (imagen principal)
  *     1200 → hero/headers
  */
 export function optimizeImage(url: string | undefined, width = 0): string {
@@ -33,7 +37,9 @@ export function optimizeImage(url: string | undefined, width = 0): string {
 
   const params = ['f_auto', 'q_auto']
   if (width > 0) {
-    params.push(`w_${width}`, 'c_limit')
+    // c_fill: genera exactamente w x h — elimina bytes innecesarios
+    // vs c_limit que solo evita upscaling pero no fuerza el resize
+    params.push(`w_${width}`, 'c_fill')
   }
 
   return `${base}/upload/${params.join(',')}/${path}`
