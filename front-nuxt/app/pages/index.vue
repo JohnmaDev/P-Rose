@@ -43,26 +43,44 @@
         <!-- Badge live — color dinámico -->
         <div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full backdrop-blur-sm dept-badge transition-all duration-500">
           <span class="w-1.5 h-1.5 rounded-full animate-pulse dept-bg" style="box-shadow: 0 0 6px var(--dept-color)"></span>
-          <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">Medellín · Premium Store</span>
+          <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">
+            <template v-if="activeDepartment === 'women'">{{ t('store.heroBadgeWomen') }}</template>
+            <template v-else>Medellín · Premium Store</template>
+          </span>
         </div>
 
         <!-- Título masivo -->
         <div class="flex flex-col gap-0">
           <div class="w-12 h-[3px] dept-bg rounded-full mb-3 transition-all duration-500"></div>
-          <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
-            <span
-              class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
-              style="filter: drop-shadow(0 0 20px var(--dept-glow))"
-            >{{ t('store.heroTitle1') }}</span>
-            <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
-              {{ t('store.heroTitle2') }}
-            </span>
-          </h1>
+          <!-- Hero femenino: título diferente y aura distinta -->
+          <template v-if="activeDepartment === 'women'">
+            <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
+              <span
+                class="dept-text block text-[2.4rem] xs:text-[2.9rem] sm:text-[4.5rem] lg:text-[6rem] xl:text-[7.5rem] transition-all duration-500"
+                style="filter: drop-shadow(0 0 24px var(--dept-glow))"
+              >{{ t('store.heroTitleWomen1') }}</span>
+              <span class="text-white block text-[2rem] xs:text-[2.4rem] sm:text-[3.5rem] lg:text-[5rem] xl:text-[6rem] leading-none pt-1 sm:pt-3">
+                {{ t('store.heroTitleWomen2') }}
+              </span>
+            </h1>
+          </template>
+          <template v-else>
+            <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
+              <span
+                class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+                style="filter: drop-shadow(0 0 20px var(--dept-glow))"
+              >{{ t('store.heroTitle1') }}</span>
+              <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
+                {{ t('store.heroTitle2') }}
+              </span>
+            </h1>
+          </template>
         </div>
 
         <!-- Subtítulo -->
         <p class="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed">
-          {{ t('store.heroSub') }}
+          <template v-if="activeDepartment === 'women'">{{ t('store.heroSubWomen') }}</template>
+          <template v-else>{{ t('store.heroSub') }}</template>
         </p>
 
         <!-- Trust badges -->
@@ -81,54 +99,78 @@
     <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pt-8 pb-8">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
-      <!-- Selector de Universo -->
-      <div class="flex flex-col items-center gap-3 mt-2 mb-8">
+      <!-- Selector de Universo — 2 niveles: protagonistas arriba, complementarios abajo -->
+      <div class="flex flex-col items-center gap-2 mt-2 mb-8">
 
-        <!-- Nivel 1: Tabs principales -->
-        <div class="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-800 gap-1">
-          <button 
-            @click="storeUniverse = 'grooming'; activeDepartment = 'all'; activeFilter = 'all'"
-            class="px-5 sm:px-6 py-2 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-widest transition-colors duration-200 flex items-center gap-2 shrink-0"
-            :class="storeUniverse === 'grooming' 
-              ? 'bg-neon-green text-black' 
+        <!-- Fila 1: Los protagonistas (Él y Ella) -->
+        <div class="inline-flex rounded-xl bg-zinc-900/90 p-1 border border-zinc-800 gap-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+          <button
+            @click="storeUniverse = 'grooming'; activeDepartment = 'men'; activeFilter = 'all'"
+            class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
+            :class="storeUniverse === 'grooming'
+              ? 'bg-neon-green text-black shadow-[0_0_14px_rgba(57,255,20,0.25)]'
               : 'text-zinc-500 hover:text-white'"
           >
             <fa-icon :icon="['fas', 'cut']" />
-            <span class="hidden sm:inline">Barbería & Cuidado</span>
-            <span class="sm:hidden">Barbería</span>
+            <span class="hidden sm:inline">Barbería</span>
+            <span class="sm:hidden">Él</span>
           </button>
-          <button 
-            @click="storeUniverse = 'boutique'; activeDepartment = 'merch'; activeFilter = 'all'"
-            class="px-5 sm:px-6 py-2 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-widest transition-colors duration-200 flex items-center gap-2 shrink-0"
-            :class="storeUniverse === 'boutique' 
-              ? 'bg-cyan-400 text-black' 
+          <button
+            @click="storeUniverse = 'beauty'; activeDepartment = 'women'; activeFilter = 'all'"
+            class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
+            :class="storeUniverse === 'beauty'
+              ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-[0_0_14px_rgba(236,72,153,0.35)]'
               : 'text-zinc-500 hover:text-white'"
           >
-            <fa-icon :icon="['fas', 'tshirt']" />
-            <span>Ropa & Merch</span>
+            <fa-icon :icon="['fas', 'spa']" />
+            <span class="hidden sm:inline">Beauty</span>
+            <span class="sm:hidden">Ella</span>
           </button>
         </div>
 
-        <!-- Nivel 2: Sub-filtros -->
-        <div v-if="storeUniverse === 'grooming'" class="inline-flex bg-zinc-900/80 rounded-full p-1 border border-zinc-800">
-          <button @click="activeDepartment = 'all'; activeFilter = 'all'"
-            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
-            :class="activeDepartment === 'all' ? 'bg-neon-green text-black' : 'text-zinc-500 hover:text-white'">
-            Todos
+        <!-- Divisor visual sutil -->
+        <div class="flex items-center gap-3 text-zinc-700">
+          <span class="h-px w-12 bg-zinc-800"></span>
+          <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-zinc-600">también</span>
+          <span class="h-px w-12 bg-zinc-800"></span>
+        </div>
+
+        <!-- Fila 2: Complementarios (Ropa y Ver Todo) — más pequeños -->
+        <div class="inline-flex rounded-lg bg-zinc-900/60 p-0.5 border border-zinc-800/60 gap-0.5">
+          <button
+            @click="storeUniverse = 'boutique'; activeDepartment = 'merch'; activeFilter = 'all'"
+            class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
+            :class="storeUniverse === 'boutique'
+              ? 'bg-cyan-400/20 text-cyan-400 border border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.15)]'
+              : 'text-zinc-600 hover:text-zinc-300'"
+          >
+            <fa-icon :icon="['fas', 'tshirt']" class="text-[8px]" />
+            <span>Ropa & Merch</span>
           </button>
-          <button @click="activeDepartment = 'men'; activeFilter = 'all'"
-            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
-            :class="activeDepartment === 'men' ? 'bg-neon-green text-black' : 'text-zinc-500 hover:text-white'">
-            Él
-          </button>
-          <button @click="activeDepartment = 'women'; activeFilter = 'all'"
-            class="px-4 py-1.5 rounded-full font-bold tracking-widest text-[10px] uppercase transition-colors duration-200 flex items-center gap-1.5"
-            :class="activeDepartment === 'women' ? 'bg-pink-500 text-white' : 'text-zinc-500 hover:text-white'">
-            Ella
+          <button
+            @click="storeUniverse = 'all'; activeDepartment = 'all'; activeFilter = 'all'"
+            class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
+            :class="storeUniverse === 'all'
+              ? 'bg-white/10 text-white border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.08)]'
+              : 'text-zinc-600 hover:text-zinc-300'"
+          >
+            <fa-icon :icon="['fas', 'border-all']" class="text-[8px]" />
+            <span>Ver Todo</span>
           </button>
         </div>
+
+        <!-- Subtexto contextual -->
+        <p v-if="storeUniverse === 'beauty'" class="text-[10px] sm:text-xs font-bold tracking-widest uppercase" style="color: #ec4899">
+          ✨ Tu mundo de belleza · Maquillaje, skincare & más
+        </p>
+        <p v-else-if="storeUniverse === 'boutique'" class="text-[10px] sm:text-xs text-cyan-600/80 uppercase tracking-widest font-bold">
+          Prendas y accesorios · Hombre & Mujer
+        </p>
+        <p v-else-if="storeUniverse === 'all'" class="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-widest font-bold">
+          Catálogo completo · Sin filtros · Todo en un solo lugar
+        </p>
         <p v-else class="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-widest font-bold">
-          Prendas y accesorios exclusivos · Hombre & Mujer
+          Productos de barbería & cuidado masculino
         </p>
       </div>
 
@@ -379,7 +421,7 @@ useHead({
 import { useDepartment } from '~/composables/useDepartment'
 
 const { activeDepartment, setDepartment } = useDepartment()
-const storeUniverse = ref<'grooming' | 'boutique'>('grooming')
+const storeUniverse = ref<'grooming' | 'beauty' | 'boutique' | 'all'>('grooming')
 const activeFilter = ref('all')
 const searchQuery = ref('')
 const selectedBrands = ref<string[]>([])
@@ -442,7 +484,7 @@ function syncFilter() {
       activeDepartment.value = categoryObj.department as 'men' | 'women'
     }
   }
-  storeUniverse.value = activeDepartment.value === 'merch' ? 'boutique' : 'grooming'
+  storeUniverse.value = activeDepartment.value === 'merch' ? 'boutique' : (activeDepartment.value === 'women' ? 'beauty' : activeDepartment.value === 'all' ? 'all' : 'grooming')
   activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
   nextTick(() => { syncingFromRoute = false })
 }
@@ -474,7 +516,7 @@ watch(categories, syncFilter)
 watch(() => route.query.cat, syncFilter)
 watch(() => route.query.dept, syncFilter)
 watch(activeDepartment, (newDept) => {
-  storeUniverse.value = newDept === 'merch' ? 'boutique' : 'grooming'
+  storeUniverse.value = newDept === 'merch' ? 'boutique' : (newDept === 'women' ? 'beauty' : newDept === 'all' ? 'all' : 'grooming')
   if (!syncingFromRoute) activeFilter.value = 'all'
 })
 watch(activeFilter, (newFilter) => {
