@@ -45,6 +45,7 @@
           <span class="w-1.5 h-1.5 rounded-full animate-pulse dept-bg" style="box-shadow: 0 0 6px var(--dept-color)"></span>
           <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">
             <template v-if="activeDepartment === 'women'">{{ t('store.heroBadgeWomen') }}</template>
+            <template v-else-if="activeDepartment === 'merch'">{{ t('store.heroBadgeMerch') }}</template>
             <template v-else>Medellín · Premium Store</template>
           </span>
         </div>
@@ -52,8 +53,20 @@
         <!-- Título masivo -->
         <div class="flex flex-col gap-0">
           <div class="w-12 h-[3px] dept-bg rounded-full mb-3 transition-all duration-500"></div>
-          <!-- Hero femenino: título diferente y aura distinta -->
-          <template v-if="activeDepartment === 'women'">
+          <!-- Hero Ropa & Merch -->
+          <template v-if="activeDepartment === 'merch'">
+            <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
+              <span
+                class="dept-text block text-[2.4rem] xs:text-[2.9rem] sm:text-[4.5rem] lg:text-[6rem] xl:text-[7.5rem] transition-all duration-500"
+                style="filter: drop-shadow(0 0 24px var(--dept-glow))"
+              >{{ t('store.heroTitleMerch1') }}</span>
+              <span class="text-white block text-[2rem] xs:text-[2.4rem] sm:text-[3.5rem] lg:text-[5rem] xl:text-[6rem] leading-none pt-1 sm:pt-3">
+                {{ t('store.heroTitleMerch2') }}
+              </span>
+            </h1>
+          </template>
+          <!-- Hero femenino -->
+          <template v-else-if="activeDepartment === 'women'">
             <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
               <span
                 class="dept-text block text-[2.4rem] xs:text-[2.9rem] sm:text-[4.5rem] lg:text-[6rem] xl:text-[7.5rem] transition-all duration-500"
@@ -79,7 +92,8 @@
 
         <!-- Subtítulo -->
         <p class="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed">
-          <template v-if="activeDepartment === 'women'">{{ t('store.heroSubWomen') }}</template>
+          <template v-if="activeDepartment === 'merch'">{{ t('store.heroSubMerch') }}</template>
+          <template v-else-if="activeDepartment === 'women'">{{ t('store.heroSubWomen') }}</template>
           <template v-else>{{ t('store.heroSub') }}</template>
         </p>
 
