@@ -29,11 +29,11 @@
           </a>
           <span class="opacity-50">·</span>
           <a
-            href="mailto:pb@personalbarber.vip"
+            href="mailto:ayuda@personalbarber.vip"
             class="hover:text-neon-green transition duration-300 cursor-pointer text-gray-300 font-semibold"
             aria-label="Enviar correo a PersonalBarber"
           >
-            ✉️ pb@personalbarber.vip
+            ✉️ ayuda@personalbarber.vip
           </a>
         </div>
       </address>
@@ -136,7 +136,7 @@
                   <p>Nos hacemos 100% responsables por la entrega de tu pedido. Si tu paquete sufre daños o pérdida durante el transporte, gestionaremos el reenvío de tus productos para que tu dinero siempre esté protegido.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">4. Atención al Cliente</h4>
-                  <p>Para cualquier solicitud, estamos disponibles en WhatsApp (+57 304 584 0264) y correo electrónico (pb@personalbarber.vip).</p>
+                  <p>Para cualquier solicitud, estamos disponibles en WhatsApp (+57 304 584 0264) y correo electrónico (ayuda@personalbarber.vip).</p>
                 </template>
 
                 <!-- Privacidad -->
@@ -150,7 +150,7 @@
                   <p>No vendemos, alquilamos ni compartimos tus datos personales con terceros para fines publicitarios.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">3. Tus Derechos</h4>
-                  <p>Puedes solicitar en cualquier momento la actualización o eliminación de tus datos escribiéndonos a <strong>pb@personalbarber.vip</strong>.</p>
+                  <p>Puedes solicitar en cualquier momento la actualización o eliminación de tus datos escribiéndonos a <strong>ayuda@personalbarber.vip</strong>.</p>
                 </template>
 
                 <!-- Envíos -->

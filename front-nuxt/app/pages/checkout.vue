@@ -460,11 +460,11 @@
                       <span class="text-[10px] opacity-80">+57 304 584 0264</span>
                     </div>
                   </a>
-                  <a href="mailto:pb@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
+                  <a href="mailto:ayuda@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
                     <fa-icon :icon="['fas', 'envelope']" class="text-lg" />
                     <div class="flex flex-col">
                       <span class="text-xs font-bold uppercase tracking-wider">Correo Electrónico</span>
-                      <span class="text-[10px] opacity-80">pb@personalbarber.vip</span>
+                      <span class="text-[10px] opacity-80">ayuda@personalbarber.vip</span>
                     </div>
                   </a>
                 </div>
@@ -513,11 +513,11 @@
                       <span class="text-[10px] opacity-80">+57 304 584 0264</span>
                     </div>
                   </a>
-                  <a href="mailto:pb@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
+                  <a href="mailto:ayuda@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
                     <fa-icon :icon="['fas', 'envelope']" class="text-lg" />
                     <div class="flex flex-col">
                       <span class="text-xs font-bold uppercase tracking-wider">Correo Electrónico</span>
-                      <span class="text-[10px] opacity-80">pb@personalbarber.vip</span>
+                      <span class="text-[10px] opacity-80">ayuda@personalbarber.vip</span>
                     </div>
                   </a>
                 </div>
@@ -539,9 +539,9 @@
                   <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
                   Escribir por WhatsApp
                 </a>
-                <a href="mailto:pb@personalbarber.vip" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-all text-white font-bold text-sm border border-white/10">
+                <a href="mailto:ayuda@personalbarber.vip" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-all text-white font-bold text-sm border border-white/10">
                   <fa-icon :icon="['fas', 'envelope']" class="text-lg text-neon-green" />
-                  pb@personalbarber.vip
+                  ayuda@personalbarber.vip
                 </a>
               </div>
               
