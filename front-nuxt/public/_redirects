@@ -2,7 +2,7 @@
 /api/* /.netlify/functions/:splat 200
 
 # Redirección WhatsApp (para correos de Resend — evita filtros de spam)
-/wa https://wa.me/573012144773 302
+/wa https://wa.me/573337518070 302
 
 # SPA catch-all — Nitro 200.html maneja páginas dinámicas
 /* /200.html 200

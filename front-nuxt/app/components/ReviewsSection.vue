@@ -66,7 +66,7 @@
       <!-- CTA below reviews -->
       <div class="text-center mt-14 animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000">
         <a
-          href="https://api.whatsapp.com/send?phone=573045840264"
+          href="https://api.whatsapp.com/send?phone=573337518070"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-3 px-10 py-4 border-2 border-[#25D366]/40 hover:border-[#25D366] text-white hover:text-[#25D366] font-black italic tracking-widest uppercase text-sm transition-all duration-300 rounded-2xl hover:bg-[#25D366]/5 hover:shadow-[0_0_30px_rgba(37,211,102,0.2)]"

@@ -413,7 +413,7 @@ useHead({
       name: 'PersonalBarber',
       description: 'Tienda online de productos de barbería premium y servicio de barbero a domicilio en Medellín.',
       url: 'https://personalbarber.vip',
-      telephone: '+573045840264',
+      telephone: '+573337518070',
       image: 'https://personalbarber.vip/og-image.webp',
       priceRange: '$$',
       currenciesAccepted: 'COP',

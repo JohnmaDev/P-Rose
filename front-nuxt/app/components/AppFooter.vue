@@ -21,11 +21,11 @@
         <span>📍 La 4 Sur · Medellín, Antioquia, Colombia</span>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <a
-            href="tel:+573045840264"
+            href="tel:+573337518070"
             class="hover:text-neon-green transition duration-300 cursor-pointer"
             aria-label="Llamar a PersonalBarber"
           >
-            📞 +57 304 584 0264
+            📞 +57 333 751 8070
           </a>
           <span class="opacity-50">·</span>
           <a
@@ -59,7 +59,7 @@
           <fa-icon :icon="['fab', 'tiktok']" />
         </a>
         <a
-          href="https://wa.me/573045840264"
+          href="https://wa.me/573337518070"
           target="_blank"
           rel="noopener noreferrer"
           class="text-gray-400 hover:text-neon-green transition duration-300 text-sm"
@@ -136,7 +136,7 @@
                   <p>Nos hacemos 100% responsables por la entrega de tu pedido. Si tu paquete sufre daños o pérdida durante el transporte, gestionaremos el reenvío de tus productos para que tu dinero siempre esté protegido.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">4. Atención al Cliente</h4>
-                  <p>Para cualquier solicitud, estamos disponibles en WhatsApp (+57 304 584 0264) y correo electrónico (ayuda@personalbarber.vip).</p>
+                  <p>Para cualquier solicitud, estamos disponibles en WhatsApp (+57 333 751 8070) y correo electrónico (ayuda@personalbarber.vip).</p>
                 </template>
 
                 <!-- Privacidad -->

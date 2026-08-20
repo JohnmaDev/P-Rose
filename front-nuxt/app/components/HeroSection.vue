@@ -151,7 +151,7 @@ import { useLanguage } from '~/composables/useLanguage'
 const { t } = useLanguage()
 
 const socials = [
-  { name: 'WhatsApp', icon: ['fab', 'whatsapp'], link: 'https://api.whatsapp.com/send?phone=573045840264' },
+  { name: 'WhatsApp', icon: ['fab', 'whatsapp'], link: 'https://api.whatsapp.com/send?phone=573337518070' },
   { name: 'TikTok', icon: ['fab', 'tiktok'], link: 'https://www.tiktok.com/@pipehpbarber' },
   { name: 'Instagram', icon: ['fab', 'instagram'], link: 'https://www.instagram.com/pipehp_/' },
 ]

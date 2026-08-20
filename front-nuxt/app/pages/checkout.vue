@@ -453,11 +453,11 @@
                   Si desea acceder, corregir o eliminar su información, o si necesita ayuda, comuníquese con nosotros por cualquiera de estos canales:
                 </p>
                 <div class="flex flex-col gap-3">
-                  <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
+                  <a href="https://api.whatsapp.com/send?phone=573337518070" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
                     <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
                     <div class="flex flex-col">
                       <span class="text-xs font-bold uppercase tracking-wider">Chat WhatsApp</span>
-                      <span class="text-[10px] opacity-80">+57 304 584 0264</span>
+                      <span class="text-[10px] opacity-80">+57 333 751 8070</span>
                     </div>
                   </a>
                   <a href="mailto:ayuda@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
@@ -506,11 +506,11 @@
                   Para cualquier duda relacionada con su pedido, comuníquese con nosotros por cualquiera de estos canales:
                 </p>
                 <div class="flex flex-col gap-3">
-                  <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
+                  <a href="https://api.whatsapp.com/send?phone=573337518070" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all text-[#25D366]">
                     <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
                     <div class="flex flex-col">
                       <span class="text-xs font-bold uppercase tracking-wider">Chat WhatsApp</span>
-                      <span class="text-[10px] opacity-80">+57 304 584 0264</span>
+                      <span class="text-[10px] opacity-80">+57 333 751 8070</span>
                     </div>
                   </a>
                   <a href="mailto:ayuda@personalbarber.vip" class="flex items-center gap-3 p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 hover:bg-neon-green/20 transition-all text-neon-green">
@@ -535,7 +535,7 @@
               </p>
               
               <div class="w-full flex flex-col gap-3">
-                <a href="https://api.whatsapp.com/send?phone=573045840264" target="_blank" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] transition-all text-black font-black text-sm shadow-[0_0_15px_rgba(37,211,102,0.3)]">
+                <a href="https://api.whatsapp.com/send?phone=573337518070" target="_blank" class="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] transition-all text-black font-black text-sm shadow-[0_0_15px_rgba(37,211,102,0.3)]">
                   <fa-icon :icon="['fab', 'whatsapp']" class="text-lg" />
                   Escribir por WhatsApp
                 </a>
@@ -687,7 +687,7 @@ async function handleCheckout() {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
       })
       if (!data.ok) throw new Error('Error')
-      const phone = '573045840264'
+      const phone = '573337518070'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
       const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || '$10.000 COP'}`
       const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío (${form.city}):* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad / Municipio: ${form.city}\nDirección: ${form.address}`

@@ -38,7 +38,7 @@
       <div class="flex-1 flex items-center justify-end gap-2.5 flex-shrink-0">
         <!-- WhatsApp Header Link -->
         <a
-          href="https://api.whatsapp.com/send?phone=573045840264"
+          href="https://api.whatsapp.com/send?phone=573337518070"
           target="_blank"
           rel="noopener noreferrer"
           class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 text-[#25D366] text-[10px] font-black tracking-widest uppercase transition-all duration-300 hover:bg-[#25D366]/20 hover:border-[#25D366] group"
@@ -99,7 +99,7 @@
 
         <!-- WhatsApp Link en Menú Móvil -->
         <a
-          href="https://api.whatsapp.com/send?phone=573045840264"
+          href="https://api.whatsapp.com/send?phone=573337518070"
           target="_blank"
           rel="noopener noreferrer"
           @click="mobileOpen = false"

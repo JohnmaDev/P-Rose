@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <a
-      :href="`https://api.whatsapp.com/send?phone=573045840264&text=${encodeURIComponent(waMessage)}`"
+      :href="`https://api.whatsapp.com/send?phone=573337518070&text=${encodeURIComponent(waMessage)}`"
       target="_blank"
       rel="noopener noreferrer"
       :aria-label="t('whatsapp.label')"
