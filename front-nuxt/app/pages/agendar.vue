@@ -10,9 +10,8 @@
       </picture>
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-barber-black z-10"></div>
       <div class="relative z-20 text-center pb-10 px-4">
-        <h1 class="text-[3.5rem] sm:text-[5.5rem] lg:text-[8rem] font-black italic uppercase tracking-tighter leading-none text-shadow-premium flex flex-wrap items-center justify-center gap-x-[0.25em]">
-          <span class="text-neon-green drop-shadow-[0_0_20px_rgba(57,255,20,0.5)] mr-[0.25em]">{{ t('agendar.title').split(' ').slice(0,1).join(' ') }}</span>
-          <span class="text-white">{{ t('agendar.title').split(' ').slice(1).join(' ') }}</span>
+        <h1 class="text-[3.5rem] sm:text-[5.5rem] lg:text-[8rem] font-black italic uppercase tracking-tighter leading-none text-shadow-premium">
+          <span class="text-neon-green drop-shadow-[0_0_20px_rgba(57,255,20,0.5)]">{{ t('agendar.title').split(' ').slice(0,1).join(' ') }}</span><span class="text-white">&nbsp;{{ t('agendar.title').split(' ').slice(1).join(' ') }}</span>
         </h1>
         <p class="text-gray-400 text-base sm:text-lg font-bold tracking-wide mt-2">{{ t('agendar.heroSub') }}</p>
       </div>
