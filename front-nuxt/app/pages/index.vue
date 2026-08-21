@@ -214,38 +214,7 @@
         </button>
       </div>
 
-      <!-- Filtros de categoría (Carrusel horizontal deslizable con flechas de navegación) -->
-      <div class="relative max-w-4xl mx-auto mb-8 px-8 sm:px-10 group">
-        <!-- Flecha Izquierda -->
-        <button
-          @click="scrollCategoryFilter('left')"
-          class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-900 border border-zinc-700 text-gray-300 hover:border-white hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95"
-          aria-label="Anterior categoría"
-        >
-          <fa-icon :icon="['fas', 'chevron-left']" class="text-xs" />
-        </button>
 
-        <!-- Contenedor Deslizable con touch drag y scroll suave -->
-        <div 
-          ref="catFilterContainer" 
-          class="flex overflow-x-auto no-scrollbar gap-2.5 py-1 px-1 scroll-smooth select-none items-center"
-        >
-          <button v-for="f in filters" :key="f.id" @click="activeFilter = f.id"
-            class="px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wide border transition-all duration-300 whitespace-nowrap shrink-0"
-            :class="activeFilter === f.id ? 'dept-bg text-black border-transparent dept-active-filter shadow-md font-black scale-105' : 'glass border-white/20 text-gray-300 dept-hover-filter'">
-            {{ f.label }}
-          </button>
-        </div>
-
-        <!-- Flecha Derecha -->
-        <button
-          @click="scrollCategoryFilter('right')"
-          class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-900 border border-zinc-700 text-gray-300 hover:border-white hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95"
-          aria-label="Siguiente categoría"
-        >
-          <fa-icon :icon="['fas', 'chevron-right']" class="text-xs" />
-        </button>
-      </div>
 
       <!-- Contador -->
       <div class="mb-6 text-center">
@@ -322,14 +291,15 @@
       <!-- Botón Cargar Más Productos (Carga Progresiva) -->
       <div v-if="hasMoreProducts" class="mt-12 flex flex-col items-center justify-center gap-3">
         <div class="text-[11px] text-zinc-400 font-bold uppercase tracking-widest">
-          Viendo <span class="text-[#00FF00] font-black">{{ displayedProducts.length }}</span> de <span class="text-white font-black">{{ filteredProducts.length }}</span> productos
+          Viendo <span class="dept-text font-black">{{ displayedProducts.length }}</span> de <span class="text-white font-black">{{ filteredProducts.length }}</span> productos
         </div>
         <div class="w-48 h-1 bg-white/10 rounded-full overflow-hidden mb-2">
-          <div class="h-full bg-gradient-to-r from-[#00FF00] to-emerald-400 transition-all duration-500 rounded-full"
+          <div class="h-full dept-bg transition-all duration-500 rounded-full"
             :style="{ width: `${(displayedProducts.length / filteredProducts.length) * 100}%` }"></div>
         </div>
         <button @click="loadMoreProducts"
-          class="px-8 py-3 bg-white/5 border border-white/15 hover:border-[#00FF00] hover:bg-[#00FF00]/10 text-white hover:text-[#00FF00] font-black uppercase text-xs tracking-[0.2em] rounded-2xl transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(0,255,0,0.15)] flex items-center gap-2.5 group">
+          class="px-8 py-3 bg-white/5 border border-white/15 dept-hover-btn text-white font-black uppercase text-xs tracking-[0.2em] rounded-2xl transition-all duration-300 shadow-lg flex items-center gap-2.5 group"
+          style="--hover-border: var(--dept-color)">
           <span>Cargar Más Productos</span>
           <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] group-hover:translate-y-0.5 transition-transform" />
         </button>
