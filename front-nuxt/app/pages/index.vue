@@ -267,7 +267,7 @@
         :class="{'opacity-40 pointer-events-none': isLoading}">
         <div v-for="(product, index) in displayedProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card">
+          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card product-card">
 
           <!-- Imagen -->
           <div class="aspect-square overflow-hidden bg-white relative cursor-pointer flex items-center justify-center p-3" @click="goToDetail(product)">
@@ -276,7 +276,7 @@
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
               sizes="(max-width: 640px) 200px, 400px"
               :alt="product.name"
-              class="w-full h-full object-contain transition-premium group-hover:scale-105"
+              class="w-full h-full object-contain transition-image group-hover:scale-110"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               width="400"
               height="400"
@@ -662,4 +662,21 @@ if (import.meta.server) {
 .products-grid-leave-active { position: absolute; width: calc(50% - 1rem); z-index: 0; pointer-events: none; }
 @media (min-width: 768px) { .products-grid-leave-active { width: calc(33.333% - 1.5rem); } }
 @media (min-width: 1024px) { .products-grid-leave-active { width: calc(25% - 2rem); } }
+
+/* Efecto hover premium en tarjetas de producto */
+.product-card {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.35s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45),
+              0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Transición suave y fluida para el zoom de la imagen */
+.transition-image {
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 </style>
