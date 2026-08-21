@@ -109,6 +109,57 @@
   .dept-glow-md  { box-shadow: 0 0 20px var(--dept-glow, rgba(57,255,20,0.3)); }
   .dept-glow-lg  { box-shadow: 0 0 30px var(--dept-glow, rgba(57,255,20,0.4)); }
 
+  /* ─── Modo "Ver Todo" — gradiente verde + rosa ─── */
+  /* Texto con gradiente (gradient-clip trick) */
+  .dept-mode-all .dept-text {
+    background: linear-gradient(135deg, #39FF14 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: none;
+  }
+  /* Fondos con gradiente */
+  .dept-mode-all .dept-bg {
+    background: linear-gradient(135deg, #39FF14 0%, #f472b6 100%) !important;
+    transition: none;
+  }
+  /* Bordes con gradiente (vía pseudo-border trick) */
+  .dept-mode-all .dept-border {
+    border-color: #39FF14;
+    border-image: linear-gradient(135deg, #39FF14, #f472b6) 1;
+    transition: none;
+  }
+  /* Badge */
+  .dept-mode-all .dept-badge {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    background: linear-gradient(135deg, rgba(57,255,20,0.12) 0%, rgba(244,114,182,0.12) 100%);
+    border-image: linear-gradient(135deg, rgba(57,255,20,0.4), rgba(244,114,182,0.4)) 1;
+  }
+  /* Glow combinado (verde izq + rosa der) */
+  .dept-mode-all .dept-glow-sm {
+    box-shadow: -4px 0 10px rgba(57,255,20,0.25), 4px 0 10px rgba(244,114,182,0.25);
+  }
+  .dept-mode-all .dept-glow-md {
+    box-shadow: -6px 0 18px rgba(57,255,20,0.3), 6px 0 18px rgba(244,114,182,0.3);
+  }
+  .dept-mode-all .dept-glow-lg {
+    box-shadow: -8px 0 28px rgba(57,255,20,0.4), 8px 0 28px rgba(244,114,182,0.4);
+  }
+  /* Hover card en modo all */
+  .dept-mode-all .dept-hover-card:hover {
+    border-color: transparent;
+    border-image: linear-gradient(135deg, rgba(57,255,20,0.5), rgba(244,114,182,0.5)) 1;
+  }
+  /* Group-hover text en modo all */
+  .dept-mode-all .group:hover .dept-hover-text,
+  .dept-mode-all .group:hover .dept-group-hover-text {
+    background: linear-gradient(135deg, #39FF14, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   /* Text shadow premium para headings grandes */
   .text-shadow-premium {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -156,6 +207,13 @@
   0%   { transform: translateX(-100%); }
   50%  { transform: translateX(0); }
   100% { transform: translateX(100%); }
+}
+
+/* Animación suave de gradiente para el modo "Ver Todo" */
+@keyframes dept-all-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes fade-in-up {

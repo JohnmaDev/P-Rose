@@ -7,6 +7,7 @@
       '--dept-color-10': accentColor + '1a',
       '--dept-color-30': accentColor + '4d',
     }"
+    :class="activeDepartment === 'all' ? 'dept-mode-all' : ''"
     class="min-h-screen text-white relative transition-colors duration-500"
   >
     <!-- Navbar global persistente en todas las páginas, excepto checkout y admin -->
@@ -40,7 +41,7 @@ import { useLanguage } from '~/composables/useLanguage'
 import { useDepartment } from '~/composables/useDepartment'
 
 const { initLang, t } = useLanguage()
-const { accentColor, accentGlow } = useDepartment()
+const { accentColor, accentGlow, activeDepartment } = useDepartment()
 const route = useRoute()
 const config = useRuntimeConfig()
 
