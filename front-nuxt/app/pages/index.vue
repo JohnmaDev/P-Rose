@@ -276,7 +276,7 @@
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
               sizes="(max-width: 640px) 200px, 400px"
               :alt="product.name"
-              class="w-full h-full object-contain transition-image group-hover:scale-[1.05]"
+              class="w-full h-full object-contain transition-image group-hover:scale-[1.03]"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               width="400"
               height="400"
@@ -675,8 +675,8 @@ if (import.meta.server) {
               0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* Transición ultrasuave y sutil para el zoom de la imagen */
+/* Transición ultrasuave y lenta para el zoom de la imagen */
 .transition-image {
-  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 2.5s ease-in-out !important;
 }
 </style>
