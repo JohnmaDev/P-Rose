@@ -276,7 +276,7 @@
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
               sizes="(max-width: 640px) 200px, 400px"
               :alt="product.name"
-              class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+              class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-104"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               width="400"
               height="400"
