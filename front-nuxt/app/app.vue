@@ -7,7 +7,6 @@
       '--dept-color-10': accentColor + '1a',
       '--dept-color-30': accentColor + '4d',
     }"
-    :class="activeDepartment === 'all' ? 'dept-mode-all' : ''"
     class="min-h-screen text-white relative transition-colors duration-500"
   >
     <!-- Navbar global persistente en todas las páginas, excepto checkout y admin -->

@@ -80,7 +80,8 @@
           <template v-else>
             <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
               <span
-                class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+                class="block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+                :class="activeDepartment === 'all' ? 'hero-title-all-gradient' : 'dept-text'"
                 style="filter: drop-shadow(0 0 20px var(--dept-glow))"
               >{{ t('store.heroTitle1') }}</span>
               <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
