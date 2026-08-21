@@ -85,8 +85,7 @@
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [160, 320, 400])"
               sizes="(max-width: 640px) calc(50vw - 1.25rem), (max-width: 1024px) calc(33vw - 1.5rem), 220px"
               :alt="product.name"
-              class="w-full h-full object-contain group-hover:scale-[1.03]"
-              style="transition: transform 3s ease"
+              class="w-full h-full object-contain transition-premium group-hover:scale-105"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               width="400"
               height="400"
@@ -324,9 +323,4 @@ if (import.meta.server) {
 .products-grid-leave-active { position: absolute; width: calc(50% - 1rem); z-index: 0; pointer-events: none; }
 @media (min-width: 768px) { .products-grid-leave-active { width: calc(33.333% - 1.5rem); } }
 @media (min-width: 1024px) { .products-grid-leave-active { width: calc(25% - 2rem); } }
-
-/* Transición ultrasuave y lenta para el zoom de la imagen */
-.transition-image {
-  transition: transform 2.5s ease-in-out !important;
-}
 </style>

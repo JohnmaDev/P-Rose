@@ -48,7 +48,7 @@
           <div class="relative w-full aspect-square sm:aspect-[4/4.5] bg-white rounded-3xl border border-white/10 overflow-hidden group shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
             <div ref="carouselRef" @scroll="handleScroll" class="w-full h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar flex">
               <div v-for="(img, idx) in (product.images?.length ? product.images : ['/hero_barber.webp'])" :key="idx" class="w-full h-full flex-shrink-0 snap-center bg-white p-3 sm:p-5 flex items-center justify-center">
-                <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain group-hover:scale-[1.04]" style="transition: transform 3s ease" width="800" height="900" :loading="idx === 0 ? 'eager' : 'lazy'" :fetchpriority="idx === 0 ? 'high' : 'auto'" decoding="async" />
+                <img :src="optimizeImage(img, 800)" :alt="`${product.name} ${idx + 1}`" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" width="800" height="900" :loading="idx === 0 ? 'eager' : 'lazy'" :fetchpriority="idx === 0 ? 'high' : 'auto'" decoding="async" />
               </div>
             </div>
           </div>
@@ -528,9 +528,4 @@ if (import.meta.server) {
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
-
-/* Zoom ultrasuave y lento para la imagen principal del producto */
-.transition-product-zoom {
-  transition: transform 2.5s ease-in-out !important;
-}
 </style>
