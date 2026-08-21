@@ -529,8 +529,8 @@ if (import.meta.server) {
 
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
 
-/* Zoom suave para la imagen principal del producto */
+/* Zoom lento y cinematográfico para la imagen principal del producto */
 .transition-product-zoom {
-  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 </style>

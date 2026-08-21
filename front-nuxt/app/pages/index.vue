@@ -675,8 +675,8 @@ if (import.meta.server) {
               0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* Transición suave y fluida para el zoom de la imagen */
+/* Transición lenta y elegante para el zoom de la imagen */
 .transition-image {
-  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 </style>
