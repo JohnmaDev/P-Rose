@@ -46,7 +46,8 @@
           <span class="text-[9px] sm:text-[10px] font-black tracking-[0.25em] uppercase dept-text">
             <template v-if="activeDepartment === 'women'">{{ t('store.heroBadgeWomen') }}</template>
             <template v-else-if="activeDepartment === 'merch'">{{ t('store.heroBadgeMerch') }}</template>
-            <template v-else>Medellín · Premium Store</template>
+            <template v-else-if="activeDepartment === 'all'">{{ t('store.heroBadgeAll') }}</template>
+            <template v-else>Medellín · Barbería Premium</template>
           </span>
         </div>
 
@@ -77,6 +78,19 @@
               </span>
             </h1>
           </template>
+          <!-- Hero Ver Todo (Unificado) -->
+          <template v-else-if="activeDepartment === 'all'">
+            <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
+              <span
+                class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+                style="filter: drop-shadow(0 0 24px var(--dept-glow))"
+              >{{ t('store.heroTitleAll1') }}</span>
+              <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
+                {{ t('store.heroTitleAll2') }}
+              </span>
+            </h1>
+          </template>
+          <!-- Hero Barbería (Men) -->
           <template v-else>
             <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
               <span
@@ -94,6 +108,7 @@
         <p class="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed">
           <template v-if="activeDepartment === 'merch'">{{ t('store.heroSubMerch') }}</template>
           <template v-else-if="activeDepartment === 'women'">{{ t('store.heroSubWomen') }}</template>
+          <template v-else-if="activeDepartment === 'all'">{{ t('store.heroSubAll') }}</template>
           <template v-else>{{ t('store.heroSub') }}</template>
         </p>
 
