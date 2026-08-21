@@ -68,14 +68,14 @@
           <!-- Títulos y Precio -->
           <div>
             <div class="flex items-center gap-3 mb-3">
-              <span class="dept-text text-[10px] font-black tracking-widest uppercase dept-bg/10 px-2 py-1 rounded border dept-border/20">{{ product.brand || 'Premium' }}</span>
+              <span class="dept-text text-[10px] font-black tracking-widest uppercase dept-badge px-2.5 py-1 rounded-md">{{ product.brand || 'Premium' }}</span>
               <span class="text-[#A1A1AA] text-[10px] font-bold tracking-widest uppercase">{{ getCategoryLabel(product.category) }}</span>
             </div>
             <h1 class="text-3xl lg:text-4xl font-black font-oswald tracking-tight leading-[1.1] mb-4 text-white drop-shadow-md">
               {{ product.name }}
             </h1>
             <div class="flex items-end gap-4 mt-2">
-              <span class="text-4xl lg:text-5xl font-black dept-text tracking-tighter dept-glow-sm">
+              <span class="text-4xl lg:text-5xl font-black dept-text tracking-tighter" style="filter: drop-shadow(0 0 12px var(--dept-glow))">
                 {{ formatPrice(product.price) }}
               </span>
               <span v-if="product.comparePrice" class="text-xl text-[#A1A1AA] line-through font-bold mb-1">
