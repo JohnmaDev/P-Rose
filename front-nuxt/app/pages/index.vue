@@ -276,7 +276,7 @@
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"
               sizes="(max-width: 640px) 200px, 400px"
               :alt="product.name"
-              class="w-full h-full object-contain transition-image group-hover:scale-110"
+              class="w-full h-full object-contain transition-image group-hover:scale-125"
               :class="{'grayscale opacity-50': product.stock <= 0}"
               width="400"
               height="400"
@@ -670,9 +670,9 @@ if (import.meta.server) {
               border-color 0.35s ease;
 }
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45),
-              0 0 0 1px rgba(255, 255, 255, 0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(255, 255, 255, 0.10);
 }
 
 /* Transición suave y fluida para el zoom de la imagen */
