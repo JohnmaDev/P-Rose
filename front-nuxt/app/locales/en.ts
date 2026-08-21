@@ -7,9 +7,9 @@ export const en = {
     book: 'Book Now',
   },
   store: {
-    heroTitle1: 'Everything you need',
-    heroTitle2: 'for personal care.',
-    heroSub: 'Professional barbershop products, grooming and fashion. Shipping to Medellín and all Colombia.',
+    heroTitle1: 'The complete universe.',
+    heroTitle2: 'For him. For her. For you.',
+    heroSub: 'Professional barbershop, cosmetics, skincare and fashion in one place. Shipping to Medellín and all Colombia.',
     heroBadgeWomen: 'Medellín · Premium Beauty Hub',
     heroTitleWomen1: 'Made to reign.',
     heroTitleWomen2: 'Everything you deserve.',

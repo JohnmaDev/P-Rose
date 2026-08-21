@@ -80,9 +80,8 @@
           <template v-else>
             <h1 class="font-black tracking-tighter italic leading-[0.92] text-shadow-premium">
               <span
-                class="block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
-                :class="activeDepartment === 'all' ? 'hero-title-all-gradient' : 'dept-text'"
-                style="filter: drop-shadow(0 0 20px var(--dept-glow))"
+                class="dept-text block text-[2.8rem] xs:text-[3.2rem] sm:text-[5rem] lg:text-[7rem] xl:text-[8.5rem] transition-all duration-500"
+                style="filter: drop-shadow(0 0 24px var(--dept-glow))"
               >{{ t('store.heroTitle1') }}</span>
               <span class="text-white block text-[2.2rem] xs:text-[2.7rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[7rem] leading-none pt-1 sm:pt-3">
                 {{ t('store.heroTitle2') }}
@@ -166,7 +165,7 @@
             @click="storeUniverse = 'all'; activeDepartment = 'all'; activeFilter = 'all'"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="storeUniverse === 'all'
-              ? 'bg-neon-green/15 text-neon-green border border-neon-green/40 shadow-[0_0_10px_rgba(57,255,20,0.12)]'
+              ? 'bg-neon-green text-black font-black shadow-[0_0_14px_rgba(57,255,20,0.3)]'
               : 'text-zinc-600 hover:text-zinc-300'"
           >
             <fa-icon :icon="['fas', 'border-all']" class="text-[8px]" />

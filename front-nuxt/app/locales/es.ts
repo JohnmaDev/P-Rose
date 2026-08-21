@@ -7,9 +7,9 @@ export const es = {
     book: 'Agendar',
   },
   store: {
-    heroTitle1: 'Todo lo que necesitas',
-    heroTitle2: 'para el cuidado personal.',
-    heroSub: 'Productos profesionales de barbería, cuidado personal y moda. Envíos a Medellín y toda Colombia.',
+    heroTitle1: 'El universo completo.',
+    heroTitle2: 'Para él. Para ella. Para ti.',
+    heroSub: 'Barbería profesional, cosmética, skincare y moda en un solo lugar. Envíos a Medellín y toda Colombia.',
     heroBadgeWomen: 'Medellín · Beauty Hub Premium',
     heroTitleWomen1: 'Hecha para reinar.',
     heroTitleWomen2: 'Todo lo que te mereces.',
