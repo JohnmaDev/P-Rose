@@ -112,21 +112,34 @@
   /* ─── Modo "Ver Todo" — gradiente verde + rosa ─── */
   /* Texto con gradiente (gradient-clip trick) */
   .dept-mode-all .dept-text {
-    background: linear-gradient(135deg, #39FF14 0%, #FF1493 100%);
+    background: linear-gradient(135deg, #39FF14 0%, #FFD700 45%, #FF1493 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     transition: none;
   }
+  @supports (background: linear-gradient(in oklch, red, blue)) {
+    .dept-mode-all .dept-text {
+      background: linear-gradient(135deg in oklch, #39FF14 0%, #FF1493 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
   /* Fondos con gradiente */
   .dept-mode-all .dept-bg {
-    background: linear-gradient(135deg, #39FF14 0%, #FF1493 100%) !important;
+    background: linear-gradient(135deg, #39FF14 0%, #FFD700 45%, #FF1493 100%) !important;
     transition: none;
   }
-  /* Bordes con gradiente (vía pseudo-border trick) */
+  @supports (background: linear-gradient(in oklch, red, blue)) {
+    .dept-mode-all .dept-bg {
+      background: linear-gradient(135deg in oklch, #39FF14 0%, #FF1493 100%) !important;
+    }
+  }
+  /* Bordes con gradiente */
   .dept-mode-all .dept-border {
     border-color: #39FF14;
-    border-image: linear-gradient(135deg, #39FF14, #FF1493) 1;
+    border-image: linear-gradient(135deg, #39FF14, #FFD700 45%, #FF1493) 1;
     transition: none;
   }
   /* Badge */
