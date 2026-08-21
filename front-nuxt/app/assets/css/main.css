@@ -112,7 +112,7 @@
   /* ─── Modo "Ver Todo" — gradiente verde + rosa ─── */
   /* Texto con gradiente (gradient-clip trick) */
   .dept-mode-all .dept-text {
-    background: linear-gradient(135deg, #39FF14 0%, #f472b6 100%);
+    background: linear-gradient(135deg, #39FF14 0%, #FF1493 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -120,13 +120,13 @@
   }
   /* Fondos con gradiente */
   .dept-mode-all .dept-bg {
-    background: linear-gradient(135deg, #39FF14 0%, #f472b6 100%) !important;
+    background: linear-gradient(135deg, #39FF14 0%, #FF1493 100%) !important;
     transition: none;
   }
   /* Bordes con gradiente (vía pseudo-border trick) */
   .dept-mode-all .dept-border {
     border-color: #39FF14;
-    border-image: linear-gradient(135deg, #39FF14, #f472b6) 1;
+    border-image: linear-gradient(135deg, #39FF14, #FF1493) 1;
     transition: none;
   }
   /* Badge */
@@ -154,7 +154,7 @@
   /* Group-hover text en modo all */
   .dept-mode-all .group:hover .dept-hover-text,
   .dept-mode-all .group:hover .dept-group-hover-text {
-    background: linear-gradient(135deg, #39FF14, #f472b6);
+    background: linear-gradient(135deg, #39FF14, #FF1493);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
