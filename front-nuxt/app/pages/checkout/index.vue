@@ -238,7 +238,7 @@
                   <div v-if="selectedPayment === 'wompi'" class="mt-4 p-4 bg-neon-green/5 border border-neon-green/20 rounded-xl">
                     <p class="text-neon-green/80 text-xs leading-relaxed">
                       <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />
-                      Pago seguro procesado por <strong>Wompi</strong>. Aceptamos Nequi, PSE, tarjetas Visa, Mastercard y más. Tu información financiera nunca pasa por nuestros servidores.
+                      Pago 100% seguro con <strong>Wompi</strong> · Nequi, PSE, Visa, Mastercard, Bancolombia y más.
                     </p>
                   </div>
                   <div v-if="paymentError" class="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
