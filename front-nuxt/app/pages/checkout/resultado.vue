@@ -200,7 +200,7 @@ const maxPolls = 20
 let pollInterval: ReturnType<typeof setInterval> | null = null
 
 // Cuenta regresiva para redirección
-const redirectDelay = 12
+const redirectDelay = 30
 const countdown = ref(redirectDelay)
 let countdownInterval: ReturnType<typeof setInterval> | null = null
 
