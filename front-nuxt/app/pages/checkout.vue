@@ -63,52 +63,6 @@
                       <input v-model="form.phone" @input="form.phone=form.phone.replace(/[^0-9+]/g,'')" @blur="touched.phone=true" type="tel" placeholder="+57 300 123 4567" class="input-field" :class="{'border-red-500/50': touched.phone && !isPhoneValid}" />
                       <p v-if="touched.phone && !isPhoneValid" class="err">Número colombiano inválido</p>
                     </div>
-                    <div class="border-t border-white/10 pt-4">
-                      <h3 class="text-sm font-bold text-white mb-3">Dirección de envío</h3>
-                      <div class="space-y-3">
-                        <div>
-                          <label class="label-xs">Ciudad / Municipio *</label>
-                          <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
-                          <datalist id="colombian-cities">
-                            <option value="Medellín">Medellín — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Bello">Bello — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Envigado">Envigado — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Itagüí">Itagüí — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Sabaneta">Sabaneta — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="La Estrella">La Estrella — Valle de Aburrá ($10.000 COP)</option>
-                            <option value="Girardota">Girardota — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Copacabana">Copacabana — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Guarne">Guarne — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Rionegro">Rionegro — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Caldas">Caldas — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Marinilla">Marinilla — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="La Ceja">La Ceja — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="El Retiro">El Retiro — Oriente / Alrededores ($15.000 COP)</option>
-                            <option value="Bogotá">Bogotá — Envío Nacional ($20.000 COP)</option>
-                            <option value="Cali">Cali — Envío Nacional ($20.000 COP)</option>
-                            <option value="Barranquilla">Barranquilla — Envío Nacional ($20.000 COP)</option>
-                            <option value="Bucaramanga">Bucaramanga — Envío Nacional ($20.000 COP)</option>
-                            <option value="Pereira">Pereira — Envío Nacional ($20.000 COP)</option>
-                          </datalist>
-                          <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
-                          <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
-                            <span>⚡ Destino: <strong class="text-white underline">{{ form.city }}</strong> → {{ currentShipping.label }} ({{ currentShipping.price }})</span>
-                          </p>
-                          <p v-else class="text-[11px] text-gray-500 mt-1.5 flex items-center gap-1">
-                            <span class="text-neon-green font-bold">⚡</span> Tarifa de envío autocalculada instantáneamente según tu municipio.
-                          </p>
-                        </div>
-                        <div>
-                          <label class="label-xs">Dirección completa *</label>
-                          <input v-model="form.address" @blur="touched.address=true" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" :class="{'border-red-500/50': touched.address && !form.address.trim()}" />
-                          <p v-if="touched.address && !form.address.trim()" class="err">La dirección es obligatoria</p>
-                        </div>
-                        <div>
-                          <label class="label-xs">Notas adicionales <span class="text-gray-600 font-normal">(opcional)</span></label>
-                          <input v-model="form.notes" type="text" placeholder="Torre A, conjunto cerrado, timbre 302..." class="input-field" />
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div class="mt-6 flex items-center justify-between">
                     <NuxtLink to="/" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
