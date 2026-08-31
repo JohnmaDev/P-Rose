@@ -131,28 +131,72 @@
                     <div class="flex flex-col gap-1">
                       <div class="flex gap-4">
                         <span class="text-gray-500 w-16">Contacto</span>
-                        <span class="text-white">{{ form.email }}</span>
-                      </div>
-                      <div class="flex gap-4">
-                        <span class="text-gray-500 w-16">Enviar a</span>
-                        <span class="text-white">{{ form.firstName }} {{ form.lastName }}, {{ form.city }}</span>
+                        <span class="text-white">{{ form.firstName }} {{ form.lastName }} · {{ form.email }}</span>
                       </div>
                     </div>
                     <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                 </div>
 
-                <!-- Método de envío -->
+                <!-- Dirección + Envío juntos -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
                     <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                    Método de envío
+                    Dirección de envío
                   </h2>
 
+                  <div class="space-y-4 mb-6">
+                    <div>
+                      <label class="label-xs">Ciudad / Municipio *</label>
+                      <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
+                      <datalist id="colombian-cities">
+                        <option value="Medellín">Medellín — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="Bello">Bello — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="Envigado">Envigado — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="Itagüí">Itagüí — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="Sabaneta">Sabaneta — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="La Estrella">La Estrella — Valle de Aburrá ($10.000 COP)</option>
+                        <option value="Girardota">Girardota — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Copacabana">Copacabana — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Guarne">Guarne — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Rionegro">Rionegro — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Caldas">Caldas — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Marinilla">Marinilla — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="La Ceja">La Ceja — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="El Retiro">El Retiro — Oriente / Alrededores ($15.000 COP)</option>
+                        <option value="Bogotá">Bogotá — Envío Nacional ($20.000 COP)</option>
+                        <option value="Cali">Cali — Envío Nacional ($20.000 COP)</option>
+                        <option value="Barranquilla">Barranquilla — Envío Nacional ($20.000 COP)</option>
+                        <option value="Bucaramanga">Bucaramanga — Envío Nacional ($20.000 COP)</option>
+                        <option value="Pereira">Pereira — Envío Nacional ($20.000 COP)</option>
+                      </datalist>
+                      <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
+                      <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
+                        <span>⚡ Destino: <strong class="text-white underline">{{ form.city }}</strong> → {{ currentShipping.label }} ({{ currentShipping.price }})</span>
+                      </p>
+                      <p v-else class="text-[11px] text-gray-500 mt-1.5">
+                        <span class="text-neon-green font-bold">⚡</span> Tarifa autocalculada según tu municipio.
+                      </p>
+                    </div>
+                    <div>
+                      <label class="label-xs">Dirección completa *</label>
+                      <input v-model="form.address" @blur="touched.address=true" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" :class="{'border-red-500/50': touched.address && !form.address.trim()}" />
+                      <p v-if="touched.address && !form.address.trim()" class="err">La dirección es obligatoria</p>
+                    </div>
+                    <div>
+                      <label class="label-xs">Notas adicionales <span class="text-gray-600 font-normal">(opcional)</span></label>
+                      <input v-model="form.notes" type="text" placeholder="Torre A, conjunto cerrado, timbre 302..." class="input-field" />
+                    </div>
+                  </div>
+
+                  <!-- Selector de método de envío -->
+                  <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <fa-icon :icon="['fas', 'truck']" class="text-xs dept-text" /> Método de envío
+                  </h3>
                   <div class="space-y-3">
                     <label v-for="s in shippingMethods" :key="s.id"
                       class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                      :class="selectedShipping === s.id ? 'dept-border bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.03)]' : 'border-white/10 hover:border-white/20'">
+                      :class="selectedShipping === s.id ? 'dept-border bg-white/10' : 'border-white/10 hover:border-white/20'">
                       <input type="radio" v-model="selectedShipping" :value="s.id" class="hidden" />
                       <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
                         :class="selectedShipping === s.id ? 'dept-border' : 'border-gray-600'">
@@ -162,10 +206,7 @@
                         <div class="flex items-center gap-2 mb-0.5 flex-wrap">
                           <span class="text-xl">{{ s.emoji }}</span>
                           <p class="text-white font-bold text-sm">{{ s.label }}</p>
-                          <span v-if="selectedShipping === s.id && form.city.trim()" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/40 px-2 py-0.5 rounded-full font-bold">
-                            📍 {{ form.city }}
-                          </span>
-                          <span v-else-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
+                          <span v-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
                         </div>
                         <p class="text-gray-500 text-xs">{{ s.desc }}</p>
                       </div>
@@ -177,9 +218,9 @@
                     <button @click="step = 1" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver
                     </button>
-                    <button @click="step = 3" :disabled="!selectedShipping"
+                    <button @click="nextStep" :disabled="!step2Valid"
                       class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
-                      :class="selectedShipping ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
+                      :class="step2Valid ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                       Continuar al pago <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
                     </button>
                   </div>
@@ -637,10 +678,16 @@ const grandTotalFormatted = computed(() => formatPrice(grandTotal.value))
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
 const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
+
+// Paso 1: solo datos de contacto
 const step1Valid = computed(() =>
   form.firstName.trim() && form.lastName.trim() &&
-  isEmailValid.value && isPhoneValid.value &&
-  form.city.trim() && form.address.trim()
+  isEmailValid.value && isPhoneValid.value
+)
+
+// Paso 2: dirección + método de envío
+const step2Valid = computed(() =>
+  form.city.trim() && form.address.trim() && !!selectedShipping.value
 )
 
 watch(() => form.city, (newCity) => {
@@ -651,8 +698,13 @@ watch(() => form.city, (newCity) => {
 
 function nextStep() {
   if (step.value === 1) {
-    Object.keys(touched).forEach(k => (touched as Record<string, boolean>)[k] = true)
+    touched.firstName = true; touched.lastName = true
+    touched.email = true; touched.phone = true
     if (!step1Valid.value) return
+  }
+  if (step.value === 2) {
+    touched.city = true; touched.address = true
+    if (!step2Valid.value) return
   }
   step.value++
 }

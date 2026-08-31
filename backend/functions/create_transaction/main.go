@@ -29,9 +29,8 @@ type TransactionRequest struct {
 }
 
 type Order struct {
-	ID    string  `bson:"id"`
-	Total float64 `bson:"total"`
-	// Solo necesitamos estos campos para la transacción
+	ID    string  `bson:"id" json:"id"`
+	Total float64 `bson:"total" json:"total"`
 }
 
 // corsHeaders devuelve las cabeceras CORS estándar
@@ -67,9 +66,10 @@ func getWompiBaseURL() string {
 }
 
 // generateIntegrityHash genera la firma de integridad SHA256
-// Formato: referencia^montoEnCentavos^moneda^llaveIntegridad
+// Wompi requiere concatenacion directa SIN separadores:
+// SHA256(referencia + montoEnCentavos + moneda + llaveIntegridad)
 func generateIntegrityHash(reference string, amountInCents int64, currency string, integrityKey string) string {
-	concat := fmt.Sprintf("%s^%d^%s^%s", reference, amountInCents, currency, integrityKey)
+	concat := reference + fmt.Sprintf("%d", amountInCents) + currency + integrityKey
 	hash := sha256.Sum256([]byte(concat))
 	return hex.EncodeToString(hash[:])
 }
