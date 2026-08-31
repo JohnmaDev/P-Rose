@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"strings"
 	"time"
@@ -35,7 +36,7 @@ type Payload struct {
 	Items          []PayloadItem `json:"items"`
 	PaymentMethod  string        `json:"paymentMethod"`
 	ShippingMethod string        `json:"shippingMethod"`
-	ShippingCost   float64       `json:"shippingCost"`
+	// NOTA: shippingCost del frontend se IGNORA — siempre se calcula en servidor
 }
 
 // Usamos interface{} para precio ya que a veces entra como string o como numero en MongoDB
@@ -61,6 +62,9 @@ type Order struct {
 	Status         string    `bson:"status" json:"status"`
 	ClientIP       string    `bson:"clientIp,omitempty" json:"clientIp,omitempty"`
 	CreatedAt      time.Time `bson:"createdAt" json:"createdAt"`
+	// Campos para integración Wompi (se llenan después)
+	WompiTransactionID string `bson:"wompiTransactionId,omitempty" json:"wompiTransactionId,omitempty"`
+	WompiStatus        string `bson:"wompiStatus,omitempty" json:"wompiStatus,omitempty"`
 }
 
 // Configura CORS
@@ -132,6 +136,32 @@ func getClientIP(req events.APIGatewayProxyRequest) string {
 		return req.RequestContext.Identity.SourceIP
 	}
 	return "desconocida"
+}
+
+// calculateShippingCost determina el costo de envío SIEMPRE en el servidor
+// NUNCA confía en valores enviados desde el frontend
+func calculateShippingCost(shippingMethod string) float64 {
+	switch shippingMethod {
+	case "express_valle", "valle":
+		return 10000
+	case "express_alrededores", "alrededores":
+		return 15000
+	case "express_nacional", "nacional":
+		return 20000
+	default:
+		// Default seguro: zona más económica
+		return 10000
+	}
+}
+
+// generateOrderID genera un ID de orden con crypto/rand en vez de math/rand
+func generateOrderID() string {
+	n, err := rand.Int(rand.Reader, big.NewInt(90000))
+	if err != nil {
+		// Fallback ultra-seguro usando timestamp
+		return fmt.Sprintf("ORD-%d", time.Now().UnixNano()%90000+10000)
+	}
+	return fmt.Sprintf("ORD-%d", n.Int64()+10000)
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -220,28 +250,13 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		return events.APIGatewayProxyResponse{StatusCode: 400, Headers: corsHeaders(), Body: `{"error": "Productos inválidos o agotados"}`}, nil
 	}
 
-	// 4.1 Determinar y validar costo de envío según la zona
-	var shippingCost float64 = 10000
-	switch body.ShippingMethod {
-	case "express_valle", "valle":
-		shippingCost = 10000
-	case "express_alrededores", "alrededores":
-		shippingCost = 15000
-	case "express_nacional", "nacional":
-		shippingCost = 20000
-	default:
-		if body.ShippingCost > 0 {
-			shippingCost = body.ShippingCost
-		} else {
-			shippingCost = 10000
-		}
-	}
+	// 4.1 Calcular costo de envío SIEMPRE en el servidor — NUNCA confiar en el frontend
+	shippingCost := calculateShippingCost(body.ShippingMethod)
 	subtotal := total
 	grandTotal := subtotal + shippingCost
 
-	// 5. Crear Orden
-	rand.Seed(time.Now().UnixNano())
-	orderID := fmt.Sprintf("ORD-%d", rand.Intn(90000)+10000)
+	// 5. Crear Orden con ID criptográficamente seguro
+	orderID := generateOrderID()
 
 	newOrder := Order{
 		ID:             orderID,

@@ -42,6 +42,10 @@ export default defineNuxtConfig({
     // Públicas (cliente + servidor)
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://personalbarber.vip',
+      // Wompi — llave PÚBLICA (diseñada para estar en el cliente)
+      wompiPublicKey: process.env.NUXT_PUBLIC_WOMPI_KEY || '',
+      // Ambiente: 'sandbox' | 'production'
+      wompiEnvironment: process.env.NUXT_PUBLIC_WOMPI_ENV || 'sandbox',
     }
   },
 

@@ -240,10 +240,16 @@
                       <span v-if="method.badge" class="text-[10px] dept-badge dept-text px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
                     </label>
                   </div>
-                  <div class="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                    <p class="text-blue-300 text-xs leading-relaxed">
-                      <fa-icon :icon="['fas', 'info-circle']" class="mr-1" />
-                      <strong>Modo Demo:</strong> Los pagos online se activarán con Wompi muy pronto. Por ahora selecciona <strong>WhatsApp</strong> para coordinar.
+                  <div v-if="selectedPayment === 'wompi'" class="mt-4 p-4 bg-neon-green/5 border border-neon-green/20 rounded-xl">
+                    <p class="text-neon-green/80 text-xs leading-relaxed">
+                      <fa-icon :icon="['fas', 'shield-alt']" class="mr-1" />
+                      Pago seguro procesado por <strong>Wompi</strong>. Aceptamos Nequi, PSE, tarjetas Visa, Mastercard y más. Tu información financiera nunca pasa por nuestros servidores.
+                    </p>
+                  </div>
+                  <div v-if="paymentError" class="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <p class="text-red-400 text-xs leading-relaxed">
+                      <fa-icon :icon="['fas', 'exclamation-triangle']" class="mr-1" />
+                      {{ paymentError }}
                     </p>
                   </div>
 
@@ -320,23 +326,7 @@
       </div>
     </footer>
 
-    <!-- Modal próximamente -->
-    <Transition name="fade">
-      <div v-if="showSoonAlert" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div class="bg-barber-black border border-white/10 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
-          <div class="w-20 h-20 bg-neon-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-neon-green">
-            <fa-icon :icon="['fas', 'tools']" class="text-3xl" />
-          </div>
-          <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tight">¡Próximamente!</h3>
-          <p class="text-gray-400 text-sm leading-relaxed mb-8">
-            Estamos integrando Wompi. Por ahora selecciona <span class="text-neon-green font-bold">"WhatsApp"</span> para coordinar directamente.
-          </p>
-          <button @click="showSoonAlert = false" class="w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-all duration-300 uppercase text-sm">
-            Entendido
-          </button>
-        </div>
-      </div>
-    </Transition>
+
 
     <!-- ═══ MODAL DE POLÍTICAS ═══ -->
     <Transition name="fade">
@@ -576,8 +566,9 @@ const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city:
 const touched = reactive({ firstName: false, lastName: false, email: false, phone: false, city: false, address: false })
 const selectedShipping = ref('express_valle')
 const selectedPayment = ref('wompi')
-const showSoonAlert = ref(false)
 const isProcessing = ref(false)
+const paymentError = ref('')
+const wompiScriptLoaded = ref(false)
 
 // ── Políticas ──────────────────────────────────────────────
 const activePolicy = ref<string | null>(null)
@@ -635,9 +626,7 @@ function detectShippingZone(cityStr: string): string {
 }
 
 const paymentMethods = [
-  { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
-  { id: 'nequi', emoji: '💜', label: 'Nequi', desc: 'Pago directo desde tu app Nequi' },
-  { id: 'pse', emoji: '🏦', label: 'PSE', desc: 'Débito bancario en línea' },
+  { id: 'wompi', emoji: '💳', label: 'Pago Online', desc: 'Nequi, PSE, tarjetas Visa/Mastercard, Bancolombia', badge: 'Recomendado' },
   { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta al barber para acordar el pago' },
 ]
 
@@ -672,21 +661,48 @@ function goToStep(n: number) {
   if (n <= step.value) step.value = n
 }
 
+// ── Cargar script del Widget Wompi dinámicamente ──
+function loadWompiScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (wompiScriptLoaded.value || (window as any).WidgetCheckout) {
+      wompiScriptLoaded.value = true
+      resolve()
+      return
+    }
+    const script = document.createElement('script')
+    script.src = 'https://checkout.wompi.co/widget.js'
+    script.async = true
+    script.onload = () => {
+      wompiScriptLoaded.value = true
+      resolve()
+    }
+    script.onerror = () => reject(new Error('No se pudo cargar Wompi'))
+    document.head.appendChild(script)
+  })
+}
+
+// ── Crear orden base en backend ──
+async function createBackendOrder(paymentMethod: string) {
+  const payload = {
+    customer: { firstName: form.firstName, lastName: form.lastName, email: form.email, phone: form.phone, city: form.city, address: form.address },
+    items: cartItems.map(i => ({ id: i.id, qty: i.qty })),
+    paymentMethod,
+    shippingMethod: selectedShipping.value,
+  }
+  return await $fetch<{ ok: boolean; order: { id: string; total: number; total_format: string; subtotal_format?: string } }>('/api/create_order', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
+  })
+}
+
 async function handleCheckout() {
-  if (selectedPayment.value === 'whatsapp') {
-    isProcessing.value = true
-    try {
-      const payload = {
-        customer: { firstName: form.firstName, lastName: form.lastName, email: form.email, phone: form.phone, city: form.city, address: form.address },
-        items: cartItems.map(i => ({ id: i.id, qty: i.qty })),
-        paymentMethod: 'whatsapp',
-        shippingMethod: selectedShipping.value,
-        shippingCost: shippingCost.value,
-      }
-      const data = await $fetch<{ ok: boolean; order: { id: string; total_format: string; subtotal_format?: string } }>('/api/create_order', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
-      })
-      if (!data.ok) throw new Error('Error')
+  paymentError.value = ''
+  isProcessing.value = true
+
+  try {
+    if (selectedPayment.value === 'whatsapp') {
+      // ── Flujo WhatsApp (igual que antes) ──
+      const data = await createBackendOrder('whatsapp')
+      if (!data.ok) throw new Error('Error creando orden')
       const phone = '573337518070'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
       const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || '$10.000 COP'}`
@@ -694,14 +710,54 @@ async function handleCheckout() {
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/')
-    } catch (e) {
-      console.error(e)
-      alert('Error procesando tu orden. Intenta de nuevo.')
-    } finally {
-      isProcessing.value = false
+    } else {
+      // ── Flujo Wompi ──
+      // 1. Crear la orden en el backend
+      const orderData = await createBackendOrder('wompi')
+      if (!orderData.ok) throw new Error('Error creando orden')
+
+      // 2. Obtener datos de transacción (hash de integridad del servidor)
+      const txData = await $fetch<{
+        ok: boolean; publicKey: string; amountInCents: number;
+        currency: string; reference: string; integrityHash: string;
+        redirectUrl: string; wompiEnvironment: string;
+      }>('/api/create_transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: { orderId: orderData.order.id },
+      })
+      if (!txData.ok) throw new Error('Error preparando pago')
+
+      // 3. Cargar el script de Wompi
+      await loadWompiScript()
+
+      // 4. Abrir el Widget de Wompi
+      const checkout = new (window as any).WidgetCheckout({
+        currency: txData.currency,
+        amountInCents: txData.amountInCents,
+        reference: txData.reference,
+        publicKey: txData.publicKey,
+        signature: { integrity: txData.integrityHash },
+        redirectUrl: `${txData.redirectUrl}?id=${txData.reference}`,
+        customerData: {
+          email: form.email,
+          fullName: `${form.firstName} ${form.lastName}`,
+          phoneNumber: form.phone.replace(/[\s\-+]/g, ''),
+          phoneNumberPrefix: '+57',
+        },
+      })
+
+      checkout.open(function (result: any) {
+        const txRef = result?.transaction?.reference || txData.reference
+        // Redirigir a la página de resultado
+        router.push(`/checkout/resultado?id=${txRef}`)
+      })
     }
-  } else {
-    showSoonAlert.value = true
+  } catch (e: any) {
+    console.error('Error en checkout:', e)
+    paymentError.value = e?.message || 'Error procesando tu orden. Intenta de nuevo.'
+  } finally {
+    isProcessing.value = false
   }
 }
 </script>
