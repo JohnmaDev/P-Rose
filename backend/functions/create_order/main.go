@@ -26,9 +26,10 @@ type Customer struct {
 	Address   string `bson:"address" json:"address"`
 }
 
+// PayloadItem — el frontend envía el id como número (int64) igual que en MongoDB
 type PayloadItem struct {
-	ID  string `json:"id"`
-	Qty int    `json:"qty"`
+	ID  int64 `json:"id"`
+	Qty int   `json:"qty"`
 }
 
 type Payload struct {
@@ -39,9 +40,9 @@ type Payload struct {
 	// NOTA: shippingCost del frontend se IGNORA — siempre se calcula en servidor
 }
 
-// Usamos interface{} para precio ya que a veces entra como string o como numero en MongoDB
+// Product — ID es int64 igual que en get_catalog
 type Product struct {
-	ID    string      `bson:"id"`
+	ID    int64       `bson:"id"`
 	Name  string      `bson:"name"`
 	Price interface{} `bson:"price"`
 	Stock int         `bson:"stock"`
@@ -199,10 +200,17 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	db := client.Database("personalbarber")
 	productsColl := db.Collection("products")
 
-	// 3. Extraer IDs de productos y buscar precios oficiales
-	var ids []string
+	// 3. Extraer IDs de productos y buscar precios oficiales en MongoDB
+	// Los IDs son int64 — igual que en la colección products
+	var ids []int64
 	for _, reqItem := range body.Items {
-		ids = append(ids, reqItem.ID)
+		if reqItem.ID > 0 && reqItem.Qty > 0 {
+			ids = append(ids, reqItem.ID)
+		}
+	}
+
+	if len(ids) == 0 {
+		return events.APIGatewayProxyResponse{StatusCode: 400, Headers: corsHeaders(), Body: `{"error": "El carrito está vacío o los IDs son inválidos"}`}, nil
 	}
 
 	filter := bson.M{"id": bson.M{"$in": ids}}
@@ -223,24 +231,27 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 
 	for _, payloadItem := range body.Items {
 		var matched *Product
-		for _, fp := range foundProducts {
-			if fp.ID == payloadItem.ID {
-				matched = &fp
+		for i := range foundProducts {
+			if foundProducts[i].ID == payloadItem.ID {
+				matched = &foundProducts[i]
 				break
 			}
 		}
 
 		if matched != nil && payloadItem.Qty > 0 {
 			price := parsePrice(matched.Price)
-			subtotal := price * float64(payloadItem.Qty)
-			total += subtotal
+			if price <= 0 {
+				continue // Ignorar productos con precio 0 o inválido
+			}
+			lineTotal := price * float64(payloadItem.Qty)
+			total += lineTotal
 
 			finalItems = append(finalItems, bson.M{
-				"id":    matched.ID,
-				"name":  matched.Name,
-				"qty":   payloadItem.Qty,
-				"price": price,
-				"subtotal": subtotal,
+				"id":      matched.ID,
+				"name":    matched.Name,
+				"qty":     payloadItem.Qty,
+				"price":   price,
+				"subtotal": lineTotal,
 			})
 		}
 	}
