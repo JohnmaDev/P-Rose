@@ -31,7 +31,7 @@ const { t, lang } = useLanguage()
 
 const waMessage = computed(() =>
   lang.value === 'en'
-    ? 'Hello! I found you on personalbarber.vip and I would like more information.'
-    : '¡Hola! Te encontré en personalbarber.vip y me gustaría más información.'
+    ? 'Hello! I found you on personalbarber.co and I would like more information.'
+    : '¡Hola! Te encontré en personalbarber.co y me gustaría más información.'
 )
 </script>

@@ -46,7 +46,7 @@ const config = useRuntimeConfig()
 
 // Configurar URL Canónica Dinámica para evitar advertencias de contenido duplicado en Google Search Console
 useHead(() => {
-  const siteUrl = config.public.siteUrl || 'https://personalbarber.vip'
+  const siteUrl = config.public.siteUrl || 'https://personalbarber.co'
   const cleanBase = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl
   const canonicalUrl = `${cleanBase}${route.path}`
   

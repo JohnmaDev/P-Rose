@@ -385,7 +385,7 @@ useSeoMeta({
   ogTitle: 'PersonalBarber — Tienda Online de Barbería | Medellín',
   description: 'Compra productos profesionales de barbería, cuidado personal y moda en PersonalBarber. Envíos a Medellín y toda Colombia. También agenda tu cita con el barber a domicilio.',
   ogDescription: 'Tienda online de barbería premium en Medellín. Ceras, maquinas, cuidado de barba, skincare y más. Compra online con envío.',
-  ogUrl: 'https://personalbarber.vip',
+  ogUrl: 'https://personalbarber.co',
 })
 
 // JSON-LD — Store + BarberShop (dual schema)
@@ -397,9 +397,9 @@ useHead({
       '@type': ['Store', 'BarberShop'],
       name: 'PersonalBarber',
       description: 'Tienda online de productos de barbería premium y servicio de barbero a domicilio en Medellín.',
-      url: 'https://personalbarber.vip',
+      url: 'https://personalbarber.co',
       telephone: '+573337518070',
-      image: 'https://personalbarber.vip/og-image.webp',
+      image: 'https://personalbarber.co/og-image.webp',
       priceRange: '$$',
       currenciesAccepted: 'COP',
       paymentAccepted: 'Cash, Transferencia, Nequi, PSE',

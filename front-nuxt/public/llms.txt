@@ -4,9 +4,9 @@
 
 ## Servicios Principales
 
-- [Reservar Cita a Domicilio](https://personalbarber.vip/agendar)
-- [Tienda de Productos](https://personalbarber.vip/)
-- [Catálogo Completo](https://personalbarber.vip/)
+- [Reservar Cita a Domicilio](https://personalbarber.co/agendar)
+- [Tienda de Productos](https://personalbarber.co/)
+- [Catálogo Completo](https://personalbarber.co/)
 
 ## Catálogo de Productos
 
@@ -23,7 +23,7 @@ Nuestra tienda incluye productos profesionales de marcas reconocidas como Nishma
 - WhatsApp: [+57 333 751 8070](https://api.whatsapp.com/send?phone=573337518070)
 - Instagram: [@pipehp_](https://www.instagram.com/pipehp_/)
 - TikTok: [@pipehpbarber](https://www.tiktok.com/@pipehpbarber)
-- Sitio web: [https://personalbarber.vip](https://personalbarber.vip)
+- Sitio web: [https://personalbarber.co](https://personalbarber.co)
 
 ## Política de Uso para IA
 

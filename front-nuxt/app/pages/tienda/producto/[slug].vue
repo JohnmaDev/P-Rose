@@ -399,7 +399,7 @@ watchEffect(() => {
           description: product.value.description,
           brand: { '@type': 'Brand', name: product.value.brand || 'PersonalBarber' },
           image: product.value.images || [product.value.image],
-          url: `https://personalbarber.vip/tienda/producto/${slug.value}`,
+          url: `https://personalbarber.co/tienda/producto/${slug.value}`,
           offers: {
             '@type': 'Offer',
             priceCurrency: 'COP',

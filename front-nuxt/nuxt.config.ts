@@ -41,7 +41,7 @@ export default defineNuxtConfig({
     adminPin: process.env.NUXT_ADMIN_PIN || process.env.NUXT_PUBLIC_ADMIN_PIN || '',
     // Públicas (cliente + servidor)
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://personalbarber.vip',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://personalbarber.co',
       // Wompi — llave PÚBLICA (diseñada para estar en el cliente)
       wompiPublicKey: process.env.NUXT_PUBLIC_WOMPI_KEY || '',
       // Ambiente: 'sandbox' | 'production'
@@ -65,9 +65,9 @@ export default defineNuxtConfig({
         { property: 'og:description', content: 'Tienda online de barbería premium. Ceras, maquinas, cuidado de barba, skincare y más. Compra online con envío a toda Colombia.' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'PersonalBarber' },
-        { property: 'og:url', content: 'https://personalbarber.vip' },
-        { property: 'og:image', content: 'https://personalbarber.vip/og-image.webp' },
-        { property: 'og:image:secure_url', content: 'https://personalbarber.vip/og-image.webp' },
+        { property: 'og:url', content: 'https://personalbarber.co' },
+        { property: 'og:image', content: 'https://personalbarber.co/og-image.webp' },
+        { property: 'og:image:secure_url', content: 'https://personalbarber.co/og-image.webp' },
         { property: 'og:image:type', content: 'image/webp' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
@@ -75,9 +75,10 @@ export default defineNuxtConfig({
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: 'PersonalBarber — Tienda Online de Barbería | Medellín' },
         { name: 'twitter:description', content: 'Tienda online de barbería premium en Medellín. Compra online con envío a toda Colombia.' },
-        { name: 'twitter:image', content: 'https://personalbarber.vip/og-image.webp' },
+        { name: 'twitter:image', content: 'https://personalbarber.co/og-image.webp' },
       ],
       link: [
+        { rel: 'canonical', href: 'https://personalbarber.co' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
@@ -104,7 +105,9 @@ export default defineNuxtConfig({
   },
 
   // Sitemap automático (@nuxtjs/sitemap v8 — auto-discovers rutas)
-  sitemap: {},
+  sitemap: {
+    siteUrl: 'https://personalbarber.co',
+  },
 
   // Nitro — preset Netlify para deploy
   nitro: {
@@ -115,8 +118,8 @@ export default defineNuxtConfig({
   routeRules: {
     '/api/**': {
       proxy: process.env.NODE_ENV === 'development'
-        ? 'https://personalbarber.vip/api/**'
-        : 'https://personalbarber.vip/.netlify/functions/**'
+        ? 'https://personalbarber.co/api/**'
+        : 'https://personalbarber.co/.netlify/functions/**'
     },
     // Aplicar security headers a todo el sitio
     '/**': {
