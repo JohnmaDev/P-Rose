@@ -1,4 +1,5 @@
 # Redirección 301 permanente de cualquier variante hacia https://personalbarber.co
+https://personalbarber.netlify.app/* https://personalbarber.co/:splat 301!
 https://personalbarber.vip/* https://personalbarber.co/:splat 301!
 https://www.personalbarber.vip/* https://personalbarber.co/:splat 301!
 https://www.personalbarber.co/* https://personalbarber.co/:splat 301!
