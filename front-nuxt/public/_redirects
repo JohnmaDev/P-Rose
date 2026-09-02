@@ -1,6 +1,7 @@
-# Redirección 301 permanente de dominio antiguo .vip al nuevo .co
-https://personalbarber.vip/* https://www.personalbarber.co/:splat 301!
-https://www.personalbarber.vip/* https://www.personalbarber.co/:splat 301!
+# Redirección 301 permanente de cualquier variante hacia https://personalbarber.co
+https://personalbarber.vip/* https://personalbarber.co/:splat 301!
+https://www.personalbarber.vip/* https://personalbarber.co/:splat 301!
+https://www.personalbarber.co/* https://personalbarber.co/:splat 301!
 
 # API → Netlify Functions (Go backend)
 /api/* /.netlify/functions/:splat 200
