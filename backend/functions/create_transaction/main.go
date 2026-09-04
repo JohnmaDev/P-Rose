@@ -144,7 +144,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	// ── 6. Construir la URL de redirección ──
 	siteURL := os.Getenv("NUXT_PUBLIC_SITE_URL")
 	if siteURL == "" {
-		siteURL = "https://personalbarber.vip"
+		siteURL = "https://personalbarber.co"
 	}
 	redirectURL := fmt.Sprintf("%s/checkout/resultado", strings.TrimRight(siteURL, "/"))
 

@@ -7,12 +7,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"html"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/resend/resend-go/v2"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -22,7 +24,8 @@ import (
 // Webhook de Wompi — recibe eventos transaction.updated
 //
 // Verifica la firma del evento, actualiza la orden en MongoDB,
-// y descuenta stock cuando el pago es aprobado.
+// descuenta stock y envía correos de confirmación vía Resend
+// cuando el pago es aprobado.
 //
 // POST /api/wompi_webhook
 // ──────────────────────────────────────────
@@ -42,14 +45,14 @@ type WebhookData struct {
 }
 
 type WompiTransaction struct {
-	ID            string `json:"id"`
-	Status        string `json:"status"`
-	Reference     string `json:"reference"`
-	AmountInCents int64  `json:"amount_in_cents"`
-	Currency      string `json:"currency"`
+	ID            string      `json:"id"`
+	Status        string      `json:"status"`
+	Reference     string      `json:"reference"`
+	AmountInCents int64       `json:"amount_in_cents"`
+	Currency      string      `json:"currency"`
 	PaymentMethod interface{} `json:"payment_method"`
-	CreatedAt     string `json:"created_at"`
-	FinalizedAt   string `json:"finalized_at"`
+	CreatedAt     string      `json:"created_at"`
+	FinalizedAt   string      `json:"finalized_at"`
 }
 
 type WebhookSig struct {
@@ -57,17 +60,38 @@ type WebhookSig struct {
 	Properties []string `json:"properties"`
 }
 
-// ── Tipo para items de la orden en MongoDB ──
+// ── Tipos para la orden en MongoDB ──
+
+type OrderCustomer struct {
+	FirstName string `bson:"firstName" json:"firstName"`
+	LastName  string `bson:"lastName" json:"lastName"`
+	Email     string `bson:"email" json:"email"`
+	Phone     string `bson:"phone" json:"phone"`
+	City      string `bson:"city" json:"city"`
+	Address   string `bson:"address" json:"address"`
+}
 
 type OrderItem struct {
-	ID  interface{} `bson:"id"`
-	Qty int         `bson:"qty"`
+	ID       interface{} `bson:"id" json:"id"`
+	Name     string      `bson:"name" json:"name"`
+	Qty      int         `bson:"qty" json:"qty"`
+	Price    float64     `bson:"price" json:"price"`
+	Subtotal float64     `bson:"subtotal" json:"subtotal"`
 }
 
 type StoredOrder struct {
-	ID     string      `bson:"id"`
-	Status string      `bson:"status"`
-	Items  []OrderItem `bson:"items"`
+	ID             string        `bson:"id" json:"id"`
+	Status         string        `bson:"status" json:"status"`
+	Customer       OrderCustomer `bson:"customer" json:"customer"`
+	Items          []OrderItem   `bson:"items" json:"items"`
+	Subtotal       float64       `bson:"subtotal" json:"subtotal"`
+	SubtotalFormat string        `bson:"subtotal_format" json:"subtotal_format"`
+	ShippingCost   float64       `bson:"shippingCost" json:"shippingCost"`
+	ShippingFormat string        `bson:"shipping_format" json:"shipping_format"`
+	ShippingMethod string        `bson:"shippingMethod" json:"shippingMethod"`
+	Total          float64       `bson:"total" json:"total"`
+	TotalFormat    string        `bson:"total_format" json:"total_format"`
+	PaymentMethod  string        `bson:"paymentMethod" json:"paymentMethod"`
 }
 
 // corsHeaders devuelve las cabeceras CORS
@@ -81,7 +105,6 @@ func corsHeaders() map[string]string {
 }
 
 // getNestedValue navega las propiedades del payload siguiendo la notación de punto
-// Ejemplo: "transaction.id" → data.transaction.id
 func getNestedValue(data WebhookData, path string) string {
 	parts := strings.Split(path, ".")
 	if len(parts) < 2 || parts[0] != "transaction" {
@@ -107,21 +130,330 @@ func getNestedValue(data WebhookData, path string) string {
 
 // verifySignature valida la firma del webhook de Wompi
 func verifySignature(payload WebhookPayload, eventsSecret string) bool {
-	// Concatenar los valores de las propiedades en orden
 	var concat string
 	for _, prop := range payload.Signature.Properties {
 		concat += getNestedValue(payload.Data, prop)
 	}
-	// Agregar timestamp y secreto
 	concat += fmt.Sprintf("%d", payload.Timestamp)
 	concat += eventsSecret
 
-	// SHA256
 	hash := sha256.Sum256([]byte(concat))
 	calculated := hex.EncodeToString(hash[:])
 
-	// Comparación timing-safe para prevenir timing attacks
 	return subtle.ConstantTimeCompare([]byte(calculated), []byte(payload.Signature.Checksum)) == 1
+}
+
+// formatAmount formatea un valor numérico a moneda colombiana con separadores de miles
+func formatAmount(val float64, fallbackFormatted string) string {
+	if fallbackFormatted != "" {
+		return fallbackFormatted
+	}
+	intVal := int64(val)
+	str := fmt.Sprintf("%d", intVal)
+	if len(str) <= 3 {
+		return str
+	}
+	var res []string
+	count := 0
+	for i := len(str) - 1; i >= 0; i-- {
+		res = append([]string{string(str[i])}, res...)
+		count++
+		if count%3 == 0 && i != 0 {
+			res = append([]string{"."}, res...)
+		}
+	}
+	return strings.Join(res, "")
+}
+
+// cleanPhoneForWhatsApp normaliza el teléfono para enlaces de WhatsApp
+func cleanPhoneForWhatsApp(phone string) string {
+	var digits strings.Builder
+	for _, ch := range phone {
+		if ch >= '0' && ch <= '9' {
+			digits.WriteRune(ch)
+		}
+	}
+	d := digits.String()
+	if strings.HasPrefix(d, "57") {
+		return d
+	}
+	return "57" + d
+}
+
+// buildCustomerOrderEmailHTML genera la plantilla HTML del correo para el cliente
+func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string {
+	var itemsHTML strings.Builder
+	for _, item := range order.Items {
+		itemName := html.EscapeString(item.Name)
+		itemPrice := formatAmount(item.Price, "")
+		itemSubtotal := formatAmount(item.Subtotal, "")
+
+		itemsHTML.WriteString(fmt.Sprintf(`
+			<tr>
+				<td style="padding:12px 16px;border-bottom:1px solid #1a1d28;color:#ffffff;font-size:14px;">
+					<strong>%s</strong>
+					<div style="font-size:12px;color:#94a3b8;margin-top:2px;">Cantidad: %d &times; $%s COP</div>
+				</td>
+				<td align="right" style="padding:12px 16px;border-bottom:1px solid #1a1d28;color:#39FF14;font-size:14px;font-weight:600;white-space:nowrap;">
+					$%s COP
+				</td>
+			</tr>`, itemName, item.Qty, itemPrice, itemSubtotal))
+	}
+
+	customerName := html.EscapeString(strings.TrimSpace(order.Customer.FirstName + " " + order.Customer.LastName))
+	if customerName == "" {
+		customerName = "Cliente"
+	}
+	customerAddress := html.EscapeString(order.Customer.Address)
+	customerCity := html.EscapeString(order.Customer.City)
+	customerPhone := html.EscapeString(order.Customer.Phone)
+
+	subtotalStr := formatAmount(order.Subtotal, order.SubtotalFormat)
+	shippingStr := formatAmount(order.ShippingCost, order.ShippingFormat)
+	totalStr := formatAmount(order.Total, order.TotalFormat)
+
+	shippingLabel := "Envío"
+	if order.ShippingCost == 0 {
+		shippingStr = "GRATIS"
+	} else if order.ShippingMethod != "" {
+		shippingLabel = fmt.Sprintf("Envío (%s)", html.EscapeString(order.ShippingMethod))
+	}
+
+	return fmt.Sprintf(`<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Pedido - Personal Barber</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0a0b0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;">
+  <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0a0b0f;padding:30px 10px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#13151c;border-radius:20px;overflow:hidden;border:1px solid #1e2130;max-width:600px;width:100%%;">
+          
+          <!-- HEADER -->
+          <tr>
+            <td style="background:linear-gradient(160deg,#0d0f16 0%%,#0d1a10 100%%);padding:36px 30px 28px;text-align:center;border-bottom:1px solid #1a3d1a;">
+              <img src="https://personalbarber.co/icon-512.png" alt="Personal Barber" width="68" height="68"
+                style="border-radius:16px;border:2px solid rgba(57,255,20,0.25);display:block;margin:0 auto 16px;" />
+              <h1 style="margin:0 0 4px;font-size:26px;font-weight:800;letter-spacing:3px;color:#ffffff;text-transform:uppercase;">
+                PERSONAL <span style="color:#39FF14;">BARBER</span>
+              </h1>
+              <p style="margin:0 0 16px;font-size:12px;letter-spacing:2px;color:rgba(57,255,20,0.6);text-transform:uppercase;">
+                Tienda Online Oficial
+              </p>
+              <span style="display:inline-block;background-color:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.3);color:#39FF14;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 18px;border-radius:50px;">
+                ✓ Pago Confirmado · Pedido #%s
+              </span>
+            </td>
+          </tr>
+
+          <!-- BODY -->
+          <tr>
+            <td style="padding:32px 30px;">
+              <p style="font-size:16px;color:#ffffff;margin:0 0 10px;font-weight:600;">
+                ¡Hola, %s!
+              </p>
+              <p style="font-size:14px;color:#94a3b8;margin:0 0 24px;line-height:1.6;">
+                Tu pago a través de <strong>Wompi</strong> ha sido procesado y aprobado con éxito. Hemos registrado tu pedido y ya estamos alistando tus productos para enviártelos lo antes posible.
+              </p>
+
+              <!-- PRODUCT BREAKDOWN -->
+              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;">
+                <tr>
+                  <td colspan="2" style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#39FF14;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                    Resumen de Productos
+                  </td>
+                </tr>
+                %s
+              </table>
+
+              <!-- FINANCIAL SUMMARY -->
+              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;padding:16px;">
+                <tr>
+                  <td style="padding:6px 16px;color:#94a3b8;font-size:14px;">Subtotal</td>
+                  <td align="right" style="padding:6px 16px;color:#ffffff;font-size:14px;">$%s COP</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 16px;color:#94a3b8;font-size:14px;">%s</td>
+                  <td align="right" style="padding:6px 16px;color:#ffffff;font-size:14px;">%s</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding:10px 16px 4px;"><hr style="border:none;border-top:1px solid #1e2130;margin:0;" /></td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 16px;color:#ffffff;font-size:16px;font-weight:700;">Total Pagado</td>
+                  <td align="right" style="padding:8px 16px;color:#39FF14;font-size:20px;font-weight:800;">$%s COP</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding:4px 16px;color:#64748b;font-size:11px;">
+                    Método: Wompi · Ref: %s · Transacción: %s
+                  </td>
+                </tr>
+              </table>
+
+              <!-- SHIPPING ADDRESS -->
+              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:28px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#39FF14;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                    📍 Datos de Entrega
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px;">
+                    <div style="font-size:14px;color:#ffffff;font-weight:600;margin-bottom:4px;">%s</div>
+                    <div style="font-size:13px;color:#94a3b8;margin-bottom:2px;">%s, %s</div>
+                    <div style="font-size:13px;color:#94a3b8;">Tel: %s</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- WHATSAPP SUPPORT CTA -->
+              <table width="100%%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://personalbarber.co/wa"
+                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:14px 34px;border-radius:50px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:1.5px;">
+                      ¿Preguntas? Escríbenos por WhatsApp →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="text-align:center;font-size:12px;color:#64748b;margin:0;">
+                O si prefieres, responde a este correo o escríbenos a <a href="mailto:ayuda@personalbarber.co" style="color:#39FF14;text-decoration:none;">ayuda@personalbarber.co</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="text-align:center;padding:22px 30px;background-color:#0a0b0f;border-top:1px solid #1a1d28;">
+              <p style="margin:0 0 6px;font-size:12px;color:#64748b;">
+                Personal Barber · Medellín, Colombia
+              </p>
+              <p style="margin:0;font-size:11px;color:#475569;">
+                <a href="https://personalbarber.co" style="color:rgba(57,255,20,0.5);text-decoration:none;">personalbarber.co</a> · Tu tienda y barbería de confianza
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`, order.ID, customerName, itemsHTML.String(), subtotalStr, shippingLabel,
+		func() string {
+			if order.ShippingCost == 0 {
+				return "GRATIS"
+			}
+			return fmt.Sprintf("$%s COP", shippingStr)
+		}(),
+		totalStr, tx.Reference, tx.ID, customerName, customerAddress, customerCity, customerPhone)
+}
+
+// buildAdminOrderEmailHTML genera la plantilla HTML de alerta de venta para los administradores
+func buildAdminOrderEmailHTML(order StoredOrder, tx WompiTransaction) string {
+	var itemsHTML strings.Builder
+	for _, item := range order.Items {
+		itemsHTML.WriteString(fmt.Sprintf(`
+			<li style="margin-bottom:6px;color:#ffffff;font-size:14px;">
+				<strong>%d &times; %s</strong> — $%s COP
+			</li>`, item.Qty, html.EscapeString(item.Name), formatAmount(item.Subtotal, "")))
+	}
+
+	customerName := html.EscapeString(strings.TrimSpace(order.Customer.FirstName + " " + order.Customer.LastName))
+	totalStr := formatAmount(order.Total, order.TotalFormat)
+	cleanPhone := cleanPhoneForWhatsApp(order.Customer.Phone)
+
+	return fmt.Sprintf(`<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="background-color:#0a0b0f;color:#e2e8f0;font-family:sans-serif;padding:20px;">
+  <table width="100%%" max-width="600" style="background:#13151c;border:1px solid #1e2130;border-radius:16px;padding:24px;">
+    <tr>
+      <td>
+        <h2 style="color:#39FF14;margin:0 0 10px;">🛍️ ¡Nueva Venta Aprobada en Personal Barber!</h2>
+        <p style="font-size:15px;color:#ffffff;margin:0 0 16px;">
+          Se acaba de confirmar el pago de la orden <strong>#%s</strong> por <strong>$%s COP</strong> en Wompi.
+        </p>
+
+        <div style="background:#0d0f16;padding:16px;border-radius:12px;margin-bottom:20px;border:1px solid #1e2130;">
+          <h4 style="color:#39FF14;margin:0 0 8px;text-transform:uppercase;font-size:12px;">Datos del Comprador</h4>
+          <p style="margin:0 0 4px;font-size:14px;"><strong>Cliente:</strong> %s</p>
+          <p style="margin:0 0 4px;font-size:14px;"><strong>Teléfono:</strong> %s</p>
+          <p style="margin:0 0 4px;font-size:14px;"><strong>Email:</strong> %s</p>
+          <p style="margin:0;font-size:14px;"><strong>Destino:</strong> %s, %s</p>
+        </div>
+
+        <div style="background:#0d0f16;padding:16px;border-radius:12px;margin-bottom:24px;border:1px solid #1e2130;">
+          <h4 style="color:#39FF14;margin:0 0 8px;text-transform:uppercase;font-size:12px;">Productos a Despachar</h4>
+          <ul style="margin:0;padding-left:20px;">
+            %s
+          </ul>
+        </div>
+
+        <table width="100%%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center">
+              <a href="https://wa.me/%s" style="background:#25D366;color:#ffffff;text-decoration:none;padding:12px 26px;border-radius:50px;font-weight:bold;font-size:14px;display:inline-block;">
+                Abrir WhatsApp con el Cliente →
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`, order.ID, totalStr, customerName, html.EscapeString(order.Customer.Phone), html.EscapeString(order.Customer.Email),
+		html.EscapeString(order.Customer.Address), html.EscapeString(order.Customer.City), itemsHTML.String(), cleanPhone)
+}
+
+// sendOrderConfirmationEmails envía los correos de confirmación tanto al comprador como al equipo
+func sendOrderConfirmationEmails(order StoredOrder, tx WompiTransaction) {
+	resendKey := os.Getenv("RESEND_API_KEY")
+	if resendKey == "" {
+		fmt.Println("[WEBHOOK RESEND WARN] No se encontró RESEND_API_KEY. Saltando el envío de correos.")
+		return
+	}
+
+	client := resend.NewClient(resendKey)
+
+	// 1. Correo de confirmación al cliente (si ingresó email)
+	if order.Customer.Email != "" && strings.Contains(order.Customer.Email, "@") {
+		customerReq := &resend.SendEmailRequest{
+			From:    "Personal Barber Store <pedidos@personalbarber.co>",
+			To:      []string{order.Customer.Email},
+			Subject: fmt.Sprintf("✓ Confirmación de tu Pedido #%s - Personal Barber", order.ID),
+			Html:    buildCustomerOrderEmailHTML(order, tx),
+		}
+
+		_, err := client.Emails.Send(customerReq)
+		if err != nil {
+			fmt.Printf("[WEBHOOK RESEND ERROR] No se pudo enviar correo al cliente (%s): %v\n", order.Customer.Email, err)
+		} else {
+			fmt.Printf("[WEBHOOK RESEND OK] Correo de confirmación enviado exitosamente al cliente: %s\n", order.Customer.Email)
+		}
+	}
+
+	// 2. Alerta para los administradores
+	adminEmails := []string{"jhonechavarria0506@gmail.com", "Calatrava7000@gmail.com"}
+	adminReq := &resend.SendEmailRequest{
+		From:    "Personal Barber Store <pedidos@personalbarber.co>",
+		To:      adminEmails,
+		Subject: fmt.Sprintf("🛍️ ¡Nueva Venta Aprobada! Pedido #%s - $%s COP", order.ID, formatAmount(order.Total, order.TotalFormat)),
+		Html:    buildAdminOrderEmailHTML(order, tx),
+	}
+
+	_, errAdmin := client.Emails.Send(adminReq)
+	if errAdmin != nil {
+		fmt.Printf("[WEBHOOK RESEND ERROR] No se pudo enviar alerta al admin: %v\n", errAdmin)
+	} else {
+		fmt.Println("[WEBHOOK RESEND OK] Alerta de nueva venta enviada a administradores")
+	}
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -139,7 +471,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	eventsSecret := os.Getenv("WOMPI_EVENTS_SECRET")
 
 	if mongoURI == "" || eventsSecret == "" {
-		fmt.Println("[WEBHOOK ERROR] Variables de entorno faltantes")
+		fmt.Println("[WEBHOOK ERROR] Variables de entorno faltantes (MONGODB_URI o WOMPI_EVENTS_SECRET)")
 		// Responder 200 para que Wompi no reintente infinitamente
 		return events.APIGatewayProxyResponse{
 			StatusCode: 200,
@@ -260,7 +592,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		fmt.Printf("[WEBHOOK ERROR] No se pudo actualizar orden %s: %v\n", order.ID, err)
 	}
 
-	// ── 8. Si fue aprobada, descontar stock ──
+	// ── 8. Si fue aprobada, descontar stock y enviar correos ──
 	if tx.Status == "APPROVED" {
 		productsColl := db.Collection("products")
 		for _, item := range order.Items {
@@ -275,6 +607,9 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			}
 		}
 		fmt.Printf("[WEBHOOK OK] Orden %s APROBADA — stock descontado\n", order.ID)
+
+		// Enviar correos de confirmación vía Resend
+		sendOrderConfirmationEmails(order, tx)
 	} else {
 		fmt.Printf("[WEBHOOK OK] Orden %s actualizada a %s\n", order.ID, tx.Status)
 	}

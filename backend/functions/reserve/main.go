@@ -46,7 +46,7 @@ func buildEmailHTML(res Reservation) string {
           <!-- HEADER -->
           <tr>
             <td style="background:linear-gradient(160deg,#0d0f16 0%%,#0d1a10 100%%);padding:36px 30px 28px;text-align:center;border-bottom:1px solid #1a3d1a;">
-              <img src="https://personalbarber.vip/icon-512.png" alt="Personal Barber" width="72" height="72"
+              <img src="https://personalbarber.co/icon-512.png" alt="Personal Barber" width="72" height="72"
                 style="border-radius:18px;border:2px solid rgba(57,255,20,0.25);display:block;margin:0 auto 16px;" />
               <h1 style="margin:0 0 4px;font-size:28px;font-weight:700;letter-spacing:4px;color:#ffffff;text-transform:uppercase;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;">
                 PERSONAL <span style="color:#39FF14;">BARBER</span>
@@ -127,7 +127,7 @@ func buildEmailHTML(res Reservation) string {
               <table width="100%%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom:8px;">
-                    <a href="https://personalbarber.vip/wa"
+                    <a href="https://personalbarber.co/wa"
                       style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:15px 38px;border-radius:50px;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:2px;font-family:'Arial Narrow','Impact','Helvetica Neue',Helvetica,Arial,sans-serif;">
                       Abrir Chat en WhatsApp →
                     </a>
@@ -142,7 +142,7 @@ func buildEmailHTML(res Reservation) string {
           <tr>
             <td style="text-align:center;padding:20px 30px;background-color:#0a0b0f;border-top:1px solid #1a1d28;">
               <p style="margin:0;font-size:11px;color:#374151;line-height:1.7;font-family:'Oswald','Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;">
-                Notificación automática · <a href="https://personalbarber.vip" style="color:rgba(57,255,20,0.4);text-decoration:none;">personalbarber.vip</a>
+                Notificación automática · <a href="https://personalbarber.co" style="color:rgba(57,255,20,0.4);text-decoration:none;">personalbarber.co</a>
               </p>
             </td>
           </tr>
@@ -272,7 +272,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		clienteResend := resend.NewClient(resendKey)
 
 		parametrosCorreo := &resend.SendEmailRequest{
-			From:    "Personal Barber <reservas@personalbarber.vip>",
+			From:    "Personal Barber <reservas@personalbarber.co>",
 			To:      []string{"jhonechavarria0506@gmail.com", "Calatrava7000@gmail.com"},
 			Subject: "💈 ¡Nueva Reserva de " + res.Nombre + "!",
 			Html:    buildEmailHTML(res),
